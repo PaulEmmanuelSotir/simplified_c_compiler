@@ -1,8 +1,8 @@
 ############################################################################################
 ################################## GENERIC MAKEFILE ########################################
 ############################################################################################
-# TODO: g�rer les sous-dossiers / fichiers ayants le mêmes noms dans des dossiers différen
-# TODO: g�rer les extentions .hpp, .cxx, ...
+# TODO: gèrer les sous-dossiers / fichiers ayants le mêmes noms dans des dossiers différents
+# TODO: gèrer les extentions .hpp, .cxx, ...
 
 # Debug mode (comment this line to build project in release mode)
 DEBUG = true
@@ -12,7 +12,7 @@ CC = g++
 # Command used to remove files
 RM = rm -f
 # Compiler and pre-processor options
-CPPFLAGS = -Wall -std=c++17 -O0
+CPPFLAGS = -Wall -std=c++14 -O0
 # Add -Ofast for opt
 # Debug flags
 DEBUGFLAGS = -g
@@ -36,10 +36,10 @@ RELEASEDIR = release
 DEBUGDIR = debug
 # Dependency files directory
 DEPDIR = dep
-# Libraries paths
-LIBS = #-l
+# Library paths
+LIBS = -L ./antlr/runtime_source/dist
 # List of include paths
-INCLUDES = ./$(INCDIR)
+INCLUDES = ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 
 ifdef DEBUG
 BUILD_PATH = ./$(OUTPUT_DIR)/$(DEBUGDIR)
