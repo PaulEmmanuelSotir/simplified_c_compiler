@@ -2,7 +2,6 @@
 // Generated from .\GramComp.g4 by ANTLR 4.7.1
 
 
-#include "GramCompListener.h"
 #include "GramCompVisitor.h"
 
 #include "GramCompParser.h"
@@ -74,19 +73,6 @@ GramCompParser::FunctionContext* GramCompParser::ProgrammeContext::function(size
 size_t GramCompParser::ProgrammeContext::getRuleIndex() const {
   return GramCompParser::RuleProgramme;
 }
-
-void GramCompParser::ProgrammeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterProgramme(this);
-}
-
-void GramCompParser::ProgrammeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitProgramme(this);
-}
-
 
 antlrcpp::Any GramCompParser::ProgrammeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -180,17 +166,6 @@ GramCompParser::ExpressionContext* GramCompParser::Expression_instrContext::expr
 
 GramCompParser::Expression_instrContext::Expression_instrContext(InstructionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::Expression_instrContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterExpression_instr(this);
-}
-void GramCompParser::Expression_instrContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitExpression_instr(this);
-}
-
 antlrcpp::Any GramCompParser::Expression_instrContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitExpression_instr(this);
@@ -200,17 +175,6 @@ antlrcpp::Any GramCompParser::Expression_instrContext::accept(tree::ParseTreeVis
 //----------------- BreakContext ------------------------------------------------------------------
 
 GramCompParser::BreakContext::BreakContext(InstructionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::BreakContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterBreak(this);
-}
-void GramCompParser::BreakContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitBreak(this);
-}
 
 antlrcpp::Any GramCompParser::BreakContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -234,17 +198,6 @@ GramCompParser::ExpressionContext* GramCompParser::FucntioncallContext::expressi
 
 GramCompParser::FucntioncallContext::FucntioncallContext(InstructionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::FucntioncallContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFucntioncall(this);
-}
-void GramCompParser::FucntioncallContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFucntioncall(this);
-}
-
 antlrcpp::Any GramCompParser::FucntioncallContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitFucntioncall(this);
@@ -255,17 +208,6 @@ antlrcpp::Any GramCompParser::FucntioncallContext::accept(tree::ParseTreeVisitor
 
 GramCompParser::ContinueContext::ContinueContext(InstructionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::ContinueContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterContinue(this);
-}
-void GramCompParser::ContinueContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitContinue(this);
-}
-
 antlrcpp::Any GramCompParser::ContinueContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitContinue(this);
@@ -275,17 +217,6 @@ antlrcpp::Any GramCompParser::ContinueContext::accept(tree::ParseTreeVisitor *vi
 //----------------- Semicolon_instrContext ------------------------------------------------------------------
 
 GramCompParser::Semicolon_instrContext::Semicolon_instrContext(InstructionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Semicolon_instrContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSemicolon_instr(this);
-}
-void GramCompParser::Semicolon_instrContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSemicolon_instr(this);
-}
 
 antlrcpp::Any GramCompParser::Semicolon_instrContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -301,17 +232,6 @@ GramCompParser::StructureContext* GramCompParser::Structure_instrContext::struct
 
 GramCompParser::Structure_instrContext::Structure_instrContext(InstructionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::Structure_instrContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterStructure_instr(this);
-}
-void GramCompParser::Structure_instrContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitStructure_instr(this);
-}
-
 antlrcpp::Any GramCompParser::Structure_instrContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitStructure_instr(this);
@@ -325,17 +245,6 @@ GramCompParser::ExpressionContext* GramCompParser::ReturnContext::expression() {
 }
 
 GramCompParser::ReturnContext::ReturnContext(InstructionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::ReturnContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterReturn(this);
-}
-void GramCompParser::ReturnContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitReturn(this);
-}
 
 antlrcpp::Any GramCompParser::ReturnContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -491,17 +400,6 @@ tree::TerminalNode* GramCompParser::IncludeCrochContext::STRING_LITERAL() {
 
 GramCompParser::IncludeCrochContext::IncludeCrochContext(IncludeContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::IncludeCrochContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIncludeCroch(this);
-}
-void GramCompParser::IncludeCrochContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIncludeCroch(this);
-}
-
 antlrcpp::Any GramCompParser::IncludeCrochContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitIncludeCroch(this);
@@ -515,17 +413,6 @@ tree::TerminalNode* GramCompParser::IncludeGuillContext::STRING_LITERAL() {
 }
 
 GramCompParser::IncludeGuillContext::IncludeGuillContext(IncludeContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::IncludeGuillContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIncludeGuill(this);
-}
-void GramCompParser::IncludeGuillContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIncludeGuill(this);
-}
 
 antlrcpp::Any GramCompParser::IncludeGuillContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -634,17 +521,6 @@ GramCompParser::InstructionContext* GramCompParser::Function_defContext::instruc
 }
 
 GramCompParser::Function_defContext::Function_defContext(FunctionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Function_defContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFunction_def(this);
-}
-void GramCompParser::Function_defContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFunction_def(this);
-}
 
 antlrcpp::Any GramCompParser::Function_defContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -789,17 +665,6 @@ tree::TerminalNode* GramCompParser::Args_listContext::IDENTIFIER(size_t i) {
 
 GramCompParser::Args_listContext::Args_listContext(ArgsContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::Args_listContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArgs_list(this);
-}
-void GramCompParser::Args_listContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArgs_list(this);
-}
-
 antlrcpp::Any GramCompParser::Args_listContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitArgs_list(this);
@@ -809,17 +674,6 @@ antlrcpp::Any GramCompParser::Args_listContext::accept(tree::ParseTreeVisitor *v
 //----------------- Void_argContext ------------------------------------------------------------------
 
 GramCompParser::Void_argContext::Void_argContext(ArgsContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Void_argContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterVoid_arg(this);
-}
-void GramCompParser::Void_argContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitVoid_arg(this);
-}
 
 antlrcpp::Any GramCompParser::Void_argContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -910,17 +764,6 @@ GramCompParser::DefinitionContext* GramCompParser::Functioninit_defContext::defi
 
 GramCompParser::Functioninit_defContext::Functioninit_defContext(Function_initContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::Functioninit_defContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFunctioninit_def(this);
-}
-void GramCompParser::Functioninit_defContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFunctioninit_def(this);
-}
-
 antlrcpp::Any GramCompParser::Functioninit_defContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitFunctioninit_def(this);
@@ -934,17 +777,6 @@ GramCompParser::DeclarationContext* GramCompParser::Functioninit_declContext::de
 }
 
 GramCompParser::Functioninit_declContext::Functioninit_declContext(Function_initContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Functioninit_declContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterFunctioninit_decl(this);
-}
-void GramCompParser::Functioninit_declContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitFunctioninit_decl(this);
-}
 
 antlrcpp::Any GramCompParser::Functioninit_declContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1018,17 +850,6 @@ GramCompParser::ExpressionContext* GramCompParser::InfContext::expression(size_t
 
 GramCompParser::InfContext::InfContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::InfContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInf(this);
-}
-void GramCompParser::InfContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInf(this);
-}
-
 antlrcpp::Any GramCompParser::InfContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitInf(this);
@@ -1042,17 +863,6 @@ tree::TerminalNode* GramCompParser::IdentifierContext::IDENTIFIER() {
 }
 
 GramCompParser::IdentifierContext::IdentifierContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::IdentifierContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIdentifier(this);
-}
-void GramCompParser::IdentifierContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIdentifier(this);
-}
 
 antlrcpp::Any GramCompParser::IdentifierContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1072,17 +882,6 @@ GramCompParser::ExpressionContext* GramCompParser::MinusContext::expression(size
 
 GramCompParser::MinusContext::MinusContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::MinusContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterMinus(this);
-}
-void GramCompParser::MinusContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitMinus(this);
-}
-
 antlrcpp::Any GramCompParser::MinusContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitMinus(this);
@@ -1101,17 +900,6 @@ GramCompParser::ExpressionContext* GramCompParser::MultContext::expression(size_
 
 GramCompParser::MultContext::MultContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::MultContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterMult(this);
-}
-void GramCompParser::MultContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitMult(this);
-}
-
 antlrcpp::Any GramCompParser::MultContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitMult(this);
@@ -1126,17 +914,6 @@ GramCompParser::AffectationContext* GramCompParser::Affect_epxrContext::affectat
 
 GramCompParser::Affect_epxrContext::Affect_epxrContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::Affect_epxrContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAffect_epxr(this);
-}
-void GramCompParser::Affect_epxrContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAffect_epxr(this);
-}
-
 antlrcpp::Any GramCompParser::Affect_epxrContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitAffect_epxr(this);
@@ -1150,17 +927,6 @@ tree::TerminalNode* GramCompParser::StringContext::STRING_LITERAL() {
 }
 
 GramCompParser::StringContext::StringContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::StringContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterString(this);
-}
-void GramCompParser::StringContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitString(this);
-}
 
 antlrcpp::Any GramCompParser::StringContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1180,17 +946,6 @@ GramCompParser::ExpressionContext* GramCompParser::SupequalContext::expression(s
 
 GramCompParser::SupequalContext::SupequalContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::SupequalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSupequal(this);
-}
-void GramCompParser::SupequalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSupequal(this);
-}
-
 antlrcpp::Any GramCompParser::SupequalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitSupequal(this);
@@ -1209,17 +964,6 @@ GramCompParser::ExpressionContext* GramCompParser::InfequalContext::expression(s
 
 GramCompParser::InfequalContext::InfequalContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::InfequalContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInfequal(this);
-}
-void GramCompParser::InfequalContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInfequal(this);
-}
-
 antlrcpp::Any GramCompParser::InfequalContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitInfequal(this);
@@ -1234,17 +978,6 @@ tree::TerminalNode* GramCompParser::IntegerContext::INTEGER() {
 
 GramCompParser::IntegerContext::IntegerContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::IntegerContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterInteger(this);
-}
-void GramCompParser::IntegerContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitInteger(this);
-}
-
 antlrcpp::Any GramCompParser::IntegerContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitInteger(this);
@@ -1258,17 +991,6 @@ GramCompParser::ExpressionContext* GramCompParser::ParenthesisContext::expressio
 }
 
 GramCompParser::ParenthesisContext::ParenthesisContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::ParenthesisContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterParenthesis(this);
-}
-void GramCompParser::ParenthesisContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitParenthesis(this);
-}
 
 antlrcpp::Any GramCompParser::ParenthesisContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1288,17 +1010,6 @@ GramCompParser::ExpressionContext* GramCompParser::PlusContext::expression(size_
 
 GramCompParser::PlusContext::PlusContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::PlusContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPlus(this);
-}
-void GramCompParser::PlusContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPlus(this);
-}
-
 antlrcpp::Any GramCompParser::PlusContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitPlus(this);
@@ -1316,17 +1027,6 @@ GramCompParser::ExpressionContext* GramCompParser::SupContext::expression(size_t
 }
 
 GramCompParser::SupContext::SupContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::SupContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterSup(this);
-}
-void GramCompParser::SupContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitSup(this);
-}
 
 antlrcpp::Any GramCompParser::SupContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1346,17 +1046,6 @@ GramCompParser::ExpressionContext* GramCompParser::DivContext::expression(size_t
 
 GramCompParser::DivContext::DivContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::DivContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDiv(this);
-}
-void GramCompParser::DivContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDiv(this);
-}
-
 antlrcpp::Any GramCompParser::DivContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitDiv(this);
@@ -1375,17 +1064,6 @@ GramCompParser::ExpressionContext* GramCompParser::EqualContext::expression(size
 
 GramCompParser::EqualContext::EqualContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::EqualContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterEqual(this);
-}
-void GramCompParser::EqualContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitEqual(this);
-}
-
 antlrcpp::Any GramCompParser::EqualContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitEqual(this);
@@ -1399,17 +1077,6 @@ GramCompParser::ExpressionContext* GramCompParser::NotContext::expression() {
 }
 
 GramCompParser::NotContext::NotContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::NotContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterNot(this);
-}
-void GramCompParser::NotContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitNot(this);
-}
 
 antlrcpp::Any GramCompParser::NotContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1425,17 +1092,6 @@ tree::TerminalNode* GramCompParser::CharContext::CHAR_LITERAL() {
 
 GramCompParser::CharContext::CharContext(ExpressionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::CharContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterChar(this);
-}
-void GramCompParser::CharContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitChar(this);
-}
-
 antlrcpp::Any GramCompParser::CharContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitChar(this);
@@ -1449,17 +1105,6 @@ GramCompParser::ExpressionContext* GramCompParser::Minus1Context::expression() {
 }
 
 GramCompParser::Minus1Context::Minus1Context(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Minus1Context::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterMinus1(this);
-}
-void GramCompParser::Minus1Context::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitMinus1(this);
-}
 
 antlrcpp::Any GramCompParser::Minus1Context::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1478,17 +1123,6 @@ GramCompParser::ExpressionContext* GramCompParser::DifferentContext::expression(
 }
 
 GramCompParser::DifferentContext::DifferentContext(ExpressionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::DifferentContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDifferent(this);
-}
-void GramCompParser::DifferentContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDifferent(this);
-}
 
 antlrcpp::Any GramCompParser::DifferentContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -1800,17 +1434,6 @@ GramCompParser::InstructionContext* GramCompParser::WhileContext::instruction(si
 
 GramCompParser::WhileContext::WhileContext(StructureContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::WhileContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterWhile(this);
-}
-void GramCompParser::WhileContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitWhile(this);
-}
-
 antlrcpp::Any GramCompParser::WhileContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitWhile(this);
@@ -1836,17 +1459,6 @@ GramCompParser::Else_structureContext* GramCompParser::IfContext::else_structure
 }
 
 GramCompParser::IfContext::IfContext(StructureContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::IfContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIf(this);
-}
-void GramCompParser::IfContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIf(this);
-}
 
 antlrcpp::Any GramCompParser::IfContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2001,17 +1613,6 @@ GramCompParser::InstructionContext* GramCompParser::ElseContext::instruction(siz
 
 GramCompParser::ElseContext::ElseContext(Else_structureContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::ElseContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterElse(this);
-}
-void GramCompParser::ElseContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitElse(this);
-}
-
 antlrcpp::Any GramCompParser::ElseContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitElse(this);
@@ -2098,17 +1699,6 @@ GramCompParser::ExpressionContext* GramCompParser::PourcentmentationContext::exp
 
 GramCompParser::PourcentmentationContext::PourcentmentationContext(AffectationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::PourcentmentationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPourcentmentation(this);
-}
-void GramCompParser::PourcentmentationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPourcentmentation(this);
-}
-
 antlrcpp::Any GramCompParser::PourcentmentationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitPourcentmentation(this);
@@ -2126,17 +1716,6 @@ GramCompParser::ExpressionContext* GramCompParser::Affect_exprContext::expressio
 }
 
 GramCompParser::Affect_exprContext::Affect_exprContext(AffectationContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::Affect_exprContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAffect_expr(this);
-}
-void GramCompParser::Affect_exprContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAffect_expr(this);
-}
 
 antlrcpp::Any GramCompParser::Affect_exprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2156,17 +1735,6 @@ GramCompParser::ExpressionContext* GramCompParser::MultmentationContext::express
 
 GramCompParser::MultmentationContext::MultmentationContext(AffectationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::MultmentationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterMultmentation(this);
-}
-void GramCompParser::MultmentationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitMultmentation(this);
-}
-
 antlrcpp::Any GramCompParser::MultmentationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitMultmentation(this);
@@ -2185,17 +1753,6 @@ GramCompParser::ExpressionContext* GramCompParser::IncrementationContext::expres
 
 GramCompParser::IncrementationContext::IncrementationContext(AffectationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::IncrementationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIncrementation(this);
-}
-void GramCompParser::IncrementationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIncrementation(this);
-}
-
 antlrcpp::Any GramCompParser::IncrementationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitIncrementation(this);
@@ -2209,17 +1766,6 @@ tree::TerminalNode* GramCompParser::IncunairepostContext::IDENTIFIER() {
 }
 
 GramCompParser::IncunairepostContext::IncunairepostContext(AffectationContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::IncunairepostContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIncunairepost(this);
-}
-void GramCompParser::IncunairepostContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIncunairepost(this);
-}
 
 antlrcpp::Any GramCompParser::IncunairepostContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2239,17 +1785,6 @@ GramCompParser::ExpressionContext* GramCompParser::DividementationContext::expre
 
 GramCompParser::DividementationContext::DividementationContext(AffectationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::DividementationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDividementation(this);
-}
-void GramCompParser::DividementationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDividementation(this);
-}
-
 antlrcpp::Any GramCompParser::DividementationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitDividementation(this);
@@ -2268,17 +1803,6 @@ GramCompParser::ExpressionContext* GramCompParser::DecrementationContext::expres
 
 GramCompParser::DecrementationContext::DecrementationContext(AffectationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::DecrementationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDecrementation(this);
-}
-void GramCompParser::DecrementationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDecrementation(this);
-}
-
 antlrcpp::Any GramCompParser::DecrementationContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitDecrementation(this);
@@ -2292,17 +1816,6 @@ tree::TerminalNode* GramCompParser::IncunairepreContext::IDENTIFIER() {
 }
 
 GramCompParser::IncunairepreContext::IncunairepreContext(AffectationContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::IncunairepreContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterIncunairepre(this);
-}
-void GramCompParser::IncunairepreContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitIncunairepre(this);
-}
 
 antlrcpp::Any GramCompParser::IncunairepreContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2325,17 +1838,6 @@ GramCompParser::ExpressionContext* GramCompParser::TableContext::expression(size
 }
 
 GramCompParser::TableContext::TableContext(AffectationContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::TableContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTable(this);
-}
-void GramCompParser::TableContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTable(this);
-}
 
 antlrcpp::Any GramCompParser::TableContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2534,17 +2036,6 @@ tree::TerminalNode* GramCompParser::DeftableContext::STRING_LITERAL() {
 
 GramCompParser::DeftableContext::DeftableContext(DefinitionContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::DeftableContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDeftable(this);
-}
-void GramCompParser::DeftableContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDeftable(this);
-}
-
 antlrcpp::Any GramCompParser::DeftableContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitDeftable(this);
@@ -2566,17 +2057,6 @@ GramCompParser::ExpressionContext* GramCompParser::DefineContext::expression() {
 }
 
 GramCompParser::DefineContext::DefineContext(DefinitionContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::DefineContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDefine(this);
-}
-void GramCompParser::DefineContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDefine(this);
-}
 
 antlrcpp::Any GramCompParser::DefineContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2693,17 +2173,6 @@ tree::TerminalNode* GramCompParser::DecltableContext::INTEGER() {
 
 GramCompParser::DecltableContext::DecltableContext(DeclarationContext *ctx) { copyFrom(ctx); }
 
-void GramCompParser::DecltableContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDecltable(this);
-}
-void GramCompParser::DecltableContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDecltable(this);
-}
-
 antlrcpp::Any GramCompParser::DecltableContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitDecltable(this);
@@ -2721,17 +2190,6 @@ tree::TerminalNode* GramCompParser::DeclareContext::IDENTIFIER() {
 }
 
 GramCompParser::DeclareContext::DeclareContext(DeclarationContext *ctx) { copyFrom(ctx); }
-
-void GramCompParser::DeclareContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDeclare(this);
-}
-void GramCompParser::DeclareContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDeclare(this);
-}
 
 antlrcpp::Any GramCompParser::DeclareContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2810,19 +2268,6 @@ GramCompParser::Const_exprContext* GramCompParser::Array_exprContext::const_expr
 size_t GramCompParser::Array_exprContext::getRuleIndex() const {
   return GramCompParser::RuleArray_expr;
 }
-
-void GramCompParser::Array_exprContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterArray_expr(this);
-}
-
-void GramCompParser::Array_exprContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitArray_expr(this);
-}
-
 
 antlrcpp::Any GramCompParser::Array_exprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
@@ -2910,19 +2355,6 @@ size_t GramCompParser::Const_exprContext::getRuleIndex() const {
   return GramCompParser::RuleConst_expr;
 }
 
-void GramCompParser::Const_exprContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConst_expr(this);
-}
-
-void GramCompParser::Const_exprContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConst_expr(this);
-}
-
-
 antlrcpp::Any GramCompParser::Const_exprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitConst_expr(this);
@@ -2986,19 +2418,6 @@ size_t GramCompParser::Atomic_typeContext::getRuleIndex() const {
   return GramCompParser::RuleAtomic_type;
 }
 
-void GramCompParser::Atomic_typeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterAtomic_type(this);
-}
-
-void GramCompParser::Atomic_typeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitAtomic_type(this);
-}
-
-
 antlrcpp::Any GramCompParser::Atomic_typeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
     return parserVisitor->visitAtomic_type(this);
@@ -3053,19 +2472,6 @@ GramCompParser::Atomic_typeContext* GramCompParser::TypeContext::atomic_type() {
 size_t GramCompParser::TypeContext::getRuleIndex() const {
   return GramCompParser::RuleType;
 }
-
-void GramCompParser::TypeContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterType(this);
-}
-
-void GramCompParser::TypeContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<GramCompListener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitType(this);
-}
-
 
 antlrcpp::Any GramCompParser::TypeContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<GramCompVisitor*>(visitor))
