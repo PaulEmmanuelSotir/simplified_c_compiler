@@ -1,3 +1,6 @@
 #include "While.h"
 
-While::While() {}
+namespace SyntaxModel {
+
+    While::While() {}
+}

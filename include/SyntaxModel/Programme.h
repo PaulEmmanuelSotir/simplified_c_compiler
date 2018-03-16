@@ -6,13 +6,15 @@
 #include "Declaration.h"
 #include "Fonction.h"
 
-class Programme
-{
-public:
-  Programme();
-  virtual ~Programme() = default;
+namespace SyntaxModel {
 
-private:
-  std::list<Fonction> _fonctions;
-  std::list<Declaration> _declarations;
-};
+    class Programme {
+    public:
+        Programme();
+        virtual ~Programme() = default;
+
+    private:
+        std::list<Fonction> _fonctions;
+        std::list<Declaration> _declarations;
+    };
+}

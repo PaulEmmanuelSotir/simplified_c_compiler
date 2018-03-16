@@ -1,7 +1,10 @@
-#include <iostream>
 #include "Identificateur.h"
+#include <iostream>
 
-Identificateur::Identificateur()
-{
-  std::cout << "Creation Identificateur" << std::endl;
+namespace SyntaxModel {
+
+    Identificateur::Identificateur()
+    {
+        std::cout << "Creation Identificateur" << std::endl;
+    }
 }

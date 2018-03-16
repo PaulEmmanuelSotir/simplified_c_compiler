@@ -2,9 +2,11 @@
 
 #include "Structure.h"
 
-class While final : public Structure
-{
-public:
-  While();
-  virtual ~While() = default;
-};
+namespace SyntaxModel {
+
+    class While final : public Structure {
+    public:
+        While();
+        virtual ~While() = default;
+    };
+}

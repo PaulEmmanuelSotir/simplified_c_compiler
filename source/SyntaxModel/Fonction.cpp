@@ -1,7 +1,10 @@
-#include <iostream>
 #include "Fonction.h"
+#include <iostream>
 
-Fonction::Fonction()
-{
-  std::cout << "Creation de fonction" << std::endl;
+namespace SyntaxModel {
+
+    Fonction::Fonction()
+    {
+        std::cout << "Creation de fonction" << std::endl;
+    }
 }

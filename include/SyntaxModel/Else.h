@@ -1,13 +1,15 @@
 #pragma once
 
-#include <list>
 #include "Instruction.h"
+#include <list>
 
-class Else final
-{
-public:
-  Else();
+namespace SyntaxModel {
 
-private:
-  std::list<Instruction> _instructions;
-};
+    class Else final {
+    public:
+        Else();
+
+    private:
+        std::list<Instruction> _instructions;
+    };
+}

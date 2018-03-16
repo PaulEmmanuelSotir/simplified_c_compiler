@@ -2,9 +2,11 @@
 
 #include "Instruction.h"
 
-class Expression : public Instruction
-{
-public:
-  Expression();
-  virtual ~Expression() = default;
-};
+namespace SyntaxModel {
+
+    class Expression : public Instruction {
+    public:
+        Expression();
+        virtual ~Expression() = default;
+    };
+}

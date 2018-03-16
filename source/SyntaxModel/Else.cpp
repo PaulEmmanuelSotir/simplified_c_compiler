@@ -1,3 +1,6 @@
 #include "Else.h"
 
-Else::Else() {}
+namespace SyntaxModel {
+
+    Else::Else() {}
+}

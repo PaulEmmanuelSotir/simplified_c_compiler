@@ -1,3 +1,6 @@
 #include "If.h"
 
-Else::Else() {}
+namespace SyntaxModel {
+
+    Else::Else() {}
+}

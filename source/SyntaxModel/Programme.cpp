@@ -1,7 +1,10 @@
-#include <iostream>
 #include "Programme.h"
+#include <iostream>
 
-Programme::Programme()
-{
-  std::cout << "Creation d'un programme" << std::endl;
+namespace SyntaxModel {
+
+    Programme::Programme()
+    {
+        std::cout << "Creation d'un programme" << std::endl;
+    }
 }

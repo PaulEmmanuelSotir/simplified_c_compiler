@@ -1,9 +1,11 @@
 #pragma once
 
-class Identificateur final
-{
-  public:
-    Identificateur();
+namespace SyntaxModel {
 
-  private:
-};
+    class Identificateur final {
+    public:
+        Identificateur();
+
+    private:
+    };
+}

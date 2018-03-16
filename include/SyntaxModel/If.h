@@ -1,15 +1,16 @@
 #pragma once
 #include <optional>
 
-#include "Structure.h"
 #include "Else.h"
+#include "Structure.h"
 
-class If final : public Structure
-{
-public:
-  If();
-  virtual ~If() = default;
+namespace SyntaxModel {
+    class If final : public Structure {
+    public:
+        If();
+        virtual ~If() = default;
 
-private:
-  Else _clauseElse;
-};
+    private:
+        Else _clauseElse;
+    };
+}

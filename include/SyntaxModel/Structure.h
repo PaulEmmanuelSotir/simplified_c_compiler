@@ -2,16 +2,18 @@
 #pragma once
 #include <list>
 
-#include "Instruction.h"
 #include "Expression.h"
+#include "Instruction.h"
 
-class Structure : public Instruction
-{
-public:
-  Structure();
-  ~Structure();
+namespace SyntaxModel {
 
-private:
-  Expression _condition;
-  std::list<Instruction> _instructions;
-};
+    class Structure : public Instruction {
+    public:
+        Structure();
+        ~Structure();
+
+    private:
+        Expression _condition;
+        std::list<Instruction> _instructions;
+    };
+}
