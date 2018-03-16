@@ -39,7 +39,7 @@ DEPDIR = dep
 # Library paths
 LIBS = -L ./antlr/runtime_source/dist
 # List of include paths
-INCLUDES = ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
+INCLUDES = -I ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 
 ifdef DEBUG
 BUILD_PATH = ./$(OUTPUT_DIR)/$(DEBUGDIR)
@@ -81,7 +81,7 @@ help:
 # Build object files
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@mkdir -p $(DEP_PATH)
-	$(CC) $(CPPFLAGS) $(DEBUGFLAGS) -I $(INCLUDES) $(LIBS) -MMD -MP -MF $(DEP_PATH)/$*.d -c $< -o $@
+	$(CC) $(CPPFLAGS) $(DEBUGFLAGS) $(INCLUDES) $(LIBS) -MMD -MP -MF $(DEP_PATH)/$*.d -c $< -o $@
 
 # Build main target
 $(BUILD_PATH)/$(EXE_NAME): $(OBJS)
