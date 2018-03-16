@@ -27,7 +27,7 @@ HDR_EXT = h
 # Source directory
 SRCDIR = source
 # Headers directory
-INCDIR = headers
+INCDIR = include
 # Main output directory
 OUTPUT_DIR = bin
 # Release output directory
