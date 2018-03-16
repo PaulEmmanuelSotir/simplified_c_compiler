@@ -1,13 +1,14 @@
 #pragma once
 
-#include <iostream>
 #include "Identificateur.h"
-using namespace std;
+#include "Instruction.h"
 
-class Declaration : public Instruction {
+class Declaration final : public Instruction
+{
 public:
   Declaration();
-  ~Declaration();
+  virtual ~Declaration() = default;
+
 private:
-  Identificateur nom;
+  Identificateur _nom;
 };

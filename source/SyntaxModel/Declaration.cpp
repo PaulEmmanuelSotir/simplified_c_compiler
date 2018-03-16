@@ -1,5 +1,7 @@
+#include <iostream>
 #include "Declaration.h"
 
-Declaration::Declaration(){
-  cout << "Creation de declaration" << endl;
+Declaration::Declaration()
+{
+  std::cout << "Creation de declaration" << std::endl;
 }

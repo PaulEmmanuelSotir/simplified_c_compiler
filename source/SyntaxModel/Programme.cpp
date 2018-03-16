@@ -1,9 +1,7 @@
+#include <iostream>
 #include "Programme.h"
 
-Programme::Programme(){
-  cout<<"Creation d'un programme" << endl;
-}
-
-Programme::~Programme(){
-
+Programme::Programme()
+{
+  std::cout << "Creation d'un programme" << std::endl;
 }

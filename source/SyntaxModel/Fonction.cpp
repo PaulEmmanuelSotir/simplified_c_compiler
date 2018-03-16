@@ -1,9 +1,7 @@
+#include <iostream>
 #include "Fonction.h"
 
-Fonction::Fonction(){
-  cout<<"Creation de fonction"<<endl;
-}
-
-Fonction::~Fonction(){
-  
+Fonction::Fonction()
+{
+  std::cout << "Creation de fonction" << std::endl;
 }

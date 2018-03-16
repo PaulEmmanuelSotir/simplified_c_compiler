@@ -1,9 +1,7 @@
+#include <iostream>
 #include "Identificateur.h"
 
-Identificateur::Identificateur() {
-  cout << "Creation Identificateur" << endl;
-}
-
-Identificateur::~Identificateur() {
-
+Identificateur::Identificateur()
+{
+  std::cout << "Creation Identificateur" << std::endl;
 }

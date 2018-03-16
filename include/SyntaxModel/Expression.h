@@ -2,7 +2,9 @@
 
 #include "Instruction.h"
 
-class Expression : public Instruction {
-  Instruction();
-  ~Instruction();
+class Expression : public Instruction
+{
+public:
+  Expression();
+  virtual ~Expression() = default;
 };

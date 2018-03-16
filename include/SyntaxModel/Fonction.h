@@ -1,15 +1,18 @@
 #pragma once
-
 #include <iostream>
-#include "Identificateur.h"
-using namespace std;
 
-class Fonction {
+#include "Identificateur.h"
+#include "Declaration.h"
+#include "Instruction.h"
+
+class Fonction final
+{
 public:
   Fonction();
-  ~Fonction();
+  virtual ~Fonction() = default;
+
 private:
-  list<Declaration> declarations;
-  list<Instruction> instructions;
-  Identificateur nom;
+  std::list<Declaration> _declarations;
+  std::list<Instruction> _instructions;
+  Identificateur _nom;
 };

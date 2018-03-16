@@ -1,14 +1,17 @@
 
 #pragma once
+#include <list>
 
 #include "Instruction.h"
 #include "Expression.h"
-#include <list>
 
-class Structure : public Instruction {
+class Structure : public Instruction
+{
+public:
   Structure();
   ~Structure();
+
 private:
-  Expression condition;
-  list<Instruction> instructions;
+  Expression _condition;
+  std::list<Instruction> _instructions;
 };

@@ -1,11 +1,13 @@
 #pragma once
 
 #include <list>
+#include "Instruction.h"
 
-class Else {
+class Else final
+{
+public:
   Else();
-  ~Else();
 
-  private:
-    list<Instruction> instructions;
+private:
+  std::list<Instruction> _instructions;
 };

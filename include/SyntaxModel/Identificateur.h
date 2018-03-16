@@ -1,11 +1,9 @@
 #pragma once
 
-#include <iostream>
-using namespace std;
+class Identificateur final
+{
+  public:
+    Identificateur();
 
-class Identificateur {
-public:
-
-private:
-
+  private:
 };

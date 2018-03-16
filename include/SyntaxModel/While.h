@@ -2,8 +2,9 @@
 
 #include "Structure.h"
 
-class While : public Structure {
+class While final : public Structure
+{
+public:
   While();
-  ~While();
-
+  virtual ~While() = default;
 };
