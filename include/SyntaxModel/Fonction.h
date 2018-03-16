@@ -9,6 +9,7 @@ public:
   Fonction();
   ~Fonction();
 private:
-  list<Declaration *> declarations;
+  list<Declaration> declarations;
+  list<Instruction> instructions;
   Identificateur nom;
 };

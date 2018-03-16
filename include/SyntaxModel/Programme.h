@@ -14,7 +14,7 @@ public:
   Programme();
   ~Programme();
 private:
-  list<Fonction *> fonctions;
-  list<Declaration *>declarations;
+  list<Fonction> fonctions;
+  list<Declaration>declarations;
 
 };
