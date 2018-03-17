@@ -1,6 +1,6 @@
 grammar GramComp;
 
-programme: (include | declaration | definition | function)*;
+programme: (INCLUDE | declaration | definition | function)*;
 
 WS: [ \t\n\r]+ -> skip;
 
@@ -13,8 +13,6 @@ instruction:
 	| expression ';'											# expression_instr
 	| ';'														# semicolon_instr
 ;
-
-include: '#include' (('<' (CHAR_LITERAL)+ '>') | string_literal);
 
 function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
 
@@ -43,8 +41,8 @@ expression:
 	| expression '>=' expression	# supequal
 	| affectation					# affect_epxr
 	| INTEGER						# integer
-	| quoted_char_literal			# char
-	| string_literal				# string
+	| QUOTED_CHAR_LITERAL			# char
+	| STRING_LITERAL				# string
 	| IDENTIFIER					# identifier
 ;
 
@@ -67,13 +65,9 @@ affectation:
 	| IDENTIFIER '[' expression ']' '=' expression	# table
 ;
 
-string_literal: '"' (CHAR_LITERAL)* '"';
-
-quoted_char_literal: '\'' CHAR_LITERAL '\'';
-
 definition:
 	type IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* ';'            # define
-	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | string_literal) ';' # deftable
+	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | STRING_LITERAL) ';' # deftable
 ;
 
 declaration:
@@ -83,7 +77,7 @@ declaration:
 
 array_expr: '{' const_expr (',' const_expr)* '}' | '[]';
 
-const_expr: INTEGER | string_literal | quoted_char_literal;
+const_expr: INTEGER | STRING_LITERAL | QUOTED_CHAR_LITERAL;
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
@@ -94,4 +88,7 @@ INTEGER: [0-9]+;
 INT32_T: 'int' | 'int32_t';
 INT64_T: 'long' | 'int64_t';
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-CHAR_LITERAL: [^\\\n\r]|'\\'.;
+fragment CHAR_LITERAL: ~('\\'|'\n'|'\r') | '\\'.;
+QUOTED_CHAR_LITERAL: '\'' CHAR_LITERAL '\'';
+STRING_LITERAL: '"' (CHAR_LITERAL)* '"';
+INCLUDE: '#include' ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);
