@@ -36,7 +36,7 @@ DEBUGDIR = debug
 # Dependency files directory
 DEPDIR = dep
 # Libraries
-LIBS = -L/mnt/d/Programation/TPs_4IF/2/grammaire/pld_comp/antlr/runtime_source/dist/ -l:libantlr4-runtime.a
+LIBS = -L./antlr/runtime_source/dist/ -l:libantlr4-runtime.a
 # List of include paths
 INCLUDES = -I ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 

@@ -71,7 +71,7 @@ string_literal: '"' (CHAR_LITERAL)* '"';
 
 quoted_char_literal: '\'' CHAR_LITERAL '\'';
 
-CHAR_LITERAL: [^\\\n\r] | '\\' .;
+CHAR_LITERAL: [^\\\n\r]|'\\'.;
 
 INTEGER: [0-9]+;
 
