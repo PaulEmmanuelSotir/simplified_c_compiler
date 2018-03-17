@@ -2,6 +2,8 @@ grammar GramComp;
 
 programme: (include | declaration | definition | function)*;
 
+WS: [ \t\n\r]+ -> skip;
+
 instruction:
 	'break' ';'													# break
 	| 'continue' ';'											# continue
@@ -12,7 +14,7 @@ instruction:
 	| ';'														# semicolon_instr
 ;
 
-include: '#include' (('<' (CHAR_LITERAL)* '>') | string_literal);
+include: '#include' (('<' (CHAR_LITERAL)+ '>') | string_literal);
 
 function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
 
@@ -65,24 +67,18 @@ affectation:
 	| IDENTIFIER '[' expression ']' '=' expression	# table
 ;
 
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-
 string_literal: '"' (CHAR_LITERAL)* '"';
 
 quoted_char_literal: '\'' CHAR_LITERAL '\'';
 
-CHAR_LITERAL: [^\\\n\r]|'\\'.;
-
-INTEGER: [0-9]+;
-
 definition:
-	type IDENTIFIER '=' expression ';' # define
+	type IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* ';'            # define
 	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | string_literal) ';' # deftable
 ;
 
 declaration:
-	type IDENTIFIER ';'								# declare
-	| atomic_type IDENTIFIER '[' INTEGER ']' ';'	# decltable
+	type IDENTIFIER (',' IDENTIFIER)* ';'        # declare
+	| atomic_type IDENTIFIER '[' INTEGER ']' ';' # decltable
 ;
 
 array_expr: '{' const_expr (',' const_expr)* '}' | '[]';
@@ -91,10 +87,11 @@ const_expr: INTEGER | string_literal | quoted_char_literal;
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
-CHAR: 'char';
-INT32_T: 'int';
-INT64_T: 'long';
-
 type: atomic_type ('[' ']')?;
 
-WS : [ \t\n\r]+ -> skip;
+CHAR: 'char';
+INTEGER: [0-9]+;
+INT32_T: 'int' | 'int32_t';
+INT64_T: 'long' | 'int64_t';
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+CHAR_LITERAL: [^\\\n\r]|'\\'.;
