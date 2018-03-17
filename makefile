@@ -1,7 +1,6 @@
 ############################################################################################
 ################################## GENERIC MAKEFILE ########################################
 ############################################################################################
-# TODO: gèrer les sous-dossiers / fichiers ayants le mêmes noms dans des dossiers différents
 # TODO: gèrer les extentions .hpp, .cxx, ...
 
 # Debug mode (comment this line to build project in release mode)
@@ -17,7 +16,7 @@ CPPFLAGS = -Wall -std=c++14 -O0
 # Debug flags
 DEBUGFLAGS = -g
 # Resulting program file name
-EXE_NAME = c_gram_comp
+EXE_NAME = c_compiler
 # The source file extentions
 SRC_EXT = cpp
 # The header file types
@@ -36,8 +35,8 @@ RELEASEDIR = release
 DEBUGDIR = debug
 # Dependency files directory
 DEPDIR = dep
-# Library paths
-LIBS = -L ./antlr/runtime_source/dist
+# Libraries
+LIBS = -L/mnt/d/Programation/TPs_4IF/2/grammaire/pld_comp/antlr/runtime_source/dist/ -l:libantlr4-runtime.a
 # List of include paths
 INCLUDES = -I ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 
@@ -50,23 +49,23 @@ endif
 # Source directory path
 SRC_PATH = ./$(SRCDIR)
 # Dependencies path
-DEP_PATH = ./$(BUILD_PATH)/$(DEPDIR)
+DEP_PATH = $(BUILD_PATH)/$(DEPDIR)
 
 # List of source files
-SOURCES = $(wildcard $(SRC_PATH)/*.$(SRC_EXT))
+SOURCES = $(wildcard $(SRC_PATH)/*.$(SRC_EXT)) $(wildcard $(SRC_PATH)/**/*.$(SRC_EXT))
 # List of object files
 OBJS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 # List of dependency files
 DEPS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(DEP_PATH)/%.d)
+# Source directories (VPATH is internally used by make)
+VPATH := $(dir $(SOURCES))
 
 .PHONY: all clean rebuild help
 
 all: $(BUILD_PATH)/$(EXE_NAME)
 
 clean:
-	$(RM) $(BUILD_PATH)/*.o
-	$(RM) $(BUILD_PATH)/$(EXE_NAME)
-	$(RM) $(DEP_PATH)/*.d
+	$(RM) $(BUILD_PATH) -r
 	
 rebuild: clean all
 
@@ -80,9 +79,9 @@ help:
 
 # Build object files
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
-	@mkdir -p $(DEP_PATH)
-	$(CC) $(CPPFLAGS) $(DEBUGFLAGS) $(INCLUDES) $(LIBS) -MMD -MP -MF $(DEP_PATH)/$*.d -c $< -o $@
+	mkdir -p $(dir $(DEPS)) $(dir $(OBJS))
+	$(CC) $(CPPFLAGS) $(DEBUGFLAGS) $(INCLUDES) -MMD -MP -MF $(DEP_PATH)/$*.d -c $< -o $@
 
 # Build main target
 $(BUILD_PATH)/$(EXE_NAME): $(OBJS)
-	$(CC) $(OBJS) -o $(BUILD_PATH)/$(EXE_NAME)
+	$(CC) $(OBJS) -o $(BUILD_PATH)/$(EXE_NAME) $(LIBS)
