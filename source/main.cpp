@@ -1,14 +1,70 @@
-#include <iostream>
-#include <cstdlib>
-
 #include "antlr4-runtime.h"
+#include <cstdlib>
+#include <iostream>
+
 #include "SyntaxModel/Programme.h"
 #include "antlr/GramCompBaseVisitor.h"
+#include "antlr/GramCompLexer.h"
+#include "antlr/GramCompParser.h"
 
-using namespace std;
-
-int main()
+void parse(std::ifstream& fs)
 {
-    cout << "Hello World!" << endl;
+    // Stream it to lexer
+    std::cout << "\n# Executing lexer\n";
+    antlr4::ANTLRInputStream input(fs);
+    GramCompLexer lexer(&input);
+
+    // Print tokens
+    antlr4::CommonTokenStream tokens(&lexer);
+    tokens.fill();
+    for (auto token : tokens.getTokens()) {
+        std::cout << token->toString() << std::endl;
+    }
+
+    // Parse tokens
+    std::cout << "\n# Parsing tokens to obtain AST\n";
+    GramCompParser parser(&tokens);
+    antlr4::tree::ParseTree* tree = parser.programme();
+    std::cout << tree->toStringTree(&parser) << std::endl;
+}
+
+void compile(std::ifstream& fs, const std::string& target)
+{
+    // Parse AST from input file
+    parse(fs);
+
+    // Static analysis
+    // TODO: ...
+
+    // Optimization
+    // TODO: ...
+
+    // Compilation to x86 target
+    // TODO: ...
+}
+
+int main(int argc, char* argv[])
+{
+    std::string target = "output";
+    if (argc < 2) {
+        std::cout << "No input file to compile";
+        return EXIT_FAILURE;
+    } else if (argc >= 3) {
+        // Target executable filename
+        target = argv[3];
+    }
+
+    // Open source file and compile it
+    std::ifstream fs;
+    fs.open(argv[1], std::fstream::in);
+    if (fs.is_open()) {
+        std::cout << "### Compiling '" << argv[1] << "' ###" << std::endl;
+        compile(fs, target);
+        fs.close();
+    } else {
+        std::cout << "Couldn't read input file '" << argv[1] << "'";
+        return EXIT_FAILURE;
+    }
+
     return EXIT_SUCCESS;
 }
