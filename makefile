@@ -9,7 +9,7 @@ DEBUG = true
 # Compiler
 CC = g++
 # Command used to remove files
-RM = rm -f
+RM = -rm -f
 # Compiler and pre-processor options
 CPPFLAGS = -Wall -std=c++14 -O0
 # Add -Ofast for opt
@@ -60,14 +60,19 @@ DEPS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(DEP_PATH)/%.d)
 # Source directories (VPATH is internally used by make)
 VPATH := $(dir $(SOURCES))
 
-.PHONY: all clean rebuild help
+.PHONY: all clean compile_grammar rebuild help
 
 all: $(BUILD_PATH)/$(EXE_NAME)
 
 clean:
 	$(RM) $(BUILD_PATH) -r
-	
-rebuild: clean all
+	$(RM) ./include/antlr -r
+	$(RM) ./source/antlr -r
+
+compile_grammar:
+	./compile_grammar.sh
+
+rebuild: clean compile_grammar all
 
 help:
 	@echo '				### MAKEFILE HELP ###'
@@ -75,6 +80,7 @@ help:
 	@echo '	all 	...'
 	@echo '	clean 	...'
 	@echo '	rebuild ...'
+	@echo '	compile_grammar	...'
 	@echo '	help	...'
 
 # Build object files

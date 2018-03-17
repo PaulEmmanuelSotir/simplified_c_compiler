@@ -9,19 +9,17 @@ instruction:
 	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
-	| ';'														# semicolon_instr;
+	| ';'														# semicolon_instr
+;
 
-include:
-	'#' 'include' '<' STRING_LITERAL '>'	# includeCroch
-	| '#' 'include' '"' STRING_LITERAL '"'	# includeGuill;
+include: '#include' (('<' (CHAR_LITERAL)* '>') | string_literal);
 
-function: (type | 'void') IDENTIFIER '(' args? ')' '{' (
-		function_init
-	)* (instruction)* '}' # function_def;
+function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
 
 args:
 	'void'										# void_arg
-	| type IDENTIFIER (',' type IDENTIFIER)*	# args_list;
+	| type IDENTIFIER (',' type IDENTIFIER)*	# args_list
+;
 
 function_init:
 	declaration		# functioninit_decl
@@ -43,13 +41,15 @@ expression:
 	| expression '>=' expression	# supequal
 	| affectation					# affect_epxr
 	| INTEGER						# integer
-	| CHAR_LITERAL					# char
-	| STRING_LITERAL				# string
-	| IDENTIFIER					# identifier;
+	| quoted_char_literal			# char
+	| string_literal				# string
+	| IDENTIFIER					# identifier
+;
 
 structure:
 	'if' '(' expression ')' '{' (instruction)* '}' else_structure?	# if
-	| 'while' '(' expression ')' '{' (instruction)* '}'				# while;
+	| 'while' '(' expression ')' '{' (instruction)* '}'				# while
+;
 
 else_structure: 'else' '{' (instruction)* '}' # else;
 
@@ -62,30 +62,32 @@ affectation:
 	| IDENTIFIER '%=' expression					# pourcentmentation
 	| IDENTIFIER ('++' | '--')						# incunairepost
 	| ( '++' | '--') IDENTIFIER						# incunairepre
-	| IDENTIFIER '[' expression ']' '=' expression	# table;
+	| IDENTIFIER '[' expression ']' '=' expression	# table
+;
 
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 
-STRING_LITERAL: '"' ([^\\\r\n"] | '\\' .)* '"';
+string_literal: '"' (CHAR_LITERAL)* '"';
 
-CHAR_LITERAL: '\'' ([^\\\n\r] | '\\' .) '\'';
+quoted_char_literal: '\'' CHAR_LITERAL '\'';
+
+CHAR_LITERAL: [^\\\n\r] | '\\' .;
 
 INTEGER: [0-9]+;
 
 definition:
 	type IDENTIFIER '=' expression ';' # define
-	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (
-		array_expr
-		| STRING_LITERAL
-	) ';' # deftable;
+	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | string_literal) ';' # deftable
+;
 
 declaration:
 	type IDENTIFIER ';'								# declare
-	| atomic_type IDENTIFIER '[' INTEGER ']' ';'	# decltable;
+	| atomic_type IDENTIFIER '[' INTEGER ']' ';'	# decltable
+;
 
 array_expr: '{' const_expr (',' const_expr)* '}' | '[]';
 
-const_expr: INTEGER | CHAR | CHAR_LITERAL;
+const_expr: INTEGER | string_literal | quoted_char_literal;
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
@@ -93,4 +95,6 @@ CHAR: 'char';
 INT32_T: 'int';
 INT64_T: 'long';
 
-type: atomic_type ( '[' ']')?;
+type: atomic_type ('[' ']')?;
+
+WS : [ \t\n\r]+ -> skip;
