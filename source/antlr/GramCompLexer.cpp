@@ -1,7 +1,7 @@
 
 // Generated from .\GramComp.g4 by ANTLR 4.7.1
 
-#include "GramCompLexer.h"
+#include "antlr/GramCompLexer.h"
 
 using namespace antlr4;
 

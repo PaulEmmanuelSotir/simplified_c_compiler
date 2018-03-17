@@ -1,9 +1,8 @@
 
 // Generated from .\GramComp.g4 by ANTLR 4.7.1
 
-#include "GramCompVisitor.h"
-
-#include "GramCompParser.h"
+#include "antlr/GramCompParser.h"
+#include "antlr/GramCompVisitor.h"
 
 using namespace antlrcpp;
 using namespace antlr4;

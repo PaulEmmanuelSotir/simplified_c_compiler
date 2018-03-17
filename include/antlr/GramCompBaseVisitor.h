@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "GramCompVisitor.h"
+#include "antlr/GramCompVisitor.h"
 #include "antlr4-runtime.h"
 
 /**
