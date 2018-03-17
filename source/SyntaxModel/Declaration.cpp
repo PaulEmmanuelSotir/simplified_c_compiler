@@ -1,10 +1,10 @@
-#include "Declaration.h"
+#include "SyntaxModel/Declaration.h"
 #include <iostream>
 
 namespace SyntaxModel {
 
     Declaration::Declaration()
     {
-        td::cout << "Creation de declaration" << std::endl;
+        std::cout << "Creation de declaration" << std::endl;
     }
 }

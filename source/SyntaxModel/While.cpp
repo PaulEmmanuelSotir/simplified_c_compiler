@@ -1,4 +1,4 @@
-#include "While.h"
+#include "SyntaxModel/While.h"
 
 namespace SyntaxModel {
 

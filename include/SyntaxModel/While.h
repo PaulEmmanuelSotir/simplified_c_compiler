@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Structure.h"
+#include "SyntaxModel/Structure.h"
 
 namespace SyntaxModel {
 

@@ -1,19 +1,19 @@
 
 #pragma once
-#include <list>
+#include <vector>
 
-#include "Expression.h"
-#include "Instruction.h"
+#include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
     class Structure : public Instruction {
     public:
         Structure();
-        ~Structure();
+        virtual ~Structure() = default;
 
     private:
         Expression _condition;
-        std::list<Instruction> _instructions;
+        std::vector<Instruction> _instructions;
     };
 }

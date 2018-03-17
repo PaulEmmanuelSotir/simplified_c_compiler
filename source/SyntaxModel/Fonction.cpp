@@ -1,5 +1,6 @@
-#include "Fonction.h"
 #include <iostream>
+
+#include "SyntaxModel/Fonction.h"
 
 namespace SyntaxModel {
 

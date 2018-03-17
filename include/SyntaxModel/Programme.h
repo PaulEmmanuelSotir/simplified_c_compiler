@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include <list>
 #include <map>
+#include <vector>
 
-#include "Declaration.h"
-#include "Fonction.h"
+#include "SyntaxModel/Declaration.h"
+#include "SyntaxModel/Fonction.h"
 
 namespace SyntaxModel {
 
@@ -14,7 +14,7 @@ namespace SyntaxModel {
         virtual ~Programme() = default;
 
     private:
-        std::list<Fonction> _fonctions;
-        std::list<Declaration> _declarations;
+        std::vector<Fonction> _fonctions;
+        std::vector<Declaration> _declarations;
     };
 }

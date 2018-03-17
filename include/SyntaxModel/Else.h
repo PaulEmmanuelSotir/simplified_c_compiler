@@ -1,7 +1,7 @@
 #pragma once
+#include <vector>
 
-#include "Instruction.h"
-#include <list>
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
@@ -10,6 +10,6 @@ namespace SyntaxModel {
         Else();
 
     private:
-        std::list<Instruction> _instructions;
+        std::vector<Instruction> _instructions;
     };
 }

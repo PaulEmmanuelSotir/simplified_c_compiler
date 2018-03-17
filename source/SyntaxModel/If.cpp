@@ -1,6 +1,6 @@
-#include "If.h"
+#include "SyntaxModel/If.h"
 
 namespace SyntaxModel {
 
-    Else::Else() {}
+    If::If() {}
 }

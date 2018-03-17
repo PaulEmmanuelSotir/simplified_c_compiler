@@ -1,9 +1,10 @@
 #pragma once
 #include <iostream>
+#include <vector>
 
-#include "Declaration.h"
-#include "Identificateur.h"
-#include "Instruction.h"
+#include "SyntaxModel/Declaration.h"
+#include "SyntaxModel/Identificateur.h"
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
@@ -13,8 +14,8 @@ namespace SyntaxModel {
         virtual ~Fonction() = default;
 
     private:
-        std::list<Declaration> _declarations;
-        std::list<Instruction> _instructions;
+        std::vector<Declaration> _declarations;
+        std::vector<Instruction> _instructions;
         Identificateur _nom;
     };
 }

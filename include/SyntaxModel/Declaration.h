@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Identificateur.h"
-#include "Instruction.h"
+#include "SyntaxModel/Identificateur.h"
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
