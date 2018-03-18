@@ -10,7 +10,7 @@ namespace SyntaxModel {
     class Structure : public Instruction {
     public:
         Structure();
-        ~Structure();
+        ~Structure() = default;
 
     private:
         Expression _condition;

@@ -5,7 +5,5 @@ namespace SyntaxModel {
     class Identificateur final {
     public:
         Identificateur();
-
-    private:
     };
 }

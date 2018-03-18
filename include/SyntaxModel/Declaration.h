@@ -2,6 +2,7 @@
 
 #include "Identificateur.h"
 #include "Instruction.h"
+#include "AtomicType.h"
 
 namespace SyntaxModel {
 
@@ -12,5 +13,6 @@ namespace SyntaxModel {
 
     private:
         Identificateur _nom;
+        AtomicType _type;
     };
 }
