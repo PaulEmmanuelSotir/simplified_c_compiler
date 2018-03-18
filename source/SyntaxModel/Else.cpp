@@ -2,5 +2,8 @@
 
 namespace SyntaxModel {
 
-    Else::Else() {}
+    Else::Else(const std::vector<Instruction>& instructions)
+        : _instructions(instructions)
+    {
+    }
 }

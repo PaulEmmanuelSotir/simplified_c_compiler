@@ -3,8 +3,8 @@
 
 namespace SyntaxModel {
 
-    Declaration::Declaration()
+    Declaration::Declaration(const Identifier& id)
+        : _id(id)
     {
-        std::cout << "Creation de declaration" << std::endl;
     }
 }

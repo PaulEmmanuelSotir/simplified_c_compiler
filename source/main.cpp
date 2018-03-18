@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "SyntaxModel/Programme.h"
+#include "SyntaxModel/Program.h"
 #include "antlr/GramCompBaseVisitor.h"
 #include "antlr/GramCompLexer.h"
 #include "antlr/GramCompParser.h"

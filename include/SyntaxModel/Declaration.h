@@ -1,16 +1,16 @@
 #pragma once
 
-#include "SyntaxModel/Identificateur.h"
+#include "SyntaxModel/Identifier.h"
 #include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
     class Declaration final : public Instruction {
     public:
-        Declaration();
+        Declaration(const Identifier& id);
         virtual ~Declaration() = default;
 
     private:
-        Identificateur _nom;
+        const Identifier _id;
     };
 }

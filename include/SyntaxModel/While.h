@@ -6,7 +6,7 @@ namespace SyntaxModel {
 
     class While final : public Structure {
     public:
-        While();
+        While(const Expression& condition, const std::vector<Instruction>& instructions);
         virtual ~While() = default;
     };
 }

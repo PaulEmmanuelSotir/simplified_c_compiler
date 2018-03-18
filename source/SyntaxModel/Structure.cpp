@@ -4,8 +4,9 @@
 
 namespace SyntaxModel {
 
-    Structure::Structure()
+    Structure::Structure(const Expression& condition, const std::vector<Instruction>& instructions)
+        : _condition(condition)
+        , _instructions(instructions)
     {
-        std::cout << "Creation de Structure" << std::endl;
     }
 }

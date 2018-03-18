@@ -7,9 +7,9 @@ namespace SyntaxModel {
 
     class Else final {
     public:
-        Else();
+        Else(const std::vector<Instruction>& instructions);
 
     private:
-        std::vector<Instruction> _instructions;
+        const std::vector<Instruction> _instructions;
     };
 }

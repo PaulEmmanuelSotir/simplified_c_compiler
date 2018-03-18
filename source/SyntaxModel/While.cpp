@@ -2,5 +2,8 @@
 
 namespace SyntaxModel {
 
-    While::While() {}
+    While::While(const Expression& condition, const std::vector<Instruction>& instructions)
+        : Structure(condition, instructions)
+    {
+    }
 }
