@@ -1,6 +1,8 @@
 grammar GramComp;
 
-programme: (include | declaration | definition | function)*;
+program: (INCLUDE | declaration | definition | function)*;
+
+WS: [ \t\n\r]+ -> skip;
 
 instruction:
 	'break' ';'													# break
@@ -9,19 +11,15 @@ instruction:
 	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
-	| ';'														# semicolon_instr;
+	| ';'														# semicolon_instr
+;
 
-include:
-	'#' 'include' '<' STRING_LITERAL '>'	# includeCroch
-	| '#' 'include' '"' STRING_LITERAL '"'	# includeGuill;
-
-function: (type | 'void') IDENTIFIER '(' args? ')' '{' (
-		function_init
-	)* (instruction)* '}' # function_def;
+function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
 
 args:
 	'void'										# void_arg
-	| type IDENTIFIER (',' type IDENTIFIER)*	# args_list;
+	| type IDENTIFIER (',' type IDENTIFIER)*	# args_list
+;
 
 function_init:
 	declaration		# functioninit_decl
@@ -43,13 +41,15 @@ expression:
 	| expression '>=' expression	# supequal
 	| affectation					# affect_epxr
 	| INTEGER						# integer
-	| CHAR_LITERAL					# char
+	| QUOTED_CHAR_LITERAL			# char
 	| STRING_LITERAL				# string
-	| IDENTIFIER					# identifier;
+	| IDENTIFIER					# identifier
+;
 
 structure:
 	'if' '(' expression ')' '{' (instruction)* '}' else_structure?	# if
-	| 'while' '(' expression ')' '{' (instruction)* '}'				# while;
+	| 'while' '(' expression ')' '{' (instruction)* '}'				# while
+;
 
 else_structure: 'else' '{' (instruction)* '}' # else;
 
@@ -62,35 +62,33 @@ affectation:
 	| IDENTIFIER '%=' expression					# pourcentmentation
 	| IDENTIFIER ('++' | '--')						# incunairepost
 	| ( '++' | '--') IDENTIFIER						# incunairepre
-	| IDENTIFIER '[' expression ']' '=' expression	# table;
-
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-
-STRING_LITERAL: '"' ([^\\\r\n"] | '\\' .)* '"';
-
-CHAR_LITERAL: '\'' ([^\\\n\r] | '\\' .) '\'';
-
-INTEGER: [0-9]+;
+	| IDENTIFIER '[' expression ']' '=' expression	# table
+;
 
 definition:
-	type IDENTIFIER '=' expression ';' # define
-	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (
-		array_expr
-		| STRING_LITERAL
-	) ';' # deftable;
+	type IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* ';'            # define
+	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | STRING_LITERAL) ';' # deftable
+;
 
 declaration:
-	type IDENTIFIER ';'								# declare
-	| atomic_type IDENTIFIER '[' INTEGER ']' ';'	# decltable;
+	type IDENTIFIER (',' IDENTIFIER)* ';'        # declare
+	| atomic_type IDENTIFIER '[' INTEGER ']' ';' # decltable
+;
 
 array_expr: '{' const_expr (',' const_expr)* '}' | '[]';
 
-const_expr: INTEGER | CHAR | CHAR_LITERAL;
+const_expr: INTEGER | STRING_LITERAL | QUOTED_CHAR_LITERAL;
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
-CHAR: 'char';
-INT32_T: 'int';
-INT64_T: 'long';
+type: atomic_type ('[' ']')?;
 
-type: atomic_type ( '[' ']')?;
+CHAR: 'char';
+INTEGER: [0-9]+;
+INT32_T: 'int' | 'int32_t';
+INT64_T: 'long' | 'int64_t';
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+fragment CHAR_LITERAL: ~('\\'|'\n'|'\r') | '\\'.;
+QUOTED_CHAR_LITERAL: '\'' CHAR_LITERAL '\'';
+STRING_LITERAL: '"' (CHAR_LITERAL)* '"';
+INCLUDE: '#include' ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);

@@ -3,9 +3,9 @@
 
 namespace SyntaxModel {
 
-    class Identificateur final {
+    class Identifier final {
     public:
-        Identificateur(const std::string& name);
+        Identifier(const std::string& name);
 
     private:
         const std::string _name;

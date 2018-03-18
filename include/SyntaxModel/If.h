@@ -1,16 +1,15 @@
 #pragma once
-#include <optional>
 
-#include "Else.h"
-#include "Structure.h"
+#include "SyntaxModel/Else.h"
+#include "SyntaxModel/Structure.h"
 
 namespace SyntaxModel {
     class If final : public Structure {
     public:
-        If();
-        virtual ~If() = default;
+        If(const Expression* condition, const std::vector<const Instruction*>& instructions, const Else* else_clause);
+        virtual ~If();
 
     private:
-        Else _clauseElse;
+        const Else* _else_clause;
     };
 }

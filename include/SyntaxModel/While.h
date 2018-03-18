@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Structure.h"
+#include "SyntaxModel/Structure.h"
 
 namespace SyntaxModel {
 
     class While final : public Structure {
     public:
-        While();
+        While(const Expression* condition, const std::vector<const Instruction*>& instructions);
         virtual ~While() = default;
     };
 }

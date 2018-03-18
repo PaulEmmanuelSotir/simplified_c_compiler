@@ -1,15 +1,16 @@
 #pragma once
+#include <vector>
 
-#include "Instruction.h"
-#include <list>
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
 
     class Else final {
     public:
-        Else();
+        Else(const std::vector<const Instruction*>& instructions);
+        ~Else();
 
     private:
-        std::list<Instruction> _instructions;
+        const std::vector<const Instruction*> _instructions;
     };
 }

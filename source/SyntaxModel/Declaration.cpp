@@ -1,10 +1,9 @@
-#include "Declaration.h"
-#include <iostream>
+#include "SyntaxModel/Declaration.h"
 
 namespace SyntaxModel {
 
-    Declaration::Declaration()
+    Declaration::Declaration(const Identifier& id)
+        : _id(id)
     {
-        td::cout << "Creation de declaration" << std::endl;
     }
 }
