@@ -9,9 +9,9 @@ antlrcpp::Any visitor::visitProgram(GramCompParser::ProgramContext* ctx)
         includes.push_back(utils::TerminalInfo(inc));
     }
 
-    auto declarations = visit_all<const SyntaxModel::Declaration, GramCompParser::DeclarationContext>(ctx->declaration());
-    auto definitions = visit_all<const SyntaxModel::Definition, GramCompParser::DefinitionContext>(ctx->definition());
-    auto functions = visit_all<const SyntaxModel::Function, GramCompParser::FunctionContext>(ctx->function());
+    auto declarations = visit_all<SyntaxModel::Declaration>(ctx->declaration());
+    auto definitions = visit_all<SyntaxModel::Definition>(ctx->definition());
+    auto functions = visit_all<SyntaxModel::Function>(ctx->function());
 
     return new SyntaxModel::Program(includes, functions, declarations, definitions);
 }
