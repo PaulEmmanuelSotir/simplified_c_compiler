@@ -1,3 +1,5 @@
 bin/
-include/antlr
-source/antlr
+include/grammar
+source/grammar
+*.interp
+*.tokens
