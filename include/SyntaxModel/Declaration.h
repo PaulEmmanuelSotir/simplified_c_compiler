@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Identificateur.h"
+#include "Identifier.h"
 #include "Instruction.h"
 #include "AtomicType.h"
 
@@ -12,7 +12,7 @@ namespace SyntaxModel {
         virtual ~Declaration() = default;
 
     private:
-        Identificateur _nom;
+        Identifier _nom;
         AtomicType _type;
     };
 }

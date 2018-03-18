@@ -2,15 +2,16 @@
 
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/AtomicType.h"
-#include "SyntaxModel/Identificateur.h"
+#include "SyntaxModel/Identifier.h"
 
 namespace  SyntaxModel {
-  class Variable : public Expression{
-    public :
+  class Variable : public Expression {
+    public:
+      Variable();
+      virtual ~Variable();
 
-    private :
+    private:
       AtomicType _type;
-      Identificateur _name;
-
+      Identifier _name;
   };
 }

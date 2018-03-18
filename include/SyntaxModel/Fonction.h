@@ -1,11 +1,11 @@
 #pragma once
 #include <iostream>
 
-#include "Declaration.h"
-#include "Identificateur.h"
-#include "Instruction.h"
-#include "Type.h"
-#include "Arg.h"
+#include "SyntaxModel/Declaration.h"
+#include "SyntaxModel/Identifier.h"
+#include "SyntaxModel/Instruction.h"
+#include "SyntaxModel/Type.h"
+#include "SyntaxModel/Arg.h"
 
 namespace SyntaxModel {
 
@@ -19,6 +19,6 @@ namespace SyntaxModel {
         std::list<Instruction> _instructions;
         std::list<Arg> _arguments;
         Type _typeRetour;
-        Identificateur _nom;
+        Identifier _nom;
     };
 }

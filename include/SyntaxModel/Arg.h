@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Identificateur.h"
+#include "Identifier.h"
 #include "Type.h"
 
 namespace SyntaxModel {
@@ -11,6 +11,6 @@ namespace SyntaxModel {
 
     private:
       Type _type;
-      Identificateur _nom;
+      Identifier _nom;
   };
 }

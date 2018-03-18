@@ -1,16 +1,15 @@
 #pragma once
 
-#include "SyntaxModel/Expression.h"
-#include "SyntaxModel/Variable.h"
+#include "Expression.h"
+#include "Variable.h"
+#include "OperateursAffectation.h"
 
 namespace  SyntaxModel {
-  enum OperateursAffectation{"=","+=","-=","/=","*=","%=","++","--"};
 
-  class Affectation : public Expression{
-    public :
-
-    private :
-      Expression _valeur;
+  class Affectation final : public Expression {
+    private:
+      Expression _expression;
       Variable _var;
+      OperateursAffectation _operateur;
   };
 }
