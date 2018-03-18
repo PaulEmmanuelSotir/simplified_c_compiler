@@ -3,9 +3,9 @@
 #include <iostream>
 
 #include "SyntaxModel/Program.h"
-#include "antlr/GramCompBaseVisitor.h"
-#include "antlr/GramCompLexer.h"
-#include "antlr/GramCompParser.h"
+#include "grammar/GramCompBaseVisitor.h"
+#include "grammar/GramCompLexer.h"
+#include "grammar/GramCompParser.h"
 
 void parse(std::ifstream& fs)
 {
@@ -24,8 +24,10 @@ void parse(std::ifstream& fs)
     // Parse tokens
     std::cout << "\n# Parsing tokens to obtain AST\n";
     GramCompParser parser(&tokens);
-    antlr4::tree::ParseTree* tree = parser.programme();
+    antlr4::tree::ParseTree* tree = parser.program();
     std::cout << tree->toStringTree(&parser) << std::endl;
+
+    // Build syntaxic model (AST)
 }
 
 void compile(std::ifstream& fs, const std::string& target)

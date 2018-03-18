@@ -93,7 +93,7 @@ STRING_LITERAL
 INCLUDE
 
 rule names:
-programme
+program
 instruction
 function
 args

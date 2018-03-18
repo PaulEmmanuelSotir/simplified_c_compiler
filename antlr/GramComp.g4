@@ -1,6 +1,6 @@
 grammar GramComp;
 
-programme: (INCLUDE | declaration | definition | function)*;
+program: (INCLUDE | declaration | definition | function)*;
 
 WS: [ \t\n\r]+ -> skip;
 
