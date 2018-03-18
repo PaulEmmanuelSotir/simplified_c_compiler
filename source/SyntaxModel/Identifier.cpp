@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "SyntaxModel/Identifier.h"
 
 namespace SyntaxModel {

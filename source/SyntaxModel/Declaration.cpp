@@ -1,5 +1,4 @@
 #include "SyntaxModel/Declaration.h"
-#include <iostream>
 
 namespace SyntaxModel {
 
