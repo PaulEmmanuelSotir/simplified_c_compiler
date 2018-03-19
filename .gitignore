@@ -3,3 +3,4 @@ include/grammar
 source/grammar
 *.interp
 *.tokens
+.MAC

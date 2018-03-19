@@ -35,8 +35,12 @@ RELEASEDIR = release
 DEBUGDIR = debug
 # Dependency files directory
 DEPDIR = dep
-# Libraries
+# Libraries (defines different library path if '.MAC' file is found in directory)
+ifneq ("$(wildcard ./.MAC)","")
 LIBS = -L./antlr/mac_antlr4-runtime/lib/ -lantlr4-runtime
+else
+LIBS = -L./antlr/runtime_source/dist/ -l:libantlr4-runtime.a
+endif
 # List of include paths
 INCLUDES = -I ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 
