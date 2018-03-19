@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OperateursUnaires.h"
-#include "Expression.h"
+#include "SyntaxModel/OperateursUnaires.h"
+#include "SyntaxModel/Expression.h"
 
 namespace SyntaxModel {
   class OperationUnaire final : public Expression {

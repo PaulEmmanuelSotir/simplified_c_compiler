@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Expression.h"
+#include "SyntaxModel/Expression.h"
 
 
 namespace SyntaxModel {

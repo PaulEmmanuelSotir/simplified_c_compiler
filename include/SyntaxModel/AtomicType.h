@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TypesPrimitifs.h"
+#include "SyntaxModel/TypesPrimitifs.h"
 
 namespace SyntaxModel {
   class AtomicType {

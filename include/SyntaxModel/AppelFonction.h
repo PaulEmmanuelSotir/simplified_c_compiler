@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 
-#include "Expression.h"
+#include "SyntaxModel/Expression.h"
 
 namespace SyntaxModel {
   class AppelFonction final : public Expression {

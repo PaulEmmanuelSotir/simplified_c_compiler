@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Identifier.h"
-#include "Type.h"
+#include "SyntaxModel/Identifier.h"
+#include "SyntaxModel/Type.h"
 
 namespace SyntaxModel {
   class Arg final {

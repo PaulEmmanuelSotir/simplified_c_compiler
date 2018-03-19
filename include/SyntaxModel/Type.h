@@ -1,6 +1,6 @@
 #pragma once
 
-#include "AtomicType.h"
+#include "SyntaxModel/AtomicType.h"
 
 namespace SyntaxModel {
   class Type final : public AtomicType {

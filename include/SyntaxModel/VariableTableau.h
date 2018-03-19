@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Variable.h"
-#include "Expression.h"
+#include "SyntaxModel/Variable.h"
+#include "SyntaxModel/Expression.h"
 
 namespace  SyntaxModel {
   class VariableTableau final : public Variable {
