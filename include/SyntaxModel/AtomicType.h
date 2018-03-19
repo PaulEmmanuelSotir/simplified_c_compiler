@@ -5,7 +5,7 @@
 namespace SyntaxModel {
   class AtomicType {
     public:
-      AtomicType();
+      AtomicType(const TypesPrimitifs& type);
       virtual ~AtomicType() = default;
 
     private:

@@ -8,7 +8,7 @@ namespace SyntaxModel {
 
     class Declaration final : public Instruction {
     public:
-        Declaration(const Identifier& id);
+        Declaration(const Identifier& id, const AtomicType& type);
         virtual ~Declaration() = default;
 
     private:

@@ -3,13 +3,14 @@
 
 #include "Expression.h"
 
+using namespace std;
 namespace SyntaxModel {
   class AppelFonction final : public Expression {
     public:
-      AppelFonction();
+      AppelFonction(const vector<const Expression*>& expressions);
       virtual ~AppelFonction() = default;
 
     private:
-      std::list<Expression> _expressions;
+      const vector<const Expression*> _expressions;
   };
 }

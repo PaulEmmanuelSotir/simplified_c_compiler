@@ -7,6 +7,9 @@
 namespace  SyntaxModel {
 
   class AffectationIncrDecr final : public Expression {
+  public:
+    AffectationIncrDecr(const Variable& var);
+    virtual ~AffectationIncrDecr() = default;
     private:
       Variable _var;
   };

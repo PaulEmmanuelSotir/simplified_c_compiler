@@ -6,7 +6,7 @@
 namespace SyntaxModel {
   class Arg final {
     public:
-      Arg();
+      Arg(const Type& type, const Identifier& id);
       virtual ~Arg() = default;
 
     private:
