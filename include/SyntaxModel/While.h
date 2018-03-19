@@ -1,5 +1,4 @@
 #pragma once
-
 #include "SyntaxModel/Structure.h"
 
 using namespace std;

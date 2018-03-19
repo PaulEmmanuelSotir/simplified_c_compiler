@@ -1,5 +1,4 @@
 #pragma once
-
 #include "SyntaxModel/Else.h"
 #include "SyntaxModel/Structure.h"
 

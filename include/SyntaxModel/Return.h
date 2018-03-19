@@ -1,16 +1,14 @@
 #pragma once
-
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/Instruction.h"
 
-
 namespace SyntaxModel {
-  class Return final : public Instruction {
+    class Return final : public Instruction {
     public:
-      Return();
-      virtual ~Return() = default;
+        Return(const Expression* expression);
+        virtual ~Return();
 
     private:
-      Expression _expression;
-  };
+        const Expression* _expression;
+    };
 }

@@ -2,7 +2,7 @@
 
 namespace SyntaxModel {
 
-    Program::Program(const std::vector<utils::TerminalInfo>& includes, const std::vector<const Function*>& functions, const std::vector<const Declaration*>& declarations, const std::vector<const Definition*>& definitions)
+    Program::Program(const std::vector<Include>& includes, const std::vector<const Function*>& functions, const std::vector<const Definition*>& declarations, const std::vector<const Definition*>& definitions)
         : _includes(includes)
         , _functions(functions)
         , _declarations(declarations)
