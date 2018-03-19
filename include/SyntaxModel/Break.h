@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Instruction.h"
+#include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
   class Break final : public Instruction {

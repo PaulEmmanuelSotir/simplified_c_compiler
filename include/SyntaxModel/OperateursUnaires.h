@@ -1,5 +1,5 @@
 #pragma once
 
 namespace SyntaxModel {
-  enum class OperateursUnaires final { ++, --, =, +=, -=, /=, *=, %=, -, ! };
+  enum class OperateursUnaires final { ++, --, -, ! };
 }

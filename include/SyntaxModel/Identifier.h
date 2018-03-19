@@ -1,13 +1,14 @@
 #pragma once
 #include <string>
+using namespace std;
 
 namespace SyntaxModel {
 
     class Identifier final {
     public:
-        Identifier(const std::string& name);
+        Identifier(const string& name);
 
     private:
-        const std::string _name;
+        const string _name;
     };
 }

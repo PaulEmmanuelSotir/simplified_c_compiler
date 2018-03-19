@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OperateursBinaires.h"
-#include "Expression.h"
+#include "SyntaxModel/OperateursBinaires.h"
+#include "SyntaxModel/Expression.h"
 
 namespace SyntaxModel {
   class OperationBinaire final : public Expression {

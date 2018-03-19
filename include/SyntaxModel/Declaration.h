@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Identifier.h"
-#include "Instruction.h"
-#include "AtomicType.h"
+#include "SyntaxModel/Identifier.h"
+#include "SyntaxModel/Instruction.h"
+#include "SyntaxModel/AtomicType.h"
 
 namespace SyntaxModel {
 

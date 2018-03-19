@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Expression.h"
-#include "Variable.h"
-#include "OperateursAffectation.h"
+#include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Variable.h"
+#include "SyntaxModel/OperateursAffectation.h"
 
 namespace  SyntaxModel {
 

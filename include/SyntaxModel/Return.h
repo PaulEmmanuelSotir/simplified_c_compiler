@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Expression.h"
-#include "Instruction.h"
+#include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Instruction.h"
 
 
 namespace SyntaxModel {

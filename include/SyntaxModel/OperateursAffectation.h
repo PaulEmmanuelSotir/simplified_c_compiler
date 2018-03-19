@@ -1,5 +1,5 @@
 #pragma once
 
 namespace SyntaxModel {
-  enum class OperateursAffectation final {"=","+=","-=","/=","*=","%=","++","--"};
+  enum class OperateursAffectation final {=,+=,-=,/=,*=,%=};
 }
