@@ -8,7 +8,7 @@
 // TODO: add checks for nullptr
 // TODO: replace static_cast with dynamic_cast?
 
-using SM = SyntaxModel;
+namespace SM = SyntaxModel;
 using PT = SyntaxModel::Type::PrimitiveType;
 
 antlrcpp::Any visitor::visitProgram(GramCompParser::ProgramContext* ctx)
