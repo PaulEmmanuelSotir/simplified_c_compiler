@@ -105,7 +105,7 @@ private:
         std::vector<const T*> syntax_nodes(contexts.size());
         for (auto* ctx : contexts) {
             auto visited = visit(ctx);
-            if (visited != nullptr)
+            if (visited.isNotNull())
                 syntax_nodes.push_back(static_cast<const T*>(visited));
         }
         return syntax_nodes;
