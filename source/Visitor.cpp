@@ -212,7 +212,7 @@ antlrcpp::Any Visitor::visitDiv_equal(GramCompParser::Div_equalContext* ctx) { r
 antlrcpp::Any Visitor::visitMult_equal(GramCompParser::Mult_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::MULT_EQ, ctx); }
 antlrcpp::Any Visitor::visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::MODULO_EQ, ctx); }
 
-antlrcpp::Any Visitor::visitBinaryOp(auto exprs, SM::BinaryOp::Op op)
+antlrcpp::Any Visitor::visitBinaryOp(const std::vector<GramCompParser::ExpressionContext*>& exprs, SM::BinaryOp::Op op)
 {
     auto left_expr = visit_single<SM::Expression>(exprs[0]);
     auto right_expr = visit_single<SM::Expression>(exprs[1]);

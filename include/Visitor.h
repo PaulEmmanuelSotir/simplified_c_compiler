@@ -69,7 +69,7 @@ public:
     virtual antlrcpp::Any visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) override;
 
 private:
-    inline antlrcpp::Any visitBinaryOp(auto exprs, SyntaxModel::BinaryOp::Op op);
+    inline antlrcpp::Any visitBinaryOp(const std::vector<GramCompParser::ExpressionContext*>& exprs, SyntaxModel::BinaryOp::Op op);
 
     template <class CTX>
     inline antlrcpp::Any visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op op, CTX* ctx)
