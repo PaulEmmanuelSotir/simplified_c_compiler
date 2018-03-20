@@ -6,12 +6,10 @@
 using namespace std;
 namespace SyntaxModel {
 
-    class Else final {
-    public:
+    struct Else final {
         Else(const vector<const Instruction*>& instructions);
         ~Else();
 
-    private:
-        const vector<const Instruction*> _instructions;
+        const vector<const Instruction*> instructions;
     };
 }

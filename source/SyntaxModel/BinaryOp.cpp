@@ -3,15 +3,15 @@
 namespace SyntaxModel {
 
     BinaryOp::BinaryOp(const Expression* leftExpression, const Expression* rightExpression, const Op op)
-        : _leftExpression(leftExpression)
-        , _rightExpression(rightExpression)
-        , _operator(op)
+        : leftExpression(leftExpression)
+        , rightExpression(rightExpression)
+        , op(op)
     {
     }
 
     BinaryOp::~BinaryOp()
     {
-        delete _leftExpression;
-        delete _rightExpression;
+        delete leftExpression;
+        delete rightExpression;
     }
 }

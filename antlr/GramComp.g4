@@ -35,6 +35,7 @@ expression:
 	| expression '>' expression		# sup
 	| expression '>=' expression	# supequal
 	| affectation					# affect_epxr
+	| array_expr					# array_constant
 	| INTEGER						# integer
 	| QUOTED_CHAR_LITERAL			# char_literal
 	| STRING_LITERAL				# string_literal
@@ -71,22 +72,20 @@ binary_affectation:
 ;
 
 definition:
-	type IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* ';'            # define
-	| atomic_type IDENTIFIER '[' INTEGER ']' '=' (array_expr | STRING_LITERAL) ';' # deftable
+	atomic_type IDENTIFIER '=' expression (',' IDENTIFIER '=' expression)* ';'     # define
+	| atomic_type IDENTIFIER '[' INTEGER ']' '=' expression (',' IDENTIFIER '[' INTEGER ']' '=' expression)* ';' # deftable
 ;
 
 declaration:
-	type IDENTIFIER (',' IDENTIFIER)* ';'        # declare
-	| atomic_type IDENTIFIER '[' INTEGER ']' ';' # decltable
+	atomic_type IDENTIFIER (',' IDENTIFIER)* ';' # declare
+	| atomic_type IDENTIFIER '[' INTEGER ']' (',' IDENTIFIER '[' INTEGER ']')* ';' # decltable
 ;
 
-array_expr: '{' (const_expr (',' const_expr)*)? '}';
-
-const_expr: INTEGER | STRING_LITERAL | QUOTED_CHAR_LITERAL;
+array_expr: '{' ((INTEGER | QUOTED_CHAR_LITERAL) (',' (INTEGER | QUOTED_CHAR_LITERAL))*)? '}';
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
-type: atomic_type ('[' ']')?;
+type: (CHAR | INT32_T | INT64_T) ('[' ']')?;
 
 CHAR: 'char';
 INTEGER: [0-9]+;

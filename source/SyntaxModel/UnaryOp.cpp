@@ -3,13 +3,13 @@
 namespace SyntaxModel {
 
     UnaryOp::UnaryOp(const Expression* expression, const Op op)
-        : _expression(expression)
-        , _operator(op)
+        : expression(expression)
+        , op(op)
     {
     }
 
     UnaryOp::~UnaryOp()
     {
-        delete _expression;
+        delete expression;
     }
 }

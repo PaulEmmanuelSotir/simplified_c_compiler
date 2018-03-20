@@ -4,8 +4,7 @@
 
 namespace SyntaxModel {
 
-    class Type final {
-    public:
+    struct Type final {
         enum class PrimitiveType { INT32_T,
             INT64_T,
             CHAR };
@@ -13,7 +12,7 @@ namespace SyntaxModel {
         Type(const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
 
-    public:
+    private:
         template <Type::PrimitiveType T, class Enable = void>
         struct _UnderlyingType;
 
@@ -32,10 +31,10 @@ namespace SyntaxModel {
             using type = int64_t;
         };
 
-        const PrimitiveType _type;
-        const bool _isArray;
-
     public:
+        const PrimitiveType type;
+        const bool isArray;
+
         template <Type::PrimitiveType T>
         using UnderlyingType = typename _UnderlyingType<T>::type;
     };

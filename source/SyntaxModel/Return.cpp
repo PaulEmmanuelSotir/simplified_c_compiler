@@ -3,12 +3,12 @@
 namespace SyntaxModel {
 
     Return::Return(const Expression* expression)
-        : _expression(expression)
+        : expression(expression)
     {
     }
 
     Return::~Return()
     {
-        delete _expression;
+        delete expression;
     }
 }

@@ -4,30 +4,30 @@
 namespace SyntaxModel {
 
     Args::Args(const vector<const Type*>& types, const vector<Identifier>& names)
-        : _types(types)
-        , _names(names)
+        : types(types)
+        , names(names)
     {
     }
 
     Args::~Args()
     {
-        utils::delete_all(_types);
+        utils::delete_all(types);
     }
 
     Function::Function(const std::vector<const Definition*>& definitions, const std::vector<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType)
-        : _definitions(definitions)
-        , _instructions(instructions)
-        , _arguments(arguments)
-        , _id(id)
-        , _returnType(returnType)
+        : definitions(definitions)
+        , instructions(instructions)
+        , arguments(arguments)
+        , id(id)
+        , returnType(returnType)
     {
     }
 
     Function::~Function()
     {
-        delete _arguments;
-        delete _returnType;
-        utils::delete_all(_instructions);
-        utils::delete_all(_definitions);
+        delete arguments;
+        delete returnType;
+        utils::delete_all(instructions);
+        utils::delete_all(definitions);
     }
 }

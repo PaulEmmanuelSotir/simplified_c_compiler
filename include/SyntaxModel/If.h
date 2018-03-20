@@ -5,12 +5,10 @@
 using namespace std;
 
 namespace SyntaxModel {
-    class If final : public Structure {
-    public:
+    struct If final : public Structure {
         If(const Expression* condition, const std::vector<const Instruction*>& instructions, const Else* else_clause);
         virtual ~If();
 
-    private:
-        const Else* _else_clause;
+        const Else* else_clause;
     };
 }

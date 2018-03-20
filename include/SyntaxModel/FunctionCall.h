@@ -7,13 +7,11 @@
 using namespace std;
 
 namespace SyntaxModel {
-    class FunctionCall final : public Expression {
-    public:
+    struct FunctionCall final : public Expression {
         FunctionCall(const vector<const Expression*>& args, const Identifier& func_name);
         virtual ~FunctionCall();
 
-    private:
-        const vector<const Expression*> _args;
-        const Identifier _func_name;
+        const vector<const Expression*> args;
+        const Identifier func_name;
     };
 }

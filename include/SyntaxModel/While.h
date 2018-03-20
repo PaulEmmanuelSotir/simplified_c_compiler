@@ -5,8 +5,7 @@ using namespace std;
 
 namespace SyntaxModel {
 
-    class While final : public Structure {
-    public:
+    struct While final : public Structure {
         While(const Expression* condition, const vector<const Instruction*>& instructions);
         virtual ~While() = default;
     };

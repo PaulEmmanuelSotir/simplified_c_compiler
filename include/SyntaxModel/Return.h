@@ -3,12 +3,10 @@
 #include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
-    class Return final : public Instruction {
-    public:
+    struct Return final : public Instruction {
         Return(const Expression* expression);
         virtual ~Return();
 
-    private:
-        const Expression* _expression;
+        const Expression* expression;
     };
 }

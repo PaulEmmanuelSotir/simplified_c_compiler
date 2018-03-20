@@ -4,14 +4,14 @@
 namespace SyntaxModel {
 
     Structure::Structure(const Expression* condition, const std::vector<const Instruction*>& instructions)
-        : _condition(condition)
-        , _instructions(instructions)
+        : condition(condition)
+        , instructions(instructions)
     {
     }
 
     Structure::~Structure()
     {
-        delete _condition;
-        utils::delete_all(_instructions);
+        delete condition;
+        utils::delete_all(instructions);
     }
 }

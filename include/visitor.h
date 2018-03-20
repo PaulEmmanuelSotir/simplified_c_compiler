@@ -16,19 +16,16 @@ public:
     virtual antlrcpp::Any visitContinue(GramCompParser::ContinueContext* ctx) override;
     virtual antlrcpp::Any visitInteger(GramCompParser::IntegerContext* ctx) override;
     virtual antlrcpp::Any visitChar_literal(GramCompParser::Char_literalContext* ctx) override;
+    virtual antlrcpp::Any visitString_literal(GramCompParser::String_literalContext* ctx) override;
     virtual antlrcpp::Any visitIf(GramCompParser::IfContext* ctx) override;
-    //virtual antlrcpp::Any visitString_literal(GramCompParser::String_literalContext* ctx) override;
     virtual antlrcpp::Any visitVariable_usage(GramCompParser::Variable_usageContext* ctx) override;
     virtual antlrcpp::Any visitWhile(GramCompParser::WhileContext* ctx) override;
     virtual antlrcpp::Any visitElse(GramCompParser::ElseContext* ctx) override;
-    /*virtual antlrcpp::Any visitDefine(GramCompParser::DefineContext* ctx) override;
     virtual antlrcpp::Any visitDeftable(GramCompParser::DeftableContext* ctx) override;
-    virtual antlrcpp::Any visitDeclare(GramCompParser::DeclareContext* ctx) override;
     virtual antlrcpp::Any visitDecltable(GramCompParser::DecltableContext* ctx) override;
     virtual antlrcpp::Any visitArray_expr(GramCompParser::Array_exprContext* ctx) override;
-    virtual antlrcpp::Any visitConst_expr(GramCompParser::Const_exprContext* ctx) override;
     virtual antlrcpp::Any visitAtomic_type(GramCompParser::Atomic_typeContext* ctx) override;
-    virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;*/
+    virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
 
     // Binary ops
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
@@ -100,5 +97,6 @@ private:
         return syntax_nodes;
     }
 
+    static inline const std::vector<const SyntaxModel::Definition::size_constant*> parseArraySizes(auto integers);
     static inline std::vector<utils::TerminalInfo> make_all_terminals(const std::vector<antlr4::tree::TerminalNode*>& contexts);
 };

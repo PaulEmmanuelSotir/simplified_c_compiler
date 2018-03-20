@@ -4,8 +4,7 @@
 
 namespace SyntaxModel {
 
-    class UnaryAffectation final : public Expression {
-    public:
+    struct UnaryAffectation final : public Expression {
         enum class Op { POST_INC,
             POST_DEC,
             PRE_INC,
@@ -14,14 +13,12 @@ namespace SyntaxModel {
         UnaryAffectation(const Op op, const Identifier& var, const Expression* array_indice);
         virtual ~UnaryAffectation();
 
-    private:
-        const Op _operator;
-        const Identifier& _var;
-        const Expression* _array_indice;
+        const Op op;
+        const Identifier& var;
+        const Expression* array_indice;
     };
 
-    class BinaryAffectation final : public Expression {
-    public:
+    struct BinaryAffectation final : public Expression {
         enum class Op { EQ,
             PLUS_EQ,
             MIN_EQ,
@@ -32,10 +29,9 @@ namespace SyntaxModel {
         BinaryAffectation(const Op op, const Identifier& var, const Expression* affected_value, const Expression* array_indice);
         virtual ~BinaryAffectation();
 
-    private:
-        const Op _operator;
-        const Identifier& _var;
-        const Expression* _affected_value;
-        const Expression* _array_indice;
+        const Op op;
+        const Identifier& var;
+        const Expression* affected_value;
+        const Expression* array_indice;
     };
 }

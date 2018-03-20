@@ -4,12 +4,12 @@
 namespace SyntaxModel {
 
     Else::Else(const std::vector<const Instruction*>& instructions)
-        : _instructions(instructions)
+        : instructions(instructions)
     {
     }
 
     Else::~Else()
     {
-        utils::delete_all(_instructions);
+        utils::delete_all(instructions);
     }
 }

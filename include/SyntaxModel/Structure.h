@@ -9,13 +9,11 @@ using namespace std;
 
 namespace SyntaxModel {
 
-    class Structure : public Instruction {
-    public:
+    struct Structure : public Instruction {
         Structure(const Expression* condition, const vector<const Instruction*>& instructions);
         virtual ~Structure();
 
-    private:
-        const Expression* _condition;
-        const vector<const Instruction*> _instructions;
+        const Expression* condition;
+        const vector<const Instruction*> instructions;
     };
 }

@@ -3,18 +3,15 @@
 
 namespace SyntaxModel {
 
-    class Instruction {
-    public:
+    struct Instruction {
         virtual ~Instruction() = default;
     };
 
-    class Break final : public Instruction {
-    public:
+    struct Break final : public Instruction {
         virtual ~Break() = default;
     };
 
-    class Continue final : public Instruction {
-    public:
+    struct Continue final : public Instruction {
         virtual ~Continue() = default;
     };
 }

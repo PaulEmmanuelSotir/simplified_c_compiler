@@ -3,7 +3,7 @@
 
 namespace SyntaxModel {
     VariableUsage::VariableUsage(const Identifier& name)
-        : _name(name)
+        : name(name)
     {
     }
 }

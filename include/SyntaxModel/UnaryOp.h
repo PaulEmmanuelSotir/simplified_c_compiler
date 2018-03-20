@@ -2,15 +2,13 @@
 #include "SyntaxModel/Expression.h"
 
 namespace SyntaxModel {
-    class UnaryOp final : public Expression {
-    public:
+    struct UnaryOp final : public Expression {
         enum class Op { MINUS,
             NOT };
         UnaryOp(const Expression* expression, const Op op);
         virtual ~UnaryOp();
 
-    private:
-        const Expression* _expression;
-        const Op _operator;
+        const Expression* expression;
+        const Op op;
     };
 }

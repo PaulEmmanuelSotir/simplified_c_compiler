@@ -10,26 +10,22 @@ using namespace std;
 
 namespace SyntaxModel {
 
-    class Args final {
-    public:
+    struct Args final {
         Args(const vector<const Type*>& types, const vector<Identifier>& names);
         virtual ~Args();
 
-    private:
-        const vector<const Type*> _types;
-        const vector<Identifier> _names;
+        const vector<const Type*> types;
+        const vector<Identifier> names;
     };
 
-    class Function final {
-    public:
+    struct Function final {
         Function(const vector<const Definition*>& definitions, const vector<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType);
         virtual ~Function();
 
-    private:
-        const vector<const Definition*> _definitions;
-        const vector<const Instruction*> _instructions;
-        const Args* _arguments;
-        const Identifier _id;
-        const Type* _returnType;
+        const vector<const Definition*> definitions;
+        const vector<const Instruction*> instructions;
+        const Args* arguments;
+        const Identifier id;
+        const Type* returnType;
     };
 }

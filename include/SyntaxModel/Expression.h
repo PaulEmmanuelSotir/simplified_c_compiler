@@ -4,17 +4,14 @@
 
 namespace SyntaxModel {
 
-    class Expression : public Instruction {
-    public:
+    struct Expression : public Instruction {
         virtual ~Expression() = default;
     };
 
-    class VariableUsage final : public Expression {
-    public:
+    struct VariableUsage final : public Expression {
         VariableUsage(const Identifier& name);
         virtual ~VariableUsage() = default;
 
-    private:
-        const Identifier _name;
+        const Identifier name;
     };
 }
