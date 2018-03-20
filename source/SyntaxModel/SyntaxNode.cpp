@@ -22,7 +22,6 @@ namespace SyntaxModel {
             delete child;
     }
 
-    //bool SyntaxNodeBase::sameTypeAs(const SyntaxNodeBase& other) const { return getTypename() == other.getTypename(); }
     bool SyntaxNodeBase::operator==(const SyntaxNodeBase& obj) const { return _unique_id == obj._unique_id; }
     bool SyntaxNodeBase::operator<(const SyntaxNodeBase& obj) const { return _unique_id < obj._unique_id; }
 
@@ -33,15 +32,9 @@ namespace SyntaxModel {
         for (const auto* child : _children)
             if (child != nullptr) {
                 all_childrens.push_back(child);
-                _push_all(all_childrens, child->getAllChildren());
+                for (auto val : child->getAllChildren())
+                    all_childrens.push_back(val);
             }
         return all_childrens;
-    }
-
-    void _push_all(std::list<const SyntaxNodeBase*>& list, const std::list<const SyntaxNodeBase*>& list_to_merge_with)
-    {
-        list.resize(list.size() + list_to_merge_with.size());
-        for (auto val : list_to_merge_with)
-            list.push_back(val);
     }
 }

@@ -19,18 +19,13 @@ namespace SyntaxModel {
 }
 
 namespace utils {
-    template <class K, class V>
-    inline bool contains(const std::map<K, V>& map, const K& key) { return map.find(key) != map.end(); }
-
-    template <class V>
-    inline bool contains(const std::set<V>& set, const V& val) { return set.find(val) != set.end(); }
-
     struct TerminalInfo {
         TerminalInfo(antlr4::tree::TerminalNode* terminal);
         size_t line;
         size_t column;
         std::string text;
         friend inline bool operator<(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text < rhs.text; }
+        friend inline bool operator==(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text == rhs.text; }
     };
 
     template <class T>
@@ -100,6 +95,17 @@ namespace utils {
 
     template <typename... Args>
     std::list<const SyntaxModel::SyntaxNodeBase*> children_list(Args... args) { return _ChildrenList<Args...>::children_list(args...); }
+
+    template <typename T>
+    typename std::list<T>::const_iterator get_at(const std::list<T>& list, size_t index)
+    {
+        if (index < list.size()) {
+            auto it = list.begin();
+            std::advance(it, index);
+            return it;
+        }
+        return list.end();
+    }
 
     template <class T>
     std::string type_name()

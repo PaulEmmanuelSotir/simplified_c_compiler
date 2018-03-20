@@ -22,7 +22,6 @@ namespace SyntaxModel {
     class SyntaxNodeBase;
     using Identifier = utils::TerminalInfo;
     using Include = utils::TerminalInfo;
-    void _push_all(std::list<const SyntaxNodeBase*>& list, const std::list<const SyntaxNodeBase*>& list_to_merge_with);
 
     class SyntaxNodeBase {
     public:
@@ -31,7 +30,6 @@ namespace SyntaxModel {
         virtual ~SyntaxNodeBase();
 
         //TODO: put stream operator overrload here and create a virtual function "to_string"
-        //bool sameTypeAs(const SyntaxNodeBase& other) const;
         bool operator==(const SyntaxNodeBase& obj) const;
         bool operator<(const SyntaxNodeBase& obj) const;
 
@@ -43,23 +41,23 @@ namespace SyntaxModel {
             return types.find(type_name) != types.end();
         }
 
-        //template <typename SyntaxModelT>
-        //virtual bool is() const { return getTypename() == SyntaxModelT::type_name; }
-
         // Returns all children syntaxic elements recursively
-        std::list<const SyntaxNodeBase*> getAllChildren() const;
+        std::list<const SyntaxNodeBase*>
+        getAllChildren() const;
 
         // Returns an list of all children syntaxic elements recursively for which T is their final type (doesn't handle base classes)
         template <typename T>
         std::list<const T*> getAllChildrenOfType() const
         {
-            std::list<const SyntaxNodeBase*> all_childrens;
+            std::list<const T*> all_childrens;
 
             for (const auto* child : _children)
                 if (child != nullptr) {
                     if (child->is<T>())
-                        all_childrens.push_back(child);
-                    _push_all(all_childrens, child->getAllChildrenOfType<T>());
+                        all_childrens.push_back(dynamic_cast<const T*>(child));
+
+                    for (const T* val : child->getAllChildrenOfType<T>())
+                        all_childrens.push_back(val);
                 }
             return all_childrens;
         }

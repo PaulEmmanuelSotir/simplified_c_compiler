@@ -13,6 +13,7 @@ namespace SyntaxModel {
         VariableUsage(const antlr4::misc::Interval& source_interval, const Identifier& name);
         virtual ~VariableUsage() = default;
         friend bool inline operator<(const VariableUsage& lhs, const VariableUsage& rhs) { return lhs.name < rhs.name; }
+        friend inline bool operator==(const VariableUsage& lhs, const VariableUsage& rhs) { return lhs.name == rhs.name; }
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, VariableUsage>::typenames(); }
 
         const Identifier name;

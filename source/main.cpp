@@ -3,13 +3,14 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "StaticAnalysis.h"
 #include "SyntaxModel/SyntaxModel.h"
 #include "Visitor.h"
 #include "grammar/GramCompBaseVisitor.h"
 #include "grammar/GramCompLexer.h"
 #include "grammar/GramCompParser.h"
 
-void parse(std::ifstream& fs)
+const SyntaxModel::Program* parse(std::ifstream& fs)
 {
     // Stream it to lexer
     std::cout << "\n# Executing lexer\n";
@@ -32,32 +33,39 @@ void parse(std::ifstream& fs)
     // Build syntaxic model (AST)
     std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
     Visitor v;
-    antlrcpp::Any ast;
-    try {
-        ast = v.visit(tree);
-    } catch (const std::bad_cast& e) {
-        std::cout << e.what() << '\n';
-    }
-    std::cout << "test";
+    antlrcpp::Any ast = v.visit(tree);
+
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
-        std::cout << prog->includes.size();
+        return prog;
     }
+    return nullptr;
+}
+
+const StaticAnalysis::StaticAnalyser* staticAnalysis(const SyntaxModel::Program* ast)
+{
+    std::cout << "\n# Solve variable scopes and run static analysis\n";
+    auto analyser = new StaticAnalysis::StaticAnalyser(ast);
+    analyser->Analyse();
+    return analyser;
 }
 
 void compile(std::ifstream& fs, const std::string& target)
 {
     // Parse AST from input file
-    parse(fs);
+    auto program = parse(fs);
 
     // Static analysis
-    // TODO: ...
+    auto analyser = staticAnalysis(program);
 
     // Optimization
     // TODO: ...
 
     // Compilation to x86 target
     // TODO: ...
+
+    delete program;
+    delete analyser;
 }
 
 int main(int argc, char* argv[])
