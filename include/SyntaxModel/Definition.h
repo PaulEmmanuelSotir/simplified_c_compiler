@@ -6,6 +6,7 @@
 
 namespace SyntaxModel {
 
+    //TODO: store array size for array declarations/defintions
     class Definition final : public Instruction {
     public:
         using empty_expr_vector = std::vector<const Expression*>;

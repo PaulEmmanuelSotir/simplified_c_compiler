@@ -6,7 +6,9 @@ namespace SyntaxModel {
 
     class Affectation final : public Expression {
     public:
-        enum class Op { EQ,
+        enum class Op { INC,
+            DEC,
+            EQ,
             PLUS_EQ,
             MIN_EQ,
             DIV_EQ,

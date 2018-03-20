@@ -13,30 +13,30 @@ namespace SyntaxModel {
         Type(const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
 
-    private:
-        template <Type::PrimitiveType T, typename = std::enable_if_t<T == Type::PrimitiveType::CHAR>>
-        static char32_t _UnderlyingType()
-        {
-            return static_cast<char32_t>(0);
-        }
+    public:
+        template <Type::PrimitiveType T, class Enable = void>
+        struct _UnderlyingType;
 
-        template <Type::PrimitiveType T, typename = std::enable_if_t<T == Type::PrimitiveType::INT32_T>>
-        static int32_t _UnderlyingType()
-        {
-            return static_cast<int32_t>(0);
-        }
+        template <Type::PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::CHAR>> {
+            using type = char32_t;
+        };
 
-        template <Type::PrimitiveType T, typename = std::enable_if_t<T == Type::PrimitiveType::INT64_T>>
-        static int64_t _UnderlyingType()
-        {
-            return static_cast<int64_t>(0);
-        }
+        template <Type::PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::INT32_T>> {
+            using type = int32_t;
+        };
+
+        template <Type::PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::INT64_T>> {
+            using type = int64_t;
+        };
 
         const PrimitiveType _type;
         const bool _isArray;
 
     public:
         template <Type::PrimitiveType T>
-        using UnderlyingType = decltype(_UnderlyingType<T>);
+        using UnderlyingType = typename _UnderlyingType<T>::type;
     };
 }

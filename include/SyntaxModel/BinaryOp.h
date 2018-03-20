@@ -11,10 +11,10 @@ namespace SyntaxModel {
             MODULO,
             EQUAL,
             DIFFERENT,
-            GREATER_THAN,
-            GREATER_THAN_OR_EQ,
-            LESS_THAN,
-            LESS_THAN_OR_EQ,
+            SUP,
+            SUP_EQ,
+            INF,
+            INF_EQ,
             AND,
             OR
         };

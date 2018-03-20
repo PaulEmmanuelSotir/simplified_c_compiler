@@ -2,10 +2,9 @@
 
 // Includes all namespace classes
 #include "SyntaxModel/Affectation.h"
+#include "SyntaxModel/ArrayIndexing.h"
 #include "SyntaxModel/BinaryOp.h"
-#include "SyntaxModel/Break.h"
 #include "SyntaxModel/Constant.h"
-#include "SyntaxModel/Continue.h"
 #include "SyntaxModel/Definition.h"
 #include "SyntaxModel/Else.h"
 #include "SyntaxModel/Expression.h"

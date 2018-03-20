@@ -4,14 +4,13 @@ program: (INCLUDE | declaration | definition | function)*;
 
 WS: [ \t\n\r]+ -> skip;
 
-instruction:
-	'break' ';'													# break
+instruction: 
+	'break' ';' 												# break
 	| 'continue' ';'											# continue
-	| structure													# structure_instr
+	| structure	';'												# structure_instr
 	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
-	| ';'														# semicolon_instr
 ;
 
 function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
@@ -24,10 +23,10 @@ function_init:
 
 expression:
 	'(' expression ')'				# parenthesis
+	| '-' expression				# unary_minus
+	| '!' expression				# not
 	| expression '+' expression		# plus
 	| expression '-' expression		# minus
-	| '-' expression				# minus1
-	| '!' expression				# not
 	| expression '*' expression		# mult
 	| expression '/' expression		# div
 	| expression '==' expression	# equal
@@ -38,8 +37,8 @@ expression:
 	| expression '>=' expression	# supequal
 	| affectation					# affect_epxr
 	| INTEGER						# integer
-	| QUOTED_CHAR_LITERAL			# char
-	| STRING_LITERAL				# string
+	| QUOTED_CHAR_LITERAL			# char_literal
+	| STRING_LITERAL				# string_literal
 	| IDENTIFIER					# identifier
 ;
 
@@ -51,15 +50,15 @@ structure:
 else_structure: 'else' '{' (instruction)* '}' # else;
 
 affectation:
-	IDENTIFIER '=' expression						# affect_expr
-	| IDENTIFIER '+=' expression					# incrementation
-	| IDENTIFIER '-=' expression					# decrementation
-	| IDENTIFIER '/=' expression					# dividementation
-	| IDENTIFIER '*=' expression					# multmentation
-	| IDENTIFIER '%=' expression					# pourcentmentation
-	| IDENTIFIER ('++' | '--')						# incunairepost
-	| ( '++' | '--') IDENTIFIER						# incunairepre
-	| IDENTIFIER '[' expression ']' '=' expression	# table
+	IDENTIFIER '=' expression						# affect
+	| IDENTIFIER '+=' expression					# plus_equal
+	| IDENTIFIER '-=' expression					# minus_equal
+	| IDENTIFIER '/=' expression					# div_equal
+	| IDENTIFIER '*=' expression					# mult_equal
+	| IDENTIFIER '%=' expression					# modulo_equal
+	| IDENTIFIER ('++' | '--')						# post_inc_dec
+	| ( '++' | '--') IDENTIFIER						# pre_inc_dec
+	| IDENTIFIER '[' expression ']' '=' expression	# affect_array_element
 ;
 
 definition:
