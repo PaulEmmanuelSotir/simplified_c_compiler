@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Type.h"
 
 namespace SyntaxModel {
 

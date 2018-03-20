@@ -1,4 +1,5 @@
 #include "SyntaxModel/Else.h"
+#include "utils.h"
 
 namespace SyntaxModel {
 
@@ -9,7 +10,6 @@ namespace SyntaxModel {
 
     Else::~Else()
     {
-        for (auto* instr : _instructions)
-            delete instr;
+        utils::delete_all(_instructions);
     }
 }

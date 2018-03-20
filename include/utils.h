@@ -1,6 +1,8 @@
 #pragma once
-#include "antlr4-runtime.h"
 #include <string>
+#include <vector>
+
+#include "antlr4-runtime.h"
 
 namespace utils {
     struct TerminalInfo {
@@ -9,4 +11,11 @@ namespace utils {
         size_t column;
         std::string text;
     };
+
+    template <class T>
+    void delete_all(const std::vector<T*> vect_of_pointers)
+    {
+        for (auto* ptr : vect_of_pointers)
+            delete ptr;
+    }
 }

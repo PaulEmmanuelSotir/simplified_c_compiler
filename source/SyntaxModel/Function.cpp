@@ -1,10 +1,21 @@
 #include "SyntaxModel/Function.h"
+#include "utils.h"
 
 namespace SyntaxModel {
 
-    Function::Function(const std::vector<const Definition*>& declarations, const std::vector<const Definition*>& definitions, const std::vector<const Instruction*>& instructions, const vector<const Arg*>& arguments, const Identifier& id, const Type& returnType)
-        : _declarations(declarations)
-        , _definitions(definitions)
+    Args::Args(const vector<const Type*>& types, const vector<Identifier>& names)
+        : _types(types)
+        , _names(names)
+    {
+    }
+
+    Args::~Args()
+    {
+        utils::delete_all(_types);
+    }
+
+    Function::Function(const std::vector<const Definition*>& definitions, const std::vector<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType)
+        : _definitions(definitions)
         , _instructions(instructions)
         , _arguments(arguments)
         , _id(id)
@@ -14,13 +25,9 @@ namespace SyntaxModel {
 
     Function::~Function()
     {
-        for (auto* decl : _declarations)
-            delete decl;
-        for (auto* instr : _instructions)
-            delete instr;
-        for (auto* arg : _arguments)
-            delete arg;
-        for (auto* def : _definitions)
-            delete def;
+        delete _arguments;
+        delete _returnType;
+        utils::delete_all(_instructions);
+        utils::delete_all(_definitions);
     }
 }

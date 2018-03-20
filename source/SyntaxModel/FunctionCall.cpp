@@ -1,4 +1,5 @@
 #include "SyntaxModel/FunctionCall.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -11,7 +12,6 @@ namespace SyntaxModel {
 
     FunctionCall::~FunctionCall()
     {
-        for (auto* expr : _args)
-            delete expr;
+        utils::delete_all(_args);
     }
 }

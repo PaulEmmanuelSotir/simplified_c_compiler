@@ -4,6 +4,8 @@
 
 class visitor : public GramCompBaseVisitor {
     virtual antlrcpp::Any visitProgram(GramCompParser::ProgramContext* ctx) override;
+    virtual antlrcpp::Any visitFucntioncall(GramCompParser::FucntioncallContext* ctx) override;
+    virtual antlrcpp::Any visitFunction(GramCompParser::FunctionContext* ctx) override;
 
     template <class T, class CTX>
     std::vector<const T*> visit_all(const std::vector<CTX*>& contexts)

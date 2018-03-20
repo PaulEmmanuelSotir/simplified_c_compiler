@@ -1,4 +1,5 @@
 #include "SyntaxModel/Structure.h"
+#include "utils.h"
 
 namespace SyntaxModel {
 
@@ -11,7 +12,6 @@ namespace SyntaxModel {
     Structure::~Structure()
     {
         delete _condition;
-        for (auto* instr : _instructions)
-            delete instr;
+        utils::delete_all(_instructions);
     }
 }

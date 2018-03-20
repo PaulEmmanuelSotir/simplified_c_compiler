@@ -16,10 +16,7 @@ instruction:
 
 function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
 
-args:
-	'void'										# void_arg
-	| type IDENTIFIER (',' type IDENTIFIER)*	# args_list
-;
+args: ('void' | type IDENTIFIER (',' type IDENTIFIER)*);
 
 function_init:
 	declaration		# functioninit_decl

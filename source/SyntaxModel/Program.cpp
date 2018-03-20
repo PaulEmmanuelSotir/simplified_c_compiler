@@ -1,4 +1,5 @@
 #include "SyntaxModel/Program.h"
+#include "utils.h"
 
 namespace SyntaxModel {
 
@@ -12,11 +13,8 @@ namespace SyntaxModel {
 
     Program::~Program()
     {
-        for (auto* func : _functions)
-            delete func;
-        for (auto* decl : _declarations)
-            delete decl;
-        for (auto* def : _definitions)
-            delete def;
+        utils::delete_all(_functions);
+        utils::delete_all(_declarations);
+        utils::delete_all(_definitions);
     }
 }
