@@ -39,8 +39,8 @@ expression:
 	| INTEGER						# integer
 	| QUOTED_CHAR_LITERAL			# char_literal
 	| STRING_LITERAL				# string_literal
+	| IDENTIFIER '(' (expression (',' expression)*)? ')'	# fucntioncall
 	| IDENTIFIER					# variable_usage
-	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 ;
 
 structure:
