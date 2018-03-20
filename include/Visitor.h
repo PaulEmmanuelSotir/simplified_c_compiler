@@ -111,6 +111,6 @@ private:
         return syntax_nodes;
     }
 
-    static inline const std::vector<const SyntaxModel::Definition::size_constant*> parseArraySizes(auto integers);
+    static inline const std::vector<const SyntaxModel::Definition::size_constant*> parseArraySizes(const std::vector<antlr4::tree::TerminalNode*>& integers);
     static inline std::vector<utils::TerminalInfo> make_all_terminals(const std::vector<antlr4::tree::TerminalNode*>& contexts);
 };

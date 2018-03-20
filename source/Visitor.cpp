@@ -56,7 +56,7 @@ antlrcpp::Any Visitor::visitDeclare(GramCompParser::DeclareContext* ctx)
     return new SM::Definition(type, names);
 }
 
-const std::vector<const SM::Definition::size_constant*> Visitor::parseArraySizes(auto integers)
+const std::vector<const SM::Definition::size_constant*> Visitor::parseArraySizes(const std::vector<antlr4::tree::TerminalNode*>& integers)
 {
     // Parse array sizes from their tokens to build Constant<INT32_T> instances
     std::vector<const SM::Definition::size_constant*> sizes(integers.size());
