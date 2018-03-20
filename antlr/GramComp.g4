@@ -8,7 +8,6 @@ instruction:
 	'break' ';' 												# break
 	| 'continue' ';'											# continue
 	| structure	';'												# structure_instr
-	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
 ;
@@ -39,7 +38,8 @@ expression:
 	| INTEGER						# integer
 	| QUOTED_CHAR_LITERAL			# char_literal
 	| STRING_LITERAL				# string_literal
-	| IDENTIFIER					# identifier
+	| IDENTIFIER					# variable_usage
+	| IDENTIFIER '(' (expression (',' expression)*)? ')' ';'	# fucntioncall
 ;
 
 structure:
@@ -50,15 +50,24 @@ structure:
 else_structure: 'else' '{' (instruction)* '}' # else;
 
 affectation:
-	IDENTIFIER '=' expression						# affect
-	| IDENTIFIER '+=' expression					# plus_equal
-	| IDENTIFIER '-=' expression					# minus_equal
-	| IDENTIFIER '/=' expression					# div_equal
-	| IDENTIFIER '*=' expression					# mult_equal
-	| IDENTIFIER '%=' expression					# modulo_equal
-	| IDENTIFIER ('++' | '--')						# post_inc_dec
-	| ( '++' | '--') IDENTIFIER						# pre_inc_dec
-	| IDENTIFIER '[' expression ']' '=' expression	# affect_array_element
+	unary_affectation  		# unary_affect
+	| binary_affectation 	# binary_affect
+;
+
+unary_affectation:
+	IDENTIFIER ('[' expression ']')? '=' expression		# affect_eq
+	| IDENTIFIER ('[' expression ']')? '+=' expression	# plus_equal
+	| IDENTIFIER ('[' expression ']')? '-=' expression	# minus_equal
+	| IDENTIFIER ('[' expression ']')? '/=' expression	# div_equal
+	| IDENTIFIER ('[' expression ']')? '*=' expression	# mult_equal
+	| IDENTIFIER ('[' expression ']')? '%=' expression	# modulo_equal
+;
+
+binary_affectation:
+	IDENTIFIER ('[' expression ']')? '++'				# post_inc
+	| IDENTIFIER ('[' expression ']')? '--'				# post_dec
+	| '--' IDENTIFIER ('[' expression ']')?				# pre_dec
+	| '++' IDENTIFIER ('[' expression ']')?				# pre_inc
 ;
 
 definition:

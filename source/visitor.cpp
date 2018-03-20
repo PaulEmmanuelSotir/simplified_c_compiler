@@ -9,9 +9,9 @@
 
 antlrcpp::Any visitor::visitProgram(GramCompParser::ProgramContext* ctx)
 {
-    std::vector<utils::TerminalInfo> includes;
+    std::vector<SyntaxModel::Include> includes;
     for (auto* inc : ctx->INCLUDE()) {
-        includes.push_back(utils::TerminalInfo(inc));
+        includes.push_back(SyntaxModel::Include(inc));
     }
 
     auto declarations = visit_all<SyntaxModel::Definition>(ctx->declaration());
@@ -24,13 +24,13 @@ antlrcpp::Any visitor::visitProgram(GramCompParser::ProgramContext* ctx)
 antlrcpp::Any visitor::visitFucntioncall(GramCompParser::FucntioncallContext* ctx)
 {
     auto args = visit_all<SyntaxModel::Expression>(ctx->expression());
-    auto func_name = utils::TerminalInfo(ctx->IDENTIFIER());
+    auto func_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
     return new SyntaxModel::FunctionCall(args, func_name);
 }
 
 antlrcpp::Any visitor::visitFunction(GramCompParser::FunctionContext* ctx)
 {
-    auto id = utils::TerminalInfo(ctx->IDENTIFIER());
+    auto id = SyntaxModel::Identifier(ctx->IDENTIFIER());
     auto args = visit_single<SyntaxModel::Args>(ctx->args());
     auto definitions = visit_all<SyntaxModel::Definition>(ctx->function_init());
     auto instructions = visit_all<SyntaxModel::Instruction>(ctx->instruction());
@@ -113,7 +113,7 @@ antlrcpp::Any visitor::visitNot(GramCompParser::NotContext* ctx)
     auto expr = visit_single<SyntaxModel::Expression>(ctx->expression());
     return SyntaxModel::UnaryOp(expr, SyntaxModel::UnaryOp::Op::NOT);
 }
-#include <type_traits>
+
 antlrcpp::Any visitor::visitUnary_minus(GramCompParser::Unary_minusContext* ctx)
 {
     auto expr = visit_single<SyntaxModel::Expression>(ctx->expression());
@@ -136,8 +136,63 @@ antlrcpp::Any visitor::visitChar_literal(GramCompParser::Char_literalContext* ct
     return new SyntaxModel::Constant<SyntaxModel::Type::PrimitiveType::CHAR>(char_literal);
 }
 
-// TODO: remove escaping backslashs
-// auto string_literal = substr(1, terminal.text.length() - 2);
+/*antlrcpp::Any visitString_literal(GramCompParser::String_literalContext* ctx)
+{
+    auto text = utils::TerminalInfo(ctx->STRING_LITERAL()).text;
+    // TODO: remove escaping backslashs (e.g. regex "[^\\]?\\(.)|([^\\])" )
+    auto string_literal = substr(1, terminal.text.length() - 2);
+    // TODO: StringLiteral class?
+    return new SyntaxModel::;
+}*/
+
+antlrcpp::Any visitor::visitIf(GramCompParser::IfContext* ctx)
+{
+    auto condition = visit_single<SyntaxModel::Expression>(ctx->expression());
+    auto instructions = visit_all<SyntaxModel::Instruction>(ctx->instruction());
+    auto else_clause = visit_single<SyntaxModel::Else>(ctx->else_structure());
+    return new SyntaxModel::If(condition, instructions, else_clause);
+}
+
+antlrcpp::Any visitor::visitVariable_usage(GramCompParser::Variable_usageContext* ctx)
+{
+    auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
+    return new SyntaxModel::VariableUsage(var_name);
+}
+
+antlrcpp::Any visitor::visitWhile(GramCompParser::WhileContext* ctx)
+{
+    auto condition = visit_single<SyntaxModel::Expression>(ctx->expression());
+    auto instructions = visit_all<SyntaxModel::Instruction>(ctx->instruction());
+    return new SyntaxModel::While(condition, instructions);
+}
+
+antlrcpp::Any visitor::visitElse(GramCompParser::ElseContext* ctx)
+{
+    auto instructions = visit_all<SyntaxModel::Instruction>(ctx->instruction());
+    return new SyntaxModel::Else(instructions);
+}
+
+antlrcpp::Any visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op::PRE_INC, ctx); }
+antlrcpp::Any visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op::PRE_DEC, ctx); }
+antlrcpp::Any visitor::visitPost_inc(GramCompParser::Post_incContext* ctx) { return visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op::POST_INC, ctx); }
+antlrcpp::Any visitor::visitPost_dec(GramCompParser::Post_decContext* ctx) { return visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op::POST_DEC, ctx); }
+antlrcpp::Any visitor::visitAffect_eq(GramCompParser::Affect_eqContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::EQ, ctx); }
+antlrcpp::Any visitor::visitPlus_equal(GramCompParser::Plus_equalContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::PLUS_EQ, ctx); }
+antlrcpp::Any visitor::visitMinus_equal(GramCompParser::Minus_equalContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::MIN_EQ, ctx); }
+antlrcpp::Any visitor::visitDiv_equal(GramCompParser::Div_equalContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::DIV_EQ, ctx); }
+antlrcpp::Any visitor::visitMult_equal(GramCompParser::Mult_equalContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::MULT_EQ, ctx); }
+antlrcpp::Any visitor::visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) { return visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op::MODULO_EQ, ctx); }
+
+/*
+antlrcpp::Any visitor::visitDefine(GramCompParser::DefineContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitDeftable(GramCompParser::DeftableContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitDeclare(GramCompParser::DeclareContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitDecltable(GramCompParser::DecltableContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitArray_expr(GramCompParser::Array_exprContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitConst_expr(GramCompParser::Const_exprContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitAtomic_type(GramCompParser::Atomic_typeContext* ctx) { return new SyntaxModel::; }
+antlrcpp::Any visitor::visitType(GramCompParser::TypeContext* ctx) { return new SyntaxModel::; }
+*/
 
 antlrcpp::Any visitor::visitBinaryOp(auto exprs, SyntaxModel::BinaryOp::Op op)
 {
