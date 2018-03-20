@@ -6,22 +6,16 @@
 
 namespace SyntaxModel {
 
-    class Definition : public Instruction {
+    class Definition final : public Instruction {
     public:
-        Definition(const Identifier& id, const Type& type);
-        virtual ~Definition() = default;
+        using empty_expr_vector = std::vector<const Expression*>;
+
+        Definition(const Type* type, const std::vector<Identifier>& names, const std::vector<const Expression*>& init_values = empty_expr_vector());
+        virtual ~Definition();
 
     private:
-        const Identifier _id;
-        const Type _type;
-    };
-
-    class Declaration final : public Definition {
-    public:
-        Declaration(const Identifier& id, const Type& type, const Expression* init_value);
-        virtual ~Declaration();
-
-    private:
-        const Expression* _init_value;
+        const Type* _type;
+        const std::vector<Identifier> _names;
+        const std::vector<const Expression*> _init_values;
     };
 }
