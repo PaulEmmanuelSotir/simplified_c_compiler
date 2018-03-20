@@ -3,10 +3,10 @@
 #include <iostream>
 
 #include "SyntaxModel/SyntaxModel.h"
+#include "Visitor.h"
 #include "grammar/GramCompBaseVisitor.h"
 #include "grammar/GramCompLexer.h"
 #include "grammar/GramCompParser.h"
-#include "visitor.h"
 
 void parse(std::ifstream& fs)
 {
@@ -29,6 +29,7 @@ void parse(std::ifstream& fs)
     std::cout << tree->toStringTree(&parser) << std::endl;
 
     // Build syntaxic model (AST)
+    //visitor
 }
 
 void compile(std::ifstream& fs, const std::string& target)
