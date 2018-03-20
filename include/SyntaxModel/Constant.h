@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include "SyntaxModel/Expression.h"
 
 namespace SyntaxModel {
@@ -15,5 +17,18 @@ namespace SyntaxModel {
     private:
         const Type::PrimitiveType _type = T;
         const Type::UnderlyingType<T> _value;
+    };
+
+    template <Type::PrimitiveType T>
+    class ArrayConstant final : public Expression {
+    public:
+        ArrayConstant(const std::vector<const Type::UnderlyingType<T>>& values)
+            : _values(values)
+        {
+        }
+        virtual ~ArrayConstant() = default;
+
+    private:
+        const std::vector<const Type::UnderlyingType<T>> _values;
     };
 }
