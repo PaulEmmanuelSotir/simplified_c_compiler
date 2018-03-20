@@ -10,6 +10,7 @@ public:
     virtual antlrcpp::Any visitProgram(GramCompParser::ProgramContext* ctx) override;
     virtual antlrcpp::Any visitFucntioncall(GramCompParser::FucntioncallContext* ctx) override;
     virtual antlrcpp::Any visitFunction(GramCompParser::FunctionContext* ctx) override;
+    virtual antlrcpp::Any visitArgs(GramCompParser::ArgsContext* ctx) override;
     virtual antlrcpp::Any visitDeclare(GramCompParser::DeclareContext* context) override;
     virtual antlrcpp::Any visitDefine(GramCompParser::DefineContext* context) override;
     virtual antlrcpp::Any visitReturn(GramCompParser::ReturnContext* context) override;
@@ -84,7 +85,7 @@ private:
     inline const T* visit_single(CTX* context)
     {
         if (context != nullptr)
-            return static_cast<const T*>(visit(context));
+            return static_cast<T*>(visit(context));
         return nullptr;
     }
 
@@ -93,7 +94,7 @@ private:
     {
         std::vector<const T*> syntax_nodes(contexts.size());
         for (auto* ctx : contexts) {
-            syntax_nodes.push_back(static_cast<const T*>(visit(ctx)));
+            syntax_nodes.push_back(static_cast<T*>(visit(ctx)));
         }
         return syntax_nodes;
     }

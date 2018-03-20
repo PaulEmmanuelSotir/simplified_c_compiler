@@ -29,7 +29,14 @@ void parse(std::ifstream& fs)
     std::cout << tree->toStringTree(&parser) << std::endl;
 
     // Build syntaxic model (AST)
-    //visitor
+    std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
+    Visitor v;
+    auto ast = v.visit(tree);
+    std::cout << "test";
+    if (ast.is<SyntaxModel::Program*>()) {
+        auto prog = ast.as<SyntaxModel::Program*>();
+        std::cout << prog->includes.size();
+    }
 }
 
 void compile(std::ifstream& fs, const std::string& target)

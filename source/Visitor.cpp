@@ -41,6 +41,14 @@ antlrcpp::Any Visitor::visitFunction(GramCompParser::FunctionContext* ctx)
     auto return_type = visit_single<SM::Type>(ctx->type());
     return new SM::Function(definitions, instructions, args, id, return_type);
 }
+#include <iostream>
+
+antlrcpp::Any Visitor::visitArgs(GramCompParser::ArgsContext* ctx)
+{
+    auto names = make_all_terminals(ctx->IDENTIFIER());
+    auto types = visit_all<SM::Type>(ctx->type());
+    return new SM::Args(types, names);
+}
 
 antlrcpp::Any Visitor::visitDeclare(GramCompParser::DeclareContext* ctx)
 {
