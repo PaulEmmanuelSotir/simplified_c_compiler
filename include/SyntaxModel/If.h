@@ -1,7 +1,8 @@
 #pragma once
-
 #include "SyntaxModel/Else.h"
 #include "SyntaxModel/Structure.h"
+
+using namespace std;
 
 namespace SyntaxModel {
     class If final : public Structure {

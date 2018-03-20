@@ -37,7 +37,7 @@ DEBUGDIR = debug
 DEPDIR = dep
 # Libraries (defines different library path if '.MAC' file is found in directory)
 ifneq ("$(wildcard ./.MAC)","")
-LIBS = -L./antlr/mac_antlr4-runtime/lib/ -l:libantlr4-runtime.a
+LIBS = -L./antlr/mac_antlr4-runtime/lib/ -lantlr4-runtime
 else
 LIBS = -L./antlr/runtime_source/dist/ -l:libantlr4-runtime.a
 endif
@@ -47,7 +47,7 @@ INCLUDES = -I ./$(INCDIR) -I ./antlr/runtime_source/runtime/src
 ifdef DEBUG
 BUILD_PATH = ./$(OUTPUT_DIR)/$(DEBUGDIR)
 else
-DEBUGFLAGS = 
+DEBUGFLAGS =
 BUILD_PATH = ./$(OUTPUT_DIR)/$(RELEASEDIR)
 endif
 # Source directory path

@@ -75,7 +75,7 @@ declaration:
 	| atomic_type IDENTIFIER '[' INTEGER ']' ';' # decltable
 ;
 
-array_expr: '{' const_expr (',' const_expr)* '}' | '[]';
+array_expr: '{' (const_expr (',' const_expr)*)? '}';
 
 const_expr: INTEGER | STRING_LITERAL | QUOTED_CHAR_LITERAL;
 

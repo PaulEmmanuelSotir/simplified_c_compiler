@@ -1,22 +1,27 @@
 #pragma once
 #include <vector>
 
-#include "SyntaxModel/Declaration.h"
+#include "SyntaxModel/Arg.h"
 #include "SyntaxModel/Definition.h"
-#include "SyntaxModel/Identifier.h"
 #include "SyntaxModel/Instruction.h"
+#include "SyntaxModel/Terminals.h"
+#include "SyntaxModel/Type.h"
+
+using namespace std;
 
 namespace SyntaxModel {
 
     class Function final {
     public:
-        Function(const std::vector<const Declaration*>& declarations, const std::vector<const Definition*>& definitions, const std::vector<const Instruction*>& instructions, const Identifier& id);
+        Function(const vector<const Definition*>& declarations, const vector<const Definition*>& definitions, const vector<const Instruction*>& instructions, const vector<const Arg*>& arguments, const Identifier& id, const Type& returnType);
         virtual ~Function();
 
     private:
-        const std::vector<const Declaration*> _declarations;
-        const std::vector<const Definition*> _definitions;
-        const std::vector<const Instruction*> _instructions;
+        const vector<const Definition*> _declarations;
+        const vector<const Definition*> _definitions;
+        const vector<const Instruction*> _instructions;
+        const vector<const Arg*> _arguments;
         const Identifier _id;
+        const Type _returnType;
     };
 }

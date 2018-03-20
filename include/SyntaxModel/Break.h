@@ -2,9 +2,8 @@
 #include "SyntaxModel/Instruction.h"
 
 namespace SyntaxModel {
-
-    class Expression : public Instruction {
+    class Break final : public Instruction {
     public:
-        virtual ~Expression() = default;
+        virtual ~Break() = default;
     };
 }
