@@ -69,9 +69,9 @@ VPATH := $(dir $(SOURCES))
 all: $(BUILD_PATH)/$(EXE_NAME)
 
 clean:
-	$(RM) $(BUILD_PATH) -r
-	$(RM) ./include/antlr -r
-	$(RM) ./source/antlr -r
+	@$(RM) $(BUILD_PATH) -r
+	@$(RM) ./include/antlr -r
+	@$(RM) ./source/antlr -r
 
 compile_grammar:
 	./compile_grammar.sh
@@ -89,7 +89,7 @@ help:
 
 # Build object files
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
-	mkdir -p $(dir $(DEPS)) $(dir $(OBJS))
+	@mkdir -p $(dir $(DEPS)) $(dir $(OBJS))
 	$(CC) $(CPPFLAGS) $(DEBUGFLAGS) $(INCLUDES) -MMD -MP -MF $(DEP_PATH)/$*.d -c $< -o $@
 
 # Build main target

@@ -2,10 +2,11 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "SyntaxModel/Program.h"
+#include "SyntaxModel/SyntaxModel.h"
 #include "grammar/GramCompBaseVisitor.h"
 #include "grammar/GramCompLexer.h"
 #include "grammar/GramCompParser.h"
+#include "visitor.h"
 
 void parse(std::ifstream& fs)
 {

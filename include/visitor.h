@@ -1,5 +1,6 @@
 #pragma once
 
+#include "SyntaxModel/SyntaxModel.h"
 #include "antlr4-runtime.h"
 #include "grammar/GramCompBaseVisitor.h"
 #include "utils.h"
