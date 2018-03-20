@@ -1,17 +1,16 @@
 #pragma once
-#include <vector>
+#include <list>
 
 #include "SyntaxModel/Expression.h"
-#include "SyntaxModel/Terminals.h"
-
-using namespace std;
+#include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
     struct FunctionCall final : public Expression {
-        FunctionCall(const vector<const Expression*>& args, const Identifier& func_name);
-        virtual ~FunctionCall();
+        FunctionCall(const antlr4::misc::Interval& source_interval, const std::list<const Expression*>& args, const Identifier& func_name);
+        virtual ~FunctionCall() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, FunctionCall>::typenames(); }
 
-        const vector<const Expression*> args;
+        const std::list<const Expression*> args;
         const Identifier func_name;
     };
 }

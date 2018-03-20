@@ -4,14 +4,10 @@
 using namespace std;
 
 namespace SyntaxModel {
-    FunctionCall::FunctionCall(const vector<const Expression*>& args, const Identifier& func_name)
-        : args(args)
+    FunctionCall::FunctionCall(const antlr4::misc::Interval& source_interval, const list<const Expression*>& args, const Identifier& func_name)
+        : Expression(source_interval, utils::container_cast(args))
+        , args(args)
         , func_name(func_name)
     {
-    }
-
-    FunctionCall::~FunctionCall()
-    {
-        utils::delete_all(args);
     }
 }

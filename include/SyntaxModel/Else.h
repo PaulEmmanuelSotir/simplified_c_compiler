@@ -1,15 +1,15 @@
 #pragma once
-#include <vector>
+#include <list>
 
 #include "SyntaxModel/Instruction.h"
 
-using namespace std;
 namespace SyntaxModel {
 
-    struct Else final {
-        Else(const vector<const Instruction*>& instructions);
-        ~Else();
+    struct Else final : public SyntaxNodeBase {
+        Else(const antlr4::misc::Interval& source_interval, const std::list<const Instruction*>& instructions);
+        virtual ~Else() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Else>::typenames(); }
 
-        const vector<const Instruction*> instructions;
+        const std::list<const Instruction*> instructions;
     };
 }

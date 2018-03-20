@@ -2,8 +2,9 @@
 
 namespace SyntaxModel {
 
-    Type::Type(const PrimitiveType type, const bool isArray)
-        : type(type)
+    Type::Type(const antlr4::misc::Interval& source_interval, const PrimitiveType type, const bool isArray)
+        : SyntaxNodeBase(source_interval)
+        , type(type)
         , isArray(isArray)
     {
     }

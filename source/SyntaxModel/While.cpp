@@ -2,8 +2,8 @@
 
 namespace SyntaxModel {
 
-    While::While(const Expression* condition, const std::vector<const Instruction*>& instructions)
-        : Structure(condition, instructions)
+    While::While(const antlr4::misc::Interval& source_interval, const Expression* condition, const std::list<const Instruction*>& instructions)
+        : Structure(source_interval, condition, instructions)
     {
     }
 }

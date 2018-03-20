@@ -17,8 +17,9 @@ namespace SyntaxModel {
             AND,
             OR
         };
-        BinaryOp(const Expression* leftExpression, const Expression* rightExpression, const Op op);
-        virtual ~BinaryOp();
+        BinaryOp(const antlr4::misc::Interval& source_interval, const Expression* leftExpression, const Expression* rightExpression, const Op op);
+        virtual ~BinaryOp() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, BinaryOp>::typenames(); }
 
         const Expression* leftExpression;
         const Expression* rightExpression;

@@ -2,16 +2,11 @@
 
 namespace SyntaxModel {
 
-    BinaryOp::BinaryOp(const Expression* leftExpression, const Expression* rightExpression, const Op op)
-        : leftExpression(leftExpression)
+    BinaryOp::BinaryOp(const antlr4::misc::Interval& source_interval, const Expression* leftExpression, const Expression* rightExpression, const Op op)
+        : Expression(source_interval, { leftExpression, rightExpression })
+        , leftExpression(leftExpression)
         , rightExpression(rightExpression)
         , op(op)
     {
-    }
-
-    BinaryOp::~BinaryOp()
-    {
-        delete leftExpression;
-        delete rightExpression;
     }
 }

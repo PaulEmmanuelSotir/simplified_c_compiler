@@ -3,18 +3,11 @@
 
 namespace SyntaxModel {
 
-    Program::Program(const std::vector<Include>& includes, const std::vector<const Function*>& functions, const std::vector<const Definition*>& declarations, const std::vector<const Definition*>& definitions)
-        : includes(includes)
+    Program::Program(const antlr4::misc::Interval& source_interval, const std::vector<Include>& includes, const std::list<const Function*>& functions, const std::list<const Definition*>& definitions)
+        : SyntaxNodeBase(source_interval, utils::children_list(functions, definitions))
+        , includes(includes)
         , functions(functions)
-        , declarations(declarations)
         , definitions(definitions)
     {
-    }
-
-    Program::~Program()
-    {
-        utils::delete_all(functions);
-        utils::delete_all(declarations);
-        utils::delete_all(definitions);
     }
 }

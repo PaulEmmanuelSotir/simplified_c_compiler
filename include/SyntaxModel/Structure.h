@@ -1,19 +1,18 @@
 
 #pragma once
-#include <vector>
+#include <list>
 
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/Instruction.h"
-
-using namespace std;
+#include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
 
     struct Structure : public Instruction {
-        Structure(const Expression* condition, const vector<const Instruction*>& instructions);
-        virtual ~Structure();
+        Structure(const antlr4::misc::Interval& source_interval, const Expression* condition, const std::list<const Instruction*>& instructions, const std::list<const SyntaxNodeBase*>& additionnal_children = std::list<const SyntaxNodeBase*>());
+        virtual ~Structure() = default;
 
         const Expression* condition;
-        const vector<const Instruction*> instructions;
+        const std::list<const Instruction*> instructions;
     };
 }
