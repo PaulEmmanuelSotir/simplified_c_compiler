@@ -29,6 +29,7 @@ namespace SyntaxModel {
         virtual ~ArrayConstant() = default;
 
     private:
+        const Type::PrimitiveType _type = T;
         const std::vector<const Type::UnderlyingType<T>> _values;
     };
 }
