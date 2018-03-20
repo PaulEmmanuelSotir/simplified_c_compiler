@@ -55,7 +55,7 @@ affectation:
 	| binary_affectation 	# binary_affect
 ;
 
-unary_affectation:
+binary_affectation:
 	IDENTIFIER ('[' expression ']')? '=' expression		# affect_eq
 	| IDENTIFIER ('[' expression ']')? '+=' expression	# plus_equal
 	| IDENTIFIER ('[' expression ']')? '-=' expression	# minus_equal
@@ -64,7 +64,7 @@ unary_affectation:
 	| IDENTIFIER ('[' expression ']')? '%=' expression	# modulo_equal
 ;
 
-binary_affectation:
+unary_affectation:
 	IDENTIFIER ('[' expression ']')? '++'				# post_inc
 	| IDENTIFIER ('[' expression ']')? '--'				# post_dec
 	| '--' IDENTIFIER ('[' expression ']')?				# pre_dec

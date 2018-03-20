@@ -2,10 +2,10 @@
 
 #include "SyntaxModel/SyntaxModel.h"
 #include "antlr4-runtime.h"
-#include "grammar/GramCompBaseVisitor.h"
+#include "grammar/GramCompVisitor.h"
 #include "utils.h"
 
-class Visitor : public GramCompBaseVisitor {
+class Visitor : public GramCompVisitor {
 public:
     virtual antlrcpp::Any visitProgram(GramCompParser::ProgramContext* ctx) override;
     virtual antlrcpp::Any visitFucntioncall(GramCompParser::FucntioncallContext* ctx) override;
@@ -19,8 +19,8 @@ public:
     virtual antlrcpp::Any visitInteger(GramCompParser::IntegerContext* ctx) override;
     virtual antlrcpp::Any visitChar_literal(GramCompParser::Char_literalContext* ctx) override;
     virtual antlrcpp::Any visitString_literal(GramCompParser::String_literalContext* ctx) override;
-    virtual antlrcpp::Any visitIf(GramCompParser::IfContext* ctx) override;
     virtual antlrcpp::Any visitVariable_usage(GramCompParser::Variable_usageContext* ctx) override;
+    virtual antlrcpp::Any visitIf(GramCompParser::IfContext* ctx) override;
     virtual antlrcpp::Any visitWhile(GramCompParser::WhileContext* ctx) override;
     virtual antlrcpp::Any visitElse(GramCompParser::ElseContext* ctx) override;
     virtual antlrcpp::Any visitDeftable(GramCompParser::DeftableContext* ctx) override;
@@ -28,6 +28,15 @@ public:
     virtual antlrcpp::Any visitArray_expr(GramCompParser::Array_exprContext* ctx) override;
     virtual antlrcpp::Any visitAtomic_type(GramCompParser::Atomic_typeContext* ctx) override;
     virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
+    virtual antlrcpp::Any visitExpression_instr(GramCompParser::Expression_instrContext* ctx) override;
+    virtual antlrcpp::Any visitAffect_epxr(GramCompParser::Affect_epxrContext* ctx) override;
+    virtual antlrcpp::Any visitStructure_instr(GramCompParser::Structure_instrContext* context) override;
+    virtual antlrcpp::Any visitFunctioninit_decl(GramCompParser::Functioninit_declContext* context) override;
+    virtual antlrcpp::Any visitFunctioninit_def(GramCompParser::Functioninit_defContext* context) override;
+    virtual antlrcpp::Any visitArray_constant(GramCompParser::Array_constantContext* context) override;
+    virtual antlrcpp::Any visitParenthesis(GramCompParser::ParenthesisContext* context) override;
+    virtual antlrcpp::Any visitUnary_affect(GramCompParser::Unary_affectContext* context) override;
+    virtual antlrcpp::Any visitBinary_affect(GramCompParser::Binary_affectContext* context) override;
 
     // Binary ops
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
@@ -39,6 +48,7 @@ public:
     virtual antlrcpp::Any visitDiv(GramCompParser::DivContext* ctx) override;
     virtual antlrcpp::Any visitEqual(GramCompParser::EqualContext* ctx) override;
     virtual antlrcpp::Any visitSup(GramCompParser::SupContext* ctx) override;
+    virtual antlrcpp::Any visitSupequal(GramCompParser::SupequalContext* context) override;
 
     // Unary ops
     virtual antlrcpp::Any visitNot(GramCompParser::NotContext* ctx) override;
@@ -82,7 +92,7 @@ private:
     }
 
     template <class T, class CTX>
-    inline const T* visit_single(CTX* context)
+    inline T* visit_single(CTX* context)
     {
         if (context != nullptr)
             return static_cast<T*>(visit(context));
@@ -94,7 +104,9 @@ private:
     {
         std::vector<const T*> syntax_nodes(contexts.size());
         for (auto* ctx : contexts) {
-            syntax_nodes.push_back(static_cast<T*>(visit(ctx)));
+            auto visited = visit(ctx);
+            if (visited != nullptr)
+                syntax_nodes.push_back(static_cast<const T*>(visited));
         }
         return syntax_nodes;
     }

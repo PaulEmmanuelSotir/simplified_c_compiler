@@ -1,6 +1,7 @@
 #include "antlr4-runtime.h"
 #include <cstdlib>
 #include <iostream>
+#include <typeinfo>
 
 #include "SyntaxModel/SyntaxModel.h"
 #include "Visitor.h"
@@ -31,7 +32,12 @@ void parse(std::ifstream& fs)
     // Build syntaxic model (AST)
     std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
     Visitor v;
-    auto ast = v.visit(tree);
+    antlrcpp::Any ast;
+    try {
+        ast = v.visit(tree);
+    } catch (const std::bad_cast& e) {
+        std::cout << e.what() << '\n';
+    }
     std::cout << "test";
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();

@@ -14,7 +14,7 @@ RM = -rm -f
 CPPFLAGS = -Wall -std=c++14 -O0
 # Add -Ofast for opt
 # Debug flags
-DEBUGFLAGS = -g
+DEBUGFLAGS = -ggdb
 # Resulting program file name
 EXE_NAME = c_compiler
 # The source file extentions

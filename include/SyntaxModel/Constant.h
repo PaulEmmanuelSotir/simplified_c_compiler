@@ -56,13 +56,13 @@ namespace SyntaxModel {
     };
 
     template <Type::PrimitiveType T>
-    ArrayConstant<T> make_array_const(const std::vector<antlr4::tree::TerminalNode*>& terminals)
+    ArrayConstant<T>* make_array_const(const std::vector<antlr4::tree::TerminalNode*>& terminals)
     {
         std::vector<const Constant<T>*> values(terminals.size());
         for (auto* c : terminals) {
             values.push_back(SyntaxModel::make_constant_from_terminal<T>(c));
         }
-        return SyntaxModel::ArrayConstant<T>(values);
+        return new SyntaxModel::ArrayConstant<T>(values);
     }
 
     ArrayConstant<Type::PrimitiveType::CHAR>* make_array_const_from_string(antlr4::tree::TerminalNode* str_token);

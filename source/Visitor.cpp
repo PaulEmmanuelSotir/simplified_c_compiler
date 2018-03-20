@@ -37,11 +37,10 @@ antlrcpp::Any Visitor::visitFunction(GramCompParser::FunctionContext* ctx)
     auto id = SM::Identifier(ctx->IDENTIFIER());
     auto args = visit_single<SM::Args>(ctx->args());
     auto definitions = visit_all<SM::Definition>(ctx->function_init());
-    auto instructions = visit_all<SM::Instruction>(ctx->instruction());
     auto return_type = visit_single<SM::Type>(ctx->type());
+    auto instructions = visit_all<SM::Instruction>(ctx->instruction());
     return new SM::Function(definitions, instructions, args, id, return_type);
 }
-#include <iostream>
 
 antlrcpp::Any Visitor::visitArgs(GramCompParser::ArgsContext* ctx)
 {
@@ -99,84 +98,44 @@ antlrcpp::Any Visitor::visitDefine(GramCompParser::DefineContext* ctx)
 antlrcpp::Any Visitor::visitReturn(GramCompParser::ReturnContext* ctx)
 {
     auto returned_expr = visit_single<SM::Expression>(ctx->expression());
-    return new SM::Return(returned_expr);
+    return static_cast<SyntaxModel::Instruction*>(new SM::Return(returned_expr));
 }
 
-antlrcpp::Any Visitor::visitBreak(GramCompParser::BreakContext* ctx)
-{
-    return new SM::Break();
-}
+antlrcpp::Any Visitor::visitBreak(GramCompParser::BreakContext* ctx) { return static_cast<SM::Instruction*>(new SM::Break()); }
+antlrcpp::Any Visitor::visitContinue(GramCompParser::ContinueContext* ctx) { return static_cast<SM::Instruction*>(new SM::Continue()); }
 
-antlrcpp::Any Visitor::visitContinue(GramCompParser::ContinueContext* ctx)
-{
-    return new SM::Continue();
-}
-
-antlrcpp::Any Visitor::visitInfequal(GramCompParser::InfequalContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::INF_EQ);
-}
-
-antlrcpp::Any Visitor::visitDifferent(GramCompParser::DifferentContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::DIFFERENT);
-}
-
-antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::PLUS);
-}
-antlrcpp::Any Visitor::visitMult(GramCompParser::MultContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::MULT);
-}
-antlrcpp::Any Visitor::visitMinus(GramCompParser::MinusContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::MINUS);
-}
-antlrcpp::Any Visitor::visitInf(GramCompParser::InfContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::INF);
-}
-antlrcpp::Any Visitor::visitDiv(GramCompParser::DivContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::DIV);
-}
-antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::EQUAL);
-}
-antlrcpp::Any Visitor::visitSup(GramCompParser::SupContext* ctx)
-{
-    return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::SUP);
-}
+antlrcpp::Any Visitor::visitInfequal(GramCompParser::InfequalContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::INF_EQ); }
+antlrcpp::Any Visitor::visitDifferent(GramCompParser::DifferentContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::DIFFERENT); }
+antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::PLUS); }
+antlrcpp::Any Visitor::visitMult(GramCompParser::MultContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::MULT); }
+antlrcpp::Any Visitor::visitMinus(GramCompParser::MinusContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::MINUS); }
+antlrcpp::Any Visitor::visitInf(GramCompParser::InfContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::INF); }
+antlrcpp::Any Visitor::visitDiv(GramCompParser::DivContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::DIV); }
+antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::EQUAL); }
+antlrcpp::Any Visitor::visitSup(GramCompParser::SupContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::SUP); }
+antlrcpp::Any Visitor::visitSupequal(GramCompParser::SupequalContext* ctx) { return visitBinaryOp(ctx->expression(), SM::BinaryOp::Op::SUP_EQ); }
 
 antlrcpp::Any Visitor::visitNot(GramCompParser::NotContext* ctx)
 {
     auto expr = visit_single<SM::Expression>(ctx->expression());
-    return SM::UnaryOp(expr, SM::UnaryOp::Op::NOT);
+    return static_cast<SyntaxModel::Expression*>(new SM::UnaryOp(expr, SM::UnaryOp::Op::NOT));
 }
 
 antlrcpp::Any Visitor::visitUnary_minus(GramCompParser::Unary_minusContext* ctx)
 {
     auto expr = visit_single<SM::Expression>(ctx->expression());
-    return SM::UnaryOp(expr, SM::UnaryOp::Op::MINUS);
+    return static_cast<SyntaxModel::Expression*>(new SM::UnaryOp(expr, SM::UnaryOp::Op::MINUS));
 }
 
-antlrcpp::Any Visitor::visitInteger(GramCompParser::IntegerContext* ctx)
-{
-    // Parse int64_t from token (we assume here this is int64_t, if int32_t is needed an implicit cast will be performed unless optimized away)
-    return SM::make_constant_from_terminal<PT::INT64_T>(ctx->INTEGER());
-}
+// Parse int64_t from token (we assume here this is int64_t, if int32_t is needed an implicit cast will be performed unless optimized away)
+antlrcpp::Any Visitor::visitInteger(GramCompParser::IntegerContext* ctx) { return static_cast<SyntaxModel::Expression*>(SM::make_constant_from_terminal<PT::INT64_T>(ctx->INTEGER())); }
+antlrcpp::Any Visitor::visitChar_literal(GramCompParser::Char_literalContext* ctx) { return static_cast<SM::Expression*>(SM::make_constant_from_terminal<PT::CHAR>(ctx->QUOTED_CHAR_LITERAL())); }
+antlrcpp::Any Visitor::visitString_literal(GramCompParser::String_literalContext* ctx) { return SM::make_array_const_from_string(ctx->STRING_LITERAL()); }
 
-antlrcpp::Any Visitor::visitChar_literal(GramCompParser::Char_literalContext* ctx)
+antlrcpp::Any Visitor::visitVariable_usage(GramCompParser::Variable_usageContext* ctx)
 {
-    return SM::make_constant_from_terminal<PT::CHAR>(ctx->QUOTED_CHAR_LITERAL());
-}
-
-antlrcpp::Any Visitor::visitString_literal(GramCompParser::String_literalContext* ctx)
-{
-    return SM::make_array_const_from_string(ctx->STRING_LITERAL());
+    auto var_name = SM::Identifier(ctx->IDENTIFIER());
+    return static_cast<SM::Expression*>(new SM::VariableUsage(var_name));
 }
 
 antlrcpp::Any Visitor::visitIf(GramCompParser::IfContext* ctx)
@@ -185,12 +144,6 @@ antlrcpp::Any Visitor::visitIf(GramCompParser::IfContext* ctx)
     auto instructions = visit_all<SM::Instruction>(ctx->instruction());
     auto else_clause = visit_single<SM::Else>(ctx->else_structure());
     return new SM::If(condition, instructions, else_clause);
-}
-
-antlrcpp::Any Visitor::visitVariable_usage(GramCompParser::Variable_usageContext* ctx)
-{
-    auto var_name = SM::Identifier(ctx->IDENTIFIER());
-    return new SM::VariableUsage(var_name);
 }
 
 antlrcpp::Any Visitor::visitWhile(GramCompParser::WhileContext* ctx)
@@ -218,25 +171,35 @@ antlrcpp::Any Visitor::visitArray_expr(GramCompParser::Array_exprContext* ctx)
 antlrcpp::Any Visitor::visitAtomic_type(GramCompParser::Atomic_typeContext* ctx)
 {
     if (ctx->CHAR() != nullptr) {
-        return SM::Type(PT::CHAR, false);
+        return new SM::Type(PT::CHAR, false);
     } else if (ctx->INT32_T() != nullptr) {
-        return SM::Type(PT::INT32_T, false);
-    } else {
-        return SM::Type(PT::INT64_T, false);
-    }
+        return new SM::Type(PT::INT32_T, false);
+    } else if (ctx->INT64_T() != nullptr) {
+        return new SM::Type(PT::INT64_T, false);
+    } // TODO: error (else)!
 }
 
 antlrcpp::Any Visitor::visitType(GramCompParser::TypeContext* ctx)
 {
     auto is_array = [ctx](auto t) -> bool { return ctx->stop->getTokenIndex() != t; };
     if (ctx->CHAR() != nullptr) {
-        return SM::Type(PT::CHAR, is_array(GramCompParser::CHAR));
+        return new SM::Type(PT::CHAR, is_array(GramCompParser::CHAR));
     } else if (ctx->INT32_T() != nullptr) {
-        return SM::Type(PT::INT32_T, is_array(GramCompParser::INT32_T));
-    } else {
-        return SM::Type(PT::INT64_T, is_array(GramCompParser::INT64_T));
-    }
+        return new SM::Type(PT::INT32_T, is_array(GramCompParser::INT32_T));
+    } else if (ctx->INT64_T() != nullptr) {
+        return new SM::Type(PT::INT64_T, is_array(GramCompParser::INT64_T));
+    } // TODO: error (else)!
 }
+
+antlrcpp::Any Visitor::visitExpression_instr(GramCompParser::Expression_instrContext* ctx) { return visit_single<SM::Instruction>(ctx->expression()); }
+antlrcpp::Any Visitor::visitAffect_epxr(GramCompParser::Affect_epxrContext* ctx) { return visit_single<SM::Expression>(ctx->affectation()); }
+antlrcpp::Any Visitor::visitStructure_instr(GramCompParser::Structure_instrContext* ctx) { return visit_single<SM::Instruction>(ctx->structure()); }
+antlrcpp::Any Visitor::visitFunctioninit_decl(GramCompParser::Functioninit_declContext* ctx) { return visit_single<SM::Definition>(ctx->declaration()); }
+antlrcpp::Any Visitor::visitFunctioninit_def(GramCompParser::Functioninit_defContext* ctx) { return visit(ctx->definition()); }
+antlrcpp::Any Visitor::visitArray_constant(GramCompParser::Array_constantContext* ctx) { return visit_single<SM::Expression>(ctx->array_expr()); }
+antlrcpp::Any Visitor::visitParenthesis(GramCompParser::ParenthesisContext* ctx) { return visit(ctx->expression()); }
+antlrcpp::Any Visitor::visitUnary_affect(GramCompParser::Unary_affectContext* ctx) { return visit_single<SM::Expression>(ctx->unary_affectation()); }
+antlrcpp::Any Visitor::visitBinary_affect(GramCompParser::Binary_affectContext* ctx) { return visit_single<SM::Expression>(ctx->binary_affectation()); }
 
 antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::PRE_INC, ctx); }
 antlrcpp::Any Visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::PRE_DEC, ctx); }
@@ -253,7 +216,7 @@ antlrcpp::Any Visitor::visitBinaryOp(auto exprs, SM::BinaryOp::Op op)
 {
     auto left_expr = visit_single<SM::Expression>(exprs[0]);
     auto right_expr = visit_single<SM::Expression>(exprs[1]);
-    return new SM::BinaryOp(left_expr, right_expr, op);
+    return static_cast<SyntaxModel::Expression*>(new SM::BinaryOp(left_expr, right_expr, op));
 }
 
 std::vector<utils::TerminalInfo> Visitor::make_all_terminals(const std::vector<antlr4::tree::TerminalNode*>& contexts)
