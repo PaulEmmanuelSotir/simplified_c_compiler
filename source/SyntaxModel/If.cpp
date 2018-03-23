@@ -14,10 +14,11 @@ namespace SyntaxModel {
     }
 
     ostream& If::toString(ostream& os) const {
-        os << "if(" << *condition << ")" << endl;
+        os << "if(" << *condition << ") {" << endl;
         for(auto instr : instructions) {
             os << *instr;
         }
+        os << "}" <<endl;
         if(else_clause != nullptr) {
             os << *else_clause;
         }

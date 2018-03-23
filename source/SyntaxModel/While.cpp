@@ -7,11 +7,12 @@ namespace SyntaxModel {
     {
     }
 
-    virtual ostream& toString(ostream& os) const override {
-        os << "while(" << *condition << ")" << endl;
+    ostream& While::toString(ostream& os) const {
+        os << "while(" << *condition << ") {" << endl;
         for(auto instr : instructions) {
             os << *instr;
         }
+        os << "}" <<endl;
         return os;
     }
 }
