@@ -16,6 +16,10 @@ namespace SyntaxModel {
         }
 
         virtual ~Constant() = default;
+        ostream& toString(ostream& os) const {
+            os << "constante";
+            return os;
+        }
 
         const Type::PrimitiveType type = T;
         const Type::UnderlyingType<T> value;

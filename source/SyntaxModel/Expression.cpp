@@ -6,4 +6,16 @@ namespace SyntaxModel {
         : name(name)
     {
     }
+
+    ostream& Expression::toString(ostream& os) const
+    {
+        os << "expression" <<endl;
+        return os;
+    }
+
+    ostream& VariableUsage::toString(ostream& os) const
+    {
+        os << "var usage";
+        return os;
+    }
 }

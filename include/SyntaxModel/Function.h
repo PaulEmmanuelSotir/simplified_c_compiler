@@ -16,11 +16,13 @@ namespace SyntaxModel {
 
         const vector<const Type*> types;
         const vector<Identifier> names;
+        friend ostream& operator<<(ostream& os, const Args& args);
     };
 
     struct Function final {
         Function(const vector<const Definition*>& definitions, const vector<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType);
         virtual ~Function();
+        friend ostream& operator<<(ostream& os, const Function& dt);
 
         const vector<const Definition*> definitions;
         const vector<const Instruction*> instructions;

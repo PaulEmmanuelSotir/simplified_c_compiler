@@ -10,6 +10,7 @@ namespace SyntaxModel {
     struct FunctionCall final : public Expression {
         FunctionCall(const vector<const Expression*>& args, const Identifier& func_name);
         virtual ~FunctionCall();
+        ostream& toString(ostream& os) const;
 
         const vector<const Expression*> args;
         const Identifier func_name;

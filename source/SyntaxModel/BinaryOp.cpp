@@ -14,4 +14,10 @@ namespace SyntaxModel {
         delete leftExpression;
         delete rightExpression;
     }
+
+    ostream& BinaryOp::toString(ostream& os) const
+    {
+        os << *(leftExpression) << " " << static_cast<std::underlying_type<BinaryOp::Op>::type>(op) << " " << *(rightExpression) << endl;
+        return os;
+    }
 }

@@ -14,4 +14,15 @@ namespace SyntaxModel {
     {
         utils::delete_all(args);
     }
+
+    ostream& FunctionCall::toString(ostream& os) const
+    {
+        os << func_name << "(";
+        for(auto arg : args)
+        {
+            os << *arg;
+        }
+        os << ")" << endl;
+        return os;
+    }
 }

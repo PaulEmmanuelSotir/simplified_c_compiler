@@ -17,4 +17,17 @@ namespace SyntaxModel {
         utils::delete_all(declarations);
         utils::delete_all(definitions);
     }
+
+    ostream& operator<<(ostream& os, const Program& prog)
+    {
+        os << "( program :" << endl;
+        for(auto def : prog.definitions) {
+            os << *def << endl;
+        }
+        for(auto function : prog.functions){
+            os << *function;
+        }
+        os << ")" << endl;
+        return os;
+    }
 }

@@ -1,6 +1,9 @@
 #pragma once
+#include <iostream>
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/Terminals.h"
+
+using namespace std;
 
 namespace SyntaxModel {
 
@@ -12,6 +15,7 @@ namespace SyntaxModel {
 
         UnaryAffectation(const Op op, const Identifier& var, const Expression* array_indice);
         virtual ~UnaryAffectation();
+        ostream& toString(ostream& os) const;
 
         const Op op;
         const Identifier& var;
@@ -28,9 +32,10 @@ namespace SyntaxModel {
 
         BinaryAffectation(const Op op, const Identifier& var, const Expression* affected_value, const Expression* array_indice);
         virtual ~BinaryAffectation();
+        ostream& toString(ostream& os) const;
 
         const Op op;
-        const Identifier& var;
+        const Identifier var;
         const Expression* affected_value;
         const Expression* array_indice;
     };

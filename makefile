@@ -78,6 +78,8 @@ compile_grammar:
 
 rebuild: clean compile_grammar all
 
+rebuild_nogrammar : clean all
+
 help:
 	@echo '				### MAKEFILE HELP ###'
 	@echo 'PHONY TARGETS:'

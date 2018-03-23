@@ -4,7 +4,7 @@ program: (INCLUDE | declaration | definition | function)*;
 
 WS: [ \t\n\r]+ -> skip;
 
-instruction: 
+instruction:
 	'break' ';' 												# break
 	| 'continue' ';'											# continue
 	| structure	';'												# structure_instr

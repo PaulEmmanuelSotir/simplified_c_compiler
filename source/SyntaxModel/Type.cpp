@@ -7,4 +7,13 @@ namespace SyntaxModel {
         , isArray(isArray)
     {
     }
+
+    ostream& operator<<(ostream& os, const Type& t)
+    {
+        os << static_cast<int>(t.type);
+        if(t.isArray) {
+            os << "[]";
+        }
+        return os;
+    }
 }

@@ -12,4 +12,12 @@ namespace SyntaxModel {
     {
         utils::delete_all(instructions);
     }
+
+    ostream& operator<<(ostream& os, const Else& e)
+    {
+        for(auto instr : e.instructions) {
+            os << *(instr);
+        }
+        return os;
+    }
 }
