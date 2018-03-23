@@ -2,10 +2,10 @@
 
 #include "SyntaxModel/SyntaxModel.h"
 #include "antlr4-runtime.h"
-#include "grammar/GramCompVisitor.h"
+#include "grammar/GramCompBaseVisitor.h"
 #include "utils.h"
 
-class Visitor : public GramCompVisitor {
+class Visitor : public GramCompBaseVisitor {
 public:
     virtual antlrcpp::Any visitProgram(GramCompParser::ProgramContext* ctx) override;
     virtual antlrcpp::Any visitFucntioncall(GramCompParser::FucntioncallContext* ctx) override;
@@ -29,14 +29,6 @@ public:
     virtual antlrcpp::Any visitAtomic_type(GramCompParser::Atomic_typeContext* ctx) override;
     virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
     virtual antlrcpp::Any visitExpression_instr(GramCompParser::Expression_instrContext* ctx) override;
-    virtual antlrcpp::Any visitAffect_epxr(GramCompParser::Affect_epxrContext* ctx) override;
-    virtual antlrcpp::Any visitStructure_instr(GramCompParser::Structure_instrContext* context) override;
-    virtual antlrcpp::Any visitFunctioninit_decl(GramCompParser::Functioninit_declContext* context) override;
-    virtual antlrcpp::Any visitFunctioninit_def(GramCompParser::Functioninit_defContext* context) override;
-    virtual antlrcpp::Any visitArray_constant(GramCompParser::Array_constantContext* context) override;
-    virtual antlrcpp::Any visitParenthesis(GramCompParser::ParenthesisContext* context) override;
-    virtual antlrcpp::Any visitUnary_affect(GramCompParser::Unary_affectContext* context) override;
-    virtual antlrcpp::Any visitBinary_affect(GramCompParser::Binary_affectContext* context) override;
 
     // Binary ops
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
@@ -77,7 +69,7 @@ private:
         // array_indexing is nullptr if we don't affect to an array element
         auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
         auto array_index = visit_single<SyntaxModel::Expression>(ctx->expression());
-        return new SyntaxModel::UnaryAffectation(op, var_name, array_index);
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::UnaryAffectation(op, var_name, array_index));
     }
 
     template <class CTX>
@@ -88,7 +80,7 @@ private:
         auto expressions = ctx->expression();
         auto array_index = (expressions.size() > 1) ? visit_single<SyntaxModel::Expression>(ctx->expression(0)) : nullptr;
         auto value = visit_single<SyntaxModel::Expression>(expressions.back());
-        return new SyntaxModel::BinaryAffectation(op, var_name, value, array_index);
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::BinaryAffectation(op, var_name, value, array_index));
     }
 
     template <class T, class CTX>
@@ -102,11 +94,14 @@ private:
     template <class T, class CTX>
     inline std::vector<const T*> visit_all(const std::vector<CTX*>& contexts)
     {
-        std::vector<const T*> syntax_nodes(contexts.size());
+        std::vector<const T*> syntax_nodes;
+        syntax_nodes.reserve(contexts.size());
         for (auto* ctx : contexts) {
-            auto visited = visit(ctx);
-            if (visited.isNotNull())
-                syntax_nodes.push_back(static_cast<const T*>(visited));
+            if (ctx != nullptr) {
+                auto visited = visit(ctx);
+                if (visited.isNotNull())
+                    syntax_nodes.push_back(static_cast<T*>(visited));
+            }
         }
         return syntax_nodes;
     }
