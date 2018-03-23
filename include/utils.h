@@ -8,8 +8,9 @@
 #endif
 #include <cstdlib>
 #include <memory>
-
+#include <iostream>
 #include "antlr4-runtime.h"
+using namespace std;
 
 namespace utils {
     struct TerminalInfo {
@@ -17,6 +18,7 @@ namespace utils {
         size_t line;
         size_t column;
         std::string text;
+        friend ostream& operator<<(ostream& os, const TerminalInfo& ti);
     };
 
     template <class T>

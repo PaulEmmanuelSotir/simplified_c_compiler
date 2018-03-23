@@ -6,4 +6,13 @@ namespace SyntaxModel {
         : Structure(condition, instructions)
     {
     }
+
+    ostream& While::toString(ostream& os) const {
+        os << "while(" << *condition << ") {" << endl;
+        for(auto instr : instructions) {
+            os << *instr;
+        }
+        os << "}" <<endl;
+        return os;
+    }
 }

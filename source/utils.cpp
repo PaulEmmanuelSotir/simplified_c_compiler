@@ -8,4 +8,10 @@ namespace utils {
         column = token->getCharPositionInLine();
         text = token->getText();
     }
+
+    ostream& operator<<(ostream& os, const TerminalInfo& ti)
+    {
+        os << ti.text;
+        return os;
+    }
 }

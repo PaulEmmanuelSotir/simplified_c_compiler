@@ -13,6 +13,11 @@ namespace SyntaxModel {
         delete array_indice;
     }
 
+    ostream& UnaryAffectation::toString(ostream& os) const {
+        os << var << " op" << static_cast<int>(op) << endl;
+        return os;
+    }
+
     BinaryAffectation::BinaryAffectation(const Op op, const Identifier& var, const Expression* affected_value, const Expression* array_indice)
         : op(op)
         , var(var)
@@ -25,5 +30,10 @@ namespace SyntaxModel {
     {
         delete affected_value;
         delete array_indice;
+    }
+
+    ostream& BinaryAffectation::toString(ostream& os) const {
+        os << var << " op" << static_cast<std::underlying_type<BinaryAffectation::Op>::type>(op) <<" "<< *affected_value << endl;
+        return os;
     }
 }

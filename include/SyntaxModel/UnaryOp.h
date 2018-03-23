@@ -7,6 +7,7 @@ namespace SyntaxModel {
             NOT };
         UnaryOp(const Expression* expression, const Op op);
         virtual ~UnaryOp();
+        virtual ostream& toString(ostream& os) const override;
 
         const Expression* expression;
         const Op op;

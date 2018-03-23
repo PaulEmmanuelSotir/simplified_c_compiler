@@ -13,5 +13,5 @@ namespace SyntaxModel {
     {
         delete condition;
         utils::delete_all(instructions);
-    }
+    } 
 }

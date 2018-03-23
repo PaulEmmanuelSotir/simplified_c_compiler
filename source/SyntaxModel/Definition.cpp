@@ -23,4 +23,19 @@ namespace SyntaxModel {
         utils::delete_all(sizes);
         utils::delete_all(init_values);
     }
+
+    ostream& Definition::toString(ostream& os) const {
+        os << *(type) << " ";
+        int i=0;
+        for(auto name : names) {
+            os << name;
+            if(init_values.size() && init_values[i] != nullptr)
+            {
+                os << "=" << init_values[i];
+            }
+            i++;
+        }
+        os << endl;
+        return os;
+    }
 }

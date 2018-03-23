@@ -38,10 +38,10 @@ void parse(std::ifstream& fs)
     } catch (const std::bad_cast& e) {
         std::cout << e.what() << '\n';
     }
-    std::cout << "test";
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
-        std::cout << prog->includes.size();
+        //std::cout << prog->includes.size();
+        std::cout << *prog << endl;
     }
 }
 

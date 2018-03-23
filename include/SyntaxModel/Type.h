@@ -1,6 +1,9 @@
 #pragma once
+#include <iostream>
 #include <cstdint>
 #include <type_traits>
+
+using namespace std;
 
 namespace SyntaxModel {
 
@@ -11,6 +14,7 @@ namespace SyntaxModel {
 
         Type(const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
+        friend ostream& operator<<(ostream& os, const Type& t);
 
     private:
         template <Type::PrimitiveType T, class Enable = void>

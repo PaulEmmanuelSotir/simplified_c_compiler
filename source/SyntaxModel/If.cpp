@@ -12,4 +12,16 @@ namespace SyntaxModel {
     {
         delete else_clause;
     }
+
+    ostream& If::toString(ostream& os) const {
+        os << "if(" << *condition << ") {" << endl;
+        for(auto instr : instructions) {
+            os << *instr;
+        }
+        os << "}" <<endl;
+        if(else_clause != nullptr) {
+            os << *else_clause;
+        }
+        return os;
+    }
 }
