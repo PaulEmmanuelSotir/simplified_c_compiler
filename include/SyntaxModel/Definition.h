@@ -18,7 +18,7 @@ namespace SyntaxModel {
         Definition(const Type* type, const std::vector<Identifier>& names, const std::vector<const Expression*>& init_values = empty_expr_vector());
         Definition(const Type* type, const std::vector<Identifier>& names, const std::vector<const size_constant*>& sizes, const std::vector<const Expression*>& init_arrays = empty_expr_vector());
         virtual ~Definition();
-        ostream& toString(ostream& os) const;
+        virtual ostream& toString(ostream& os) const override;
 
         const Type* type;
         const std::vector<Identifier> names;

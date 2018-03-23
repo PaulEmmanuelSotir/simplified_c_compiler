@@ -53,6 +53,9 @@ namespace SyntaxModel {
         int i=0;
         for(auto type : args.types) {
             os << *type << args.names[i];
+            if(args.types.size()>1){
+                os<<", ";
+            }
             i++;
         }
         return os;

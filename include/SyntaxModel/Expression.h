@@ -9,13 +9,13 @@ namespace SyntaxModel {
 
     struct Expression : public Instruction {
         virtual ~Expression() = default;
-        ostream& toString(ostream& os) const;
+        virtual ostream& toString(ostream& os) const override;
     };
 
     struct VariableUsage final : public Expression {
         VariableUsage(const Identifier& name);
         virtual ~VariableUsage() = default;
-        ostream& toString(ostream& os) const;
+        virtual ostream& toString(ostream& os) const override;
 
         const Identifier name;
     };

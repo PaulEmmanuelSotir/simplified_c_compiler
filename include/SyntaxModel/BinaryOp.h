@@ -21,7 +21,7 @@ namespace SyntaxModel {
         };
         BinaryOp(const Expression* leftExpression, const Expression* rightExpression, const Op op);
         virtual ~BinaryOp();
-        ostream& toString(ostream& os) const;
+        virtual ostream& toString(ostream& os) const override;
 
         const Expression* leftExpression;
         const Expression* rightExpression;

@@ -12,4 +12,9 @@ namespace SyntaxModel {
     {
         delete expression;
     }
+
+    ostream& UnaryOp::toString(ostream& os) const {
+        os << "op" << static_cast<std::underlying_type<UnaryOp::Op>::type>(op) << *expression << endl;
+        return os;
+    }
 }

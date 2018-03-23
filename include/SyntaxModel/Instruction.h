@@ -13,7 +13,7 @@ namespace SyntaxModel {
 
     struct Break final : public Instruction {
         virtual ~Break() = default;
-        ostream& toString(ostream& os) const {
+        virtual ostream& toString(ostream& os) const override {
             os << "break" << endl;
             return os;
         }
@@ -21,7 +21,7 @@ namespace SyntaxModel {
 
     struct Continue final : public Instruction {
         virtual ~Continue() = default;
-        ostream& toString(ostream& os) const {
+        virtual ostream& toString(ostream& os) const override{
             os << "continue" << endl;
             return os;
         }

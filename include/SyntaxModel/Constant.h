@@ -16,7 +16,7 @@ namespace SyntaxModel {
         }
 
         virtual ~Constant() = default;
-        ostream& toString(ostream& os) const {
+        virtual ostream& toString(ostream& os) const override{
             os << "constante";
             return os;
         }

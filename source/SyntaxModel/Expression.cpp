@@ -15,7 +15,7 @@ namespace SyntaxModel {
 
     ostream& VariableUsage::toString(ostream& os) const
     {
-        os << "var usage";
+        os << name;
         return os;
     }
 }

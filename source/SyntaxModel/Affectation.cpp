@@ -14,7 +14,7 @@ namespace SyntaxModel {
     }
 
     ostream& UnaryAffectation::toString(ostream& os) const {
-        os << var << static_cast<int>(op) << endl;
+        os << var << " op" << static_cast<int>(op) << endl;
         return os;
     }
 
@@ -33,9 +33,7 @@ namespace SyntaxModel {
     }
 
     ostream& BinaryAffectation::toString(ostream& os) const {
-        //os << var ;//<< static_cast<std::underlying_type<BinaryAffectation::Op>::type>(op) ;//<< *affected_value << endl;
-        os << "affectation" <<endl;
+        os << var << " op" << static_cast<std::underlying_type<BinaryAffectation::Op>::type>(op) <<" "<< *affected_value << endl;
         return os;
     }
-
 }

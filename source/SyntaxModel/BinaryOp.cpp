@@ -17,7 +17,7 @@ namespace SyntaxModel {
 
     ostream& BinaryOp::toString(ostream& os) const
     {
-        os << *(leftExpression) << " " << static_cast<std::underlying_type<BinaryOp::Op>::type>(op) << " " << *(rightExpression) << endl;
+        os << *(leftExpression) << " op" << static_cast<std::underlying_type<BinaryOp::Op>::type>(op) << " " << *(rightExpression);
         return os;
     }
 }
