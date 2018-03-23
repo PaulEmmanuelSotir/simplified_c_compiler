@@ -6,4 +6,12 @@ namespace SyntaxModel {
         : Structure(condition, instructions)
     {
     }
+
+    virtual ostream& toString(ostream& os) const override {
+        os << "while(" << *condition << ")" << endl;
+        for(auto instr : instructions) {
+            os << *instr;
+        }
+        return os;
+    }
 }
