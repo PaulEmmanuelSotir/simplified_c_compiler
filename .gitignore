@@ -4,3 +4,4 @@ source/grammar
 *.interp
 *.tokens
 .MAC
+.DS_Store
