@@ -210,6 +210,11 @@ antlrcpp::Any Visitor::visitExpression_instr(GramCompParser::Expression_instrCon
     return static_cast<SM::Instruction*>(visit_single<SM::Expression>(ctx->expression()));
 }
 
+antlrcpp::Any Visitor::visitParenthesis(GramCompParser::ParenthesisContext* ctx)
+{
+    return visit_single<SM::Expression>(ctx->expression());
+}
+
 antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_INC, ctx); }
 antlrcpp::Any Visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_DEC, ctx); }
 antlrcpp::Any Visitor::visitPost_inc(GramCompParser::Post_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::POST_INC, ctx); }
