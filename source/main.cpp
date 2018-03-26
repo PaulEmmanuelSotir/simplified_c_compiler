@@ -59,7 +59,7 @@ void compile(std::ifstream& fs, const std::string& target)
     // Static analysis
     auto analyser = staticAnalysis(program);
 
-    if (!analyser->raisedErrors) {
+    if (!analyser->raisedErrors()) {
         // Optimization
         // TODO: ...
 
