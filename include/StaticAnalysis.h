@@ -46,17 +46,19 @@ namespace StaticAnalysis {
         void FindFuncVarUsage(const SyntaxModel::Function* func, std::set<Variable>& unused_globals);
 
         template <typename T>
-        void resolve_var_usage(std::map<const T*, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>& unused_locals, const std::vector<Variable>& func_locals)
+        void resolve_var_usage(std::map<const T*, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals = nullptr, const std::vector<Variable>* func_locals = nullptr)
         {
             Variable dummy_var(var_id, nullptr);
             auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
-            auto local_it = std::find(func_locals.cbegin(), func_locals.cend(), dummy_var);
             if (global_it != _global_variables.cend()) {
                 var_resolution_map.emplace(var_usage, *global_it);
                 unused_globals.erase(*global_it);
-            } else if (local_it != func_locals.cend()) {
-                var_resolution_map.emplace(var_usage, *local_it);
-                unused_locals.erase(*local_it);
+            } else if (func_locals != nullptr && unused_locals != nullptr) {
+                auto local_it = std::find(func_locals->cbegin(), func_locals->cend(), dummy_var);
+                if (local_it != func_locals->cend()) {
+                    var_resolution_map.emplace(var_usage, *local_it);
+                    unused_locals->erase(*local_it);
+                }
             } else
                 error<true>("Variable '", var_id.text, "' not declared.");
         }

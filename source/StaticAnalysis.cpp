@@ -36,7 +36,7 @@ namespace StaticAnalysis {
         }
 
         for (const auto& var : unused_globals)
-            error<false>("Global variable '", var.name.text, "'is unused.");
+            error<false>("Global variable '", var.name.text, "' is unused.");
     }
 
     std::set<Variable> StaticAnalyser::FindGlobals(const std::list<const SyntaxModel::Definition*>& defs)
@@ -53,18 +53,12 @@ namespace StaticAnalysis {
                 unused_globals.insert(var);
             }
 
-            //TODO: handle global affectations
             // We search for variables usages in initialization expression
             for (const auto& init_expr : def->init_values) {
-                for (const auto& var_usage : init_expr->getAllChildrenOfType<SyntaxModel::VariableUsage>()) {
-                    Variable dummy_var(var_usage->name, nullptr);
-                    auto global_it = std::find(_global_variables.begin(), _global_variables.end(), dummy_var);
-                    if (global_it != _global_variables.end()) {
-                        _var_usage_resolution.emplace(var_usage, *global_it);
-                        unused_globals.erase(*global_it);
-                    } else
-                        error<true>("Global variable '", var_usage->name.text, "' not declared.");
-                }
+                for (const auto& var_usage : init_expr->getAllChildrenOfType<SyntaxModel::VariableUsage>())
+                    resolve_var_usage(_var_usage_resolution, var_usage, var_usage->name, unused_globals);
+                for (const auto& affectation : init_expr->getAllChildrenOfType<SyntaxModel::Affectation>())
+                    resolve_var_usage(_affectation_resolution, affectation, affectation->var, unused_globals);
             }
         }
         return unused_globals;
@@ -88,16 +82,16 @@ namespace StaticAnalysis {
 
     void StaticAnalyser::FindFuncVarUsage(const SyntaxModel::Function* func, std::set<Variable>& unused_globals)
     {
-        auto& func_locals = (*_function_variables.find(func->id)).second;
-        std::set<Variable> unused_locals(func_locals.begin(), func_locals.end());
+        auto* func_locals = new std::vector<Variable>((*_function_variables.find(func->id)).second);
+        auto* unused_locals = new std::set<Variable>(func_locals->cbegin(), func_locals->cend());
 
         for (auto var_usage : func->getAllChildrenOfType<SyntaxModel::VariableUsage>())
             resolve_var_usage(_var_usage_resolution, var_usage, var_usage->name, unused_globals, unused_locals, func_locals);
-        for (auto var_usage : func->getAllChildrenOfType<SyntaxModel::Affectation>())
-            resolve_var_usage(_affectation_resolution, var_usage, var_usage->var, unused_globals, unused_locals, func_locals);
+        for (auto affectation : func->getAllChildrenOfType<SyntaxModel::Affectation>())
+            resolve_var_usage(_affectation_resolution, affectation, affectation->var, unused_globals, unused_locals, func_locals);
 
         // make sure we found at least one usage for each local variable
-        for (const auto& var : unused_locals)
+        for (const auto& var : *unused_locals)
             error<false>("Local variable '", var.name.text, "' is unused in function '", func->id.text, "'.");
     }
 }
