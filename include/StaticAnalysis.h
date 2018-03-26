@@ -9,9 +9,14 @@
 
 namespace StaticAnalysis {
 
-    struct SemanticError : std::exception {
-        // TODO: add informations like TerminalInfo
-    };
+    template <bool Warn, typename... Args>
+    void error(const std::string& message, Args&&... args)
+    {
+        std::cout << (Warn ? "ERROR: " : "WARNING: ") << message;
+        using expander = int[];
+        (void)expander{ 0, (void(std::cout << std::forward<Args>(args)), 0)... };
+        std::cout << std::endl;
+    }
 
     struct Variable {
         Variable(SyntaxModel::Identifier name, SyntaxModel::Type* type, SyntaxModel::Definition::size_constant* array_size = nullptr, SyntaxModel::Expression* init_value = nullptr);
@@ -29,7 +34,6 @@ namespace StaticAnalysis {
         using FunctionVarScope = std::vector<const SyntaxModel::Instruction*>;
 
         StaticAnalyser(const SyntaxModel::Program* ast);
-        ~StaticAnalyser();
         void Analyse();
 
         std::vector<Variable> getGlobalVariables() { return _global_variables; }
@@ -37,9 +41,25 @@ namespace StaticAnalysis {
         Variable getVariableOfUsage(const SyntaxModel::VariableUsage* usage) { return _var_usage_resolution.find(usage)->second; }
 
     private:
-        void FindGlobals(const std::list<const SyntaxModel::Definition*>& defs, std::set<Variable>& unused_globals);
+        std::set<Variable> FindGlobals(const std::list<const SyntaxModel::Definition*>& defs);
         void DefineFunctionVariables(const SyntaxModel::Function* func);
         void FindFuncVarUsage(const SyntaxModel::Function* func, std::set<Variable>& unused_globals);
+
+        template <typename T>
+        void resolve_var_usage(std::map<const T*, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>& unused_locals, const std::vector<Variable>& func_locals)
+        {
+            Variable dummy_var(var_id, nullptr);
+            auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
+            auto local_it = std::find(func_locals.cbegin(), func_locals.cend(), dummy_var);
+            if (global_it != _global_variables.cend()) {
+                var_resolution_map.emplace(var_usage, *global_it);
+                unused_globals.erase(*global_it);
+            } else if (local_it != func_locals.cend()) {
+                var_resolution_map.emplace(var_usage, *local_it);
+                unused_locals.erase(*local_it);
+            } else
+                error<true>("Variable '", var_id.text, "' not declared.");
+        }
 
         // Program syntaxic tree
         const SyntaxModel::Program* _ast;
@@ -49,33 +69,7 @@ namespace StaticAnalysis {
         std::map<SyntaxModel::Identifier, std::vector<Variable>> _function_variables;
         // Maps VariableUsages with their respective Variables
         std::map<const SyntaxModel::VariableUsage*, Variable> _var_usage_resolution;
+        // Maps UnaryAffectation with their respective Variables
+        std::map<const SyntaxModel::Affectation*, Variable> _affectation_resolution;
     };
-
-    namespace {
-        inline void _throw_error(const SemanticError* e)
-        {
-            if (e != nullptr)
-                throw e;
-            else
-                throw new SemanticError();
-        }
-    }
-
-    template <bool Warn, typename... Args>
-    void error(const SemanticError* e, const std::string& message, Args&&... args)
-    {
-        const bool THROW_ON_ERROR = false; // TODO: make it a cmd option
-        const bool THROW_ON_WARNING = false; // TODO: make it a cmd option
-        std::cout << (Warn ? "ERROR: " : "WARNING: ") << message;
-        using expander = int[];
-        (void)expander{ 0, (void(std::cout << ',' << std::forward<Args>(args)), 0)... };
-        if ((Warn ? THROW_ON_ERROR : THROW_ON_WARNING))
-            _throw_error(e);
-    }
-
-    template <bool Warn, typename... Args>
-    void error(const std::string& message, Args&&... args)
-    {
-        error<Warn>(nullptr, message, std::forward<Args>(args)...);
-    }
 }

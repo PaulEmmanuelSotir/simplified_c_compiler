@@ -23,6 +23,6 @@ namespace SyntaxModel {
         const Type* type;
         const std::vector<Identifier> names;
         const std::list<const Expression*> init_values;
-        const std::list<const size_constant*>& sizes = std::list<const size_constant*>();
+        const std::list<const size_constant*> sizes = std::list<const size_constant*>();
     };
 }

@@ -71,23 +71,23 @@ private:
     }
 
     template <class CTX>
-    inline antlrcpp::Any visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op op, CTX* ctx)
+    inline antlrcpp::Any visitUnaryAffectation(SyntaxModel::Affectation::Op op, CTX* ctx)
     {
         // array_indexing is nullptr if we don't affect to an array element
         auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
         auto array_index = visit_single<SyntaxModel::Expression>(ctx->expression());
-        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::UnaryAffectation(ctx->getSourceInterval(), op, var_name, array_index));
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::Affectation(ctx->getSourceInterval(), op, var_name, array_index));
     }
 
     template <class CTX>
-    inline antlrcpp::Any visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op op, CTX* ctx)
+    inline antlrcpp::Any visitBinaryAffectation(SyntaxModel::Affectation::Op op, CTX* ctx)
     {
         // array_indexing is nullptr if we don't affect to an array element
         auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
         auto expressions = ctx->expression();
         auto array_index = (expressions.size() > 1) ? visit_single<SyntaxModel::Expression>(ctx->expression(0)) : nullptr;
         auto value = visit_single<SyntaxModel::Expression>(expressions.back());
-        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::BinaryAffectation(ctx->getSourceInterval(), op, var_name, value, array_index));
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::Affectation(ctx->getSourceInterval(), op, var_name, array_index, value));
     }
 
     template <class T, class CTX>

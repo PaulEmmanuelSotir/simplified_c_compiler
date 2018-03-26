@@ -210,19 +210,16 @@ antlrcpp::Any Visitor::visitExpression_instr(GramCompParser::Expression_instrCon
     return static_cast<SM::Instruction*>(visit_single<SM::Expression>(ctx->expression()));
 }
 
-antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::PRE_INC, ctx); }
-antlrcpp::Any Visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::PRE_DEC, ctx); }
-antlrcpp::Any Visitor::visitPost_inc(GramCompParser::Post_incContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::POST_INC, ctx); }
-antlrcpp::Any Visitor::visitPost_dec(GramCompParser::Post_decContext* ctx) { return visitUnaryAffectation(SM::UnaryAffectation::Op::POST_DEC, ctx); }
-antlrcpp::Any Visitor::visitAffect_eq(GramCompParser::Affect_eqContext* ctx)
-{
-    return visitBinaryAffectation(SM::BinaryAffectation::Op::EQ, ctx);
-}
-antlrcpp::Any Visitor::visitPlus_equal(GramCompParser::Plus_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::PLUS_EQ, ctx); }
-antlrcpp::Any Visitor::visitMinus_equal(GramCompParser::Minus_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::MIN_EQ, ctx); }
-antlrcpp::Any Visitor::visitDiv_equal(GramCompParser::Div_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::DIV_EQ, ctx); }
-antlrcpp::Any Visitor::visitMult_equal(GramCompParser::Mult_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::MULT_EQ, ctx); }
-antlrcpp::Any Visitor::visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) { return visitBinaryAffectation(SM::BinaryAffectation::Op::MODULO_EQ, ctx); }
+antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_INC, ctx); }
+antlrcpp::Any Visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_DEC, ctx); }
+antlrcpp::Any Visitor::visitPost_inc(GramCompParser::Post_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::POST_INC, ctx); }
+antlrcpp::Any Visitor::visitPost_dec(GramCompParser::Post_decContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::POST_DEC, ctx); }
+antlrcpp::Any Visitor::visitAffect_eq(GramCompParser::Affect_eqContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::EQ, ctx); }
+antlrcpp::Any Visitor::visitPlus_equal(GramCompParser::Plus_equalContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::PLUS_EQ, ctx); }
+antlrcpp::Any Visitor::visitMinus_equal(GramCompParser::Minus_equalContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::MIN_EQ, ctx); }
+antlrcpp::Any Visitor::visitDiv_equal(GramCompParser::Div_equalContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::DIV_EQ, ctx); }
+antlrcpp::Any Visitor::visitMult_equal(GramCompParser::Mult_equalContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::MULT_EQ, ctx); }
+antlrcpp::Any Visitor::visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) { return visitBinaryAffectation(SM::Affectation::Op::MODULO_EQ, ctx); }
 
 std::vector<utils::TerminalInfo> Visitor::make_all_terminals(const std::vector<antlr4::tree::TerminalNode*>& contexts)
 {

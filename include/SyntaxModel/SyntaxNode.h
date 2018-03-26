@@ -78,10 +78,10 @@ namespace SyntaxModel {
 
     template <typename FirstT, typename... OtherTs>
     struct TN<FirstT, OtherTs...> {
-        static std::unordered_set<std::string> typenames()
+        static inline std::unordered_set<std::string> typenames()
         {
             static const std::string type_name = utils::type_name<FirstT>();
-            auto types = TN<OtherTs...>::typenames();
+            std::unordered_set<std::string> types(TN<OtherTs...>::typenames());
             types.insert(type_name);
             return types;
         }
@@ -89,7 +89,7 @@ namespace SyntaxModel {
 
     template <typename LastT>
     struct TN<LastT> {
-        static std::unordered_set<std::string> typenames()
+        static inline std::unordered_set<std::string> typenames()
         {
             //static_assert(std::is_base_of<SyntaxNodeBase, LastT>::value, "TN::typenames is meant to be used on classes derived from 'SyntaxNodeBase'.");
             static const std::string type_name = utils::type_name<LastT>();
