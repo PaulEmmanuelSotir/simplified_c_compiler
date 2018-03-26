@@ -59,11 +59,13 @@ void compile(std::ifstream& fs, const std::string& target)
     // Static analysis
     auto analyser = staticAnalysis(program);
 
-    // Optimization
-    // TODO: ...
+    if (!analyser->raisedErrors) {
+        // Optimization
+        // TODO: ...
 
-    // Compilation to x86 target
-    // TODO: ...
+        // Compilation to x86 target
+        // TODO: ...
+    }
 
     delete program;
     delete analyser;
@@ -76,28 +78,24 @@ int main(int argc, char* argv[])
 
     if (argc < 2) {
         std::cout << "No input file to compile" << std::endl;
-        ;
         return EXIT_FAILURE;
     }
 
     int i;
-
     for (i = 1; i < argc; ++i) {
         //C'est une option
         if (argv[i][0] == '-') {
-            if (argv[i][1] == 'a') {
+            if (argv[i][1] == 'a')
                 std::cout << "##### -a not implemented #### " << std::endl;
-            } else if (argv[i][1] == 'c') {
+            else if (argv[i][1] == 'c')
                 std::cout << "##### -c not implemented #### " << std::endl;
-            } else if (argv[i][1] == 'o') {
+            else if (argv[i][1] == 'o')
                 std::cout << "##### -o not implemented #### " << std::endl;
-            } else {
+            else
                 std::cout << "Unknown option " << argv[i] << std::endl;
-            }
 
-        } else {
+        } else
             inputFile = argv[i];
-        }
     }
 
     // Open source file and compile it
@@ -109,9 +107,7 @@ int main(int argc, char* argv[])
         fs.close();
     } else {
         std::cout << "Couldn't read input file '" << inputFile << "'" << std::endl;
-        ;
         return EXIT_FAILURE;
     }
-
     return EXIT_SUCCESS;
 }

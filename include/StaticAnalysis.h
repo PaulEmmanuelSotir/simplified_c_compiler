@@ -9,15 +9,6 @@
 
 namespace StaticAnalysis {
 
-    template <bool Warn, typename... Args>
-    void error(const std::string& message, Args&&... args)
-    {
-        std::cout << (Warn ? "ERROR: " : "WARNING: ") << message;
-        using expander = int[];
-        (void)expander{ 0, (void(std::cout << std::forward<Args>(args)), 0)... };
-        std::cout << std::endl;
-    }
-
     struct Variable {
         Variable(SyntaxModel::Identifier name, SyntaxModel::Type* type, SyntaxModel::Definition::size_constant* array_size = nullptr, SyntaxModel::Expression* init_value = nullptr);
         Variable(const SyntaxModel::Definition& def, const size_t index = 0);
@@ -40,10 +31,26 @@ namespace StaticAnalysis {
         std::vector<Variable> getLocalVariables(const SyntaxModel::Identifier& func_id) { return _function_variables.find(func_id)->second; }
         Variable getVariableOfUsage(const SyntaxModel::VariableUsage* usage) { return _var_usage_resolution.find(usage)->second; }
 
+        const bool raisedWarnings = false;
+        const bool raisedErrors = false;
+
     private:
         std::set<Variable> FindGlobals(const std::list<const SyntaxModel::Definition*>& defs);
         void DefineFunctionVariables(const SyntaxModel::Function* func);
         void FindFuncVarUsage(const SyntaxModel::Function* func, std::set<Variable>& unused_globals);
+
+        template <bool Warn, typename... Args>
+        void error(const std::string& message, Args&&... args)
+        {
+            if (Warn)
+                raisedWarnings = true;
+            else
+                raisedErrors = true;
+            std::cout << (Warn ? "ERROR: " : "WARNING: ") << message;
+            using expander = int[];
+            (void)expander{ 0, (void(std::cout << std::forward<Args>(args)), 0)... };
+            std::cout << std::endl;
+        }
 
         template <typename T>
         void resolve_var_usage(std::map<const T*, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals = nullptr, const std::vector<Variable>* func_locals = nullptr)
