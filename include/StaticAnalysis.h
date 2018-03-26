@@ -76,6 +76,7 @@ namespace StaticAnalysis {
         std::vector<Variable> _global_variables;
         // Maps a function to its local variables
         std::map<SyntaxModel::Identifier, std::vector<Variable>> _function_variables;
+        // TODO: fix these maps when they will be needed (map Key type better should other than a pointer)
         // Maps VariableUsages with their respective Variables
         std::map<const SyntaxModel::VariableUsage*, Variable> _var_usage_resolution;
         // Maps UnaryAffectation with their respective Variables

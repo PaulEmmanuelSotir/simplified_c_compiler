@@ -20,7 +20,6 @@ namespace std {
 }
 
 namespace SyntaxModel {
-    class SyntaxNodeBase;
     using Identifier = utils::TerminalInfo;
     using Include = utils::TerminalInfo;
 
@@ -71,7 +70,7 @@ namespace SyntaxModel {
         virtual std::ostream& toString(std::ostream& os) const = 0;
 
     private:
-        const size_t _unique_id = _instance_count++;
+        const size_t _unique_id;
         friend size_t std::hash<SyntaxNodeBase>::operator()(const SyntaxNodeBase&) const;
     };
 

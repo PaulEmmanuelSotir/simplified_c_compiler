@@ -13,6 +13,7 @@ namespace SyntaxModel {
     SyntaxNodeBase::SyntaxNodeBase(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children)
         : source_interval(source_interval)
         , _children(children)
+        , _unique_id(_instance_count++)
     {
     }
 
