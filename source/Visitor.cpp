@@ -18,6 +18,7 @@ antlrcpp::Any Visitor::visitProgram(GramCompParser::ProgramContext* ctx)
         includes.push_back(SM::Include(inc));
     auto definitions = visit_all<SM::Definition>(ctx->decl_or_def());
     auto functions = visit_all<SM::Function>(ctx->function());
+    functions.push_back(new SM::Putchar()); // We add putchar function which is defined by default
     return new SM::Program(ctx->getSourceInterval(), includes, functions, definitions);
 }
 
@@ -230,8 +231,7 @@ std::vector<utils::TerminalInfo> Visitor::make_all_terminals(const std::vector<a
 {
     std::vector<utils::TerminalInfo> syntax_nodes;
     syntax_nodes.reserve(contexts.size());
-    for (auto* ctx : contexts) {
+    for (auto* ctx : contexts)
         syntax_nodes.emplace_back(ctx);
-    }
     return syntax_nodes;
 }

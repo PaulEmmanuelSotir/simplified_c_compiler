@@ -18,7 +18,7 @@ namespace SyntaxModel {
         const std::vector<Identifier> names;
     };
 
-    struct Function final : public SyntaxNodeBase {
+    struct Function : public SyntaxNodeBase {
         Function(const antlr4::misc::Interval& source_interval, const std::list<const Definition*>& definitions, const std::list<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType);
         virtual ~Function() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Function>::typenames(); }
@@ -30,5 +30,11 @@ namespace SyntaxModel {
         const Args* arguments;
         const Identifier id;
         const Type* returnType;
+    };
+
+    struct Putchar final : public Function {
+        Putchar();
+        virtual ~Putchar() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Function, Putchar>::typenames(); }
     };
 }

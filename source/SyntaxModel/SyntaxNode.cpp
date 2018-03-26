@@ -3,7 +3,7 @@
 namespace std {
     size_t hash<SyntaxModel::SyntaxNodeBase>::operator()(const SyntaxModel::SyntaxNodeBase& obj) const
     {
-        return hash<size_t>()(obj._unique_id);
+        return hash<size_t>()(obj.unique_id);
     }
 }
 
@@ -13,7 +13,7 @@ namespace SyntaxModel {
     SyntaxNodeBase::SyntaxNodeBase(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children)
         : source_interval(source_interval)
         , _children(children)
-        , _unique_id(_instance_count++)
+        , unique_id(_instance_count++)
     {
     }
 
@@ -23,8 +23,8 @@ namespace SyntaxModel {
             delete child;
     }
 
-    bool SyntaxNodeBase::operator==(const SyntaxNodeBase& obj) const { return _unique_id == obj._unique_id; }
-    bool SyntaxNodeBase::operator<(const SyntaxNodeBase& obj) const { return _unique_id < obj._unique_id; }
+    bool SyntaxNodeBase::operator==(const SyntaxNodeBase& obj) const { return unique_id == obj.unique_id; }
+    bool SyntaxNodeBase::operator<(const SyntaxNodeBase& obj) const { return unique_id < obj.unique_id; }
 
     std::ostream& operator<<(std::ostream& os, const SyntaxNodeBase& node) { return node.toString(os); }
 

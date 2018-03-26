@@ -59,7 +59,12 @@ void compile(std::ifstream& fs, const std::string& target)
     // Static analysis
     auto analyser = staticAnalysis(program);
 
-    if (!analyser->raisedErrors) {
+    if (!analyser->raisedErrors()) {
+        // Test expression type resolution (TODO: remove it!!)
+        auto exprs = program->getAllChildrenOfType<SyntaxModel::Expression>();
+        auto expr_type = (*utils::get_at(exprs, 0))->getExprType(analyser);
+        std::cout << expr_type << std::endl;
+
         // Optimization
         // TODO: ...
 

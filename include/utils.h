@@ -22,9 +22,10 @@ namespace SyntaxModel {
 namespace utils {
     struct TerminalInfo {
         TerminalInfo(antlr4::tree::TerminalNode* terminal);
-        size_t line;
-        size_t column;
-        std::string text;
+        TerminalInfo(const std::string& text, size_t line = 0, size_t column = 0);
+        std::string text = "";
+        size_t line = 0;
+        size_t column = 0;
         friend inline bool operator<(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text < rhs.text; }
         friend inline bool operator==(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text == rhs.text; }
         friend std::ostream& operator<<(std::ostream& os, const TerminalInfo& ti);

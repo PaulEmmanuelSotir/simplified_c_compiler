@@ -20,6 +20,8 @@ namespace SyntaxModel {
 
         virtual ~Constant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override { return Type(source_interval, type, false); }
+
         virtual std::ostream& toString(std::ostream& os) const override
         {
             os << "Constant<" << utils::type_name<Type::UnderlyingType<T>>() << "> (" << value << ")";
@@ -58,6 +60,7 @@ namespace SyntaxModel {
 
         virtual ~ArrayConstant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override { return Type(source_interval, type, true); }
 
         const Type::PrimitiveType type = T;
         const std::list<const Constant<T>*> values;

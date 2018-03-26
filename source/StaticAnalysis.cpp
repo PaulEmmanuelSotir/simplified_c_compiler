@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 
 #include "StaticAnalysis.h"
 
@@ -32,11 +33,13 @@ namespace StaticAnalysis {
 
         for (const auto* func : _ast->functions) {
             DefineFunctionVariables(func);
-            FindFuncVarUsage(func, unused_globals);
+            FindFuncVarUsages(func, unused_globals);
         }
 
         for (const auto& var : unused_globals)
             error<false>("Global variable '", var.name.text, "' is unused.");
+
+        ResolveFunctionCalls();
     }
 
     std::set<Variable> StaticAnalyser::FindGlobals(const std::list<const SyntaxModel::Definition*>& defs)
@@ -56,9 +59,9 @@ namespace StaticAnalysis {
             // We search for variables usages in initialization expression
             for (const auto& init_expr : def->init_values) {
                 for (const auto& var_usage : init_expr->getAllChildrenOfType<SyntaxModel::VariableUsage>())
-                    resolve_var_usage(_var_usage_resolution, var_usage, var_usage->name, unused_globals);
+                    ResolveVarUsage(_var_usage_resolution, var_usage, var_usage->name, unused_globals);
                 for (const auto& affectation : init_expr->getAllChildrenOfType<SyntaxModel::Affectation>())
-                    resolve_var_usage(_affectation_resolution, affectation, affectation->var, unused_globals);
+                    ResolveVarUsage(_affectation_resolution, affectation, affectation->var, unused_globals);
             }
         }
         return unused_globals;
@@ -77,21 +80,38 @@ namespace StaticAnalysis {
                 vars.push_back(var);
             }
         }
-        _function_variables.emplace(func->id, vars);
+        _function_variables.emplace(func->unique_id, vars);
     }
 
-    void StaticAnalyser::FindFuncVarUsage(const SyntaxModel::Function* func, std::set<Variable>& unused_globals)
+    void StaticAnalyser::FindFuncVarUsages(const SyntaxModel::Function* func, std::set<Variable>& unused_globals)
     {
-        auto* func_locals = new std::vector<Variable>((*_function_variables.find(func->id)).second);
+        auto* func_locals = new std::vector<Variable>((*_function_variables.find(func->unique_id)).second);
         auto* unused_locals = new std::set<Variable>(func_locals->cbegin(), func_locals->cend());
 
         for (auto var_usage : func->getAllChildrenOfType<SyntaxModel::VariableUsage>())
-            resolve_var_usage(_var_usage_resolution, var_usage, var_usage->name, unused_globals, unused_locals, func_locals);
+            ResolveVarUsage(_var_usage_resolution, var_usage, var_usage->name, unused_globals, unused_locals, func_locals);
         for (auto affectation : func->getAllChildrenOfType<SyntaxModel::Affectation>())
-            resolve_var_usage(_affectation_resolution, affectation, affectation->var, unused_globals, unused_locals, func_locals);
+            ResolveVarUsage(_affectation_resolution, affectation, affectation->var, unused_globals, unused_locals, func_locals);
 
         // make sure we found at least one usage for each local variable
         for (const auto& var : *unused_locals)
             error<false>("Local variable '", var.name.text, "' is unused in function '", func->id.text, "'.");
+    }
+
+    void StaticAnalyser::ResolveFunctionCalls()
+    {
+        // Make a set of function ids in order to accelerate function lookup
+        std::unordered_map<std::string, const SyntaxModel::Function*> func_lookup_table;
+        for (const auto* func : _ast->functions)
+            func_lookup_table.emplace(func->id.text, func);
+
+        // Resolve function calls
+        for (const auto* usage : _ast->getAllChildrenOfType<SyntaxModel::FunctionCall>()) {
+            auto it = func_lookup_table.find(usage->func_name.text);
+            if (it == func_lookup_table.end())
+                error<true>("Function '", usage->func_name.text, "' not declared.");
+            else
+                _function_call_resolution.emplace(usage->unique_id, it->second);
+        }
     }
 }

@@ -7,7 +7,7 @@ WS: [ \t\n\r]+ -> skip;
 instruction:
 	'break' ';' 												# break
 	| 'continue' ';'											# continue
-	| structure			
+	| structure													# structure_instr
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
 ;

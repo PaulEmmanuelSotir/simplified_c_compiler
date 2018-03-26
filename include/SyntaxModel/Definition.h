@@ -14,11 +14,10 @@ namespace SyntaxModel {
 
     //TODO: store array size for array declarations/defintions
     struct Definition final : public Instruction {
-        using empty_expr_list = std::list<const Expression*>;
         using size_constant = Constant<Type::PrimitiveType::INT32_T>;
 
-        Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const Expression*>& init_values = empty_expr_list());
-        Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const size_constant*>& sizes, const std::list<const Expression*>& init_arrays = empty_expr_list());
+        Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const Expression*>& init_values = {});
+        Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const size_constant*>& sizes, const std::list<const Expression*>& init_arrays = {});
         virtual ~Definition() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Definition>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
@@ -26,6 +25,6 @@ namespace SyntaxModel {
         const Type* type;
         const std::vector<Identifier> names;
         const std::list<const Expression*> init_values;
-        const std::list<const size_constant*> sizes = std::list<const size_constant*>();
+        const std::list<const size_constant*> sizes = {};
     };
 }

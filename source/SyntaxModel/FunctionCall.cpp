@@ -1,7 +1,7 @@
 #include "SyntaxModel/FunctionCall.h"
 #include "utils.h"
 
-using namespace std;
+#include "StaticAnalysis.h"
 
 namespace SyntaxModel {
     FunctionCall::FunctionCall(const antlr4::misc::Interval& source_interval, const list<const Expression*>& args, const Identifier& func_name)
@@ -18,5 +18,12 @@ namespace SyntaxModel {
             os << *arg;
         os << ")" << std::endl;
         return os;
+    }
+
+    Type FunctionCall::getExprType(const StaticAnalysis::StaticAnalyser* analyser) const
+    {
+        // Returns called function return type
+        auto function = analyser->getFunctionDef(this);
+        return *(function->returnType);
     }
 }

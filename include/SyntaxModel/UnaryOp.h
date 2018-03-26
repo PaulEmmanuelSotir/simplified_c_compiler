@@ -10,6 +10,7 @@ namespace SyntaxModel {
         virtual ~UnaryOp() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<UnaryOp>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override;
 
         const Expression* expression;
         const Op op;

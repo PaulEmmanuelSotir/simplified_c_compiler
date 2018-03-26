@@ -20,6 +20,13 @@ namespace SyntaxModel {
     {
     }
 
+    static const antlr4::misc::Interval _dummy_interval;
+
+    Putchar::Putchar()
+        : Function(_dummy_interval, {}, {}, new Args(_dummy_interval, { new Type(_dummy_interval, Type::PrimitiveType::INT32_T, false) }, { Identifier("character") }), Identifier("putchar"), new Type(_dummy_interval, Type::PrimitiveType::INT32_T, false))
+    {
+    }
+
     std::ostream& Function::toString(std::ostream& os) const
     {
         if (returnType == nullptr)
