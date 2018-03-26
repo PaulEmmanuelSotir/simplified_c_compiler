@@ -13,4 +13,16 @@ namespace SyntaxModel {
         , name(name)
     {
     }
+
+    std::ostream& Expression::toString(std::ostream& os) const
+    {
+        os << "expression" << std::endl;
+        return os;
+    }
+
+    std::ostream& VariableUsage::toString(std::ostream& os) const
+    {
+        os << name;
+        return os;
+    }
 }

@@ -9,4 +9,13 @@ namespace SyntaxModel {
         , affected_value(affected_value)
     {
     }
+
+    std::ostream& Affectation::toString(std::ostream& os) const
+    {
+        os << var << " op" << static_cast<int>(op);
+        if (affected_value != nullptr)
+            os << " " << *affected_value;
+        os << std::endl;
+        return os;
+    }
 }

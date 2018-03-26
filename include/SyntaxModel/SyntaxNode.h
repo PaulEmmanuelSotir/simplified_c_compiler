@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <iostream>
 #include <list>
 #include <type_traits>
 
@@ -29,9 +30,9 @@ namespace SyntaxModel {
         SyntaxNodeBase(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>());
         virtual ~SyntaxNodeBase();
 
-        //TODO: put stream operator overrload here and create a virtual function "to_string"
         bool operator==(const SyntaxNodeBase& obj) const;
         bool operator<(const SyntaxNodeBase& obj) const;
+        friend std::ostream& operator<<(std::ostream& os, const SyntaxNodeBase& node);
 
         template <typename T>
         bool is() const
@@ -67,6 +68,7 @@ namespace SyntaxModel {
 
     protected:
         virtual std::unordered_set<std::string> getTypenames() const = 0;
+        virtual std::ostream& toString(std::ostream& os) const = 0;
 
     private:
         const size_t _unique_id = _instance_count++;

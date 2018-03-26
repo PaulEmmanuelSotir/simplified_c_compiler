@@ -9,4 +9,13 @@ namespace SyntaxModel {
         , instructions(instructions)
     {
     }
+
+    std::ostream& Else::toString(std::ostream& os) const
+    {
+        os << "else {" << std::endl;
+        for (auto instr : instructions)
+            os << *(instr);
+        os << "}" << std::endl;
+        return os;
+    }
 }

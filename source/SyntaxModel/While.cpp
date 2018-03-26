@@ -6,4 +6,13 @@ namespace SyntaxModel {
         : Structure(source_interval, condition, instructions)
     {
     }
+
+    std::ostream& While::toString(std::ostream& os) const
+    {
+        os << "while(" << *condition << ") {" << std::endl;
+        for (auto instr : instructions)
+            os << *instr;
+        os << "}" << std::endl;
+        return os;
+    }
 }

@@ -8,6 +8,7 @@ namespace SyntaxModel {
         Return(const antlr4::misc::Interval& source_interval, const Expression* expression);
         virtual ~Return() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Return>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const Expression* expression;
     };

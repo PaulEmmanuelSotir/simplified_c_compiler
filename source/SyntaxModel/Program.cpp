@@ -10,4 +10,15 @@ namespace SyntaxModel {
         , definitions(definitions)
     {
     }
+
+    std::ostream& Program::toString(std::ostream& os) const
+    {
+        os << "( program :" << std::endl;
+        for (auto def : definitions)
+            os << *def << std::endl;
+        for (auto function : functions)
+            os << *function;
+        os << ")" << std::endl;
+        return os;
+    }
 }

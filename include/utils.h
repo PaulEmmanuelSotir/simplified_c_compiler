@@ -7,6 +7,7 @@
 #include <cxxabi.h>
 #endif
 #include <cstdlib>
+#include <iostream>
 #include <map>
 #include <memory>
 #include <set>
@@ -26,6 +27,7 @@ namespace utils {
         std::string text;
         friend inline bool operator<(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text < rhs.text; }
         friend inline bool operator==(const TerminalInfo& lhs, const TerminalInfo& rhs) { return lhs.text == rhs.text; }
+        friend std::ostream& operator<<(std::ostream& os, const TerminalInfo& ti);
     };
 
     template <class T>

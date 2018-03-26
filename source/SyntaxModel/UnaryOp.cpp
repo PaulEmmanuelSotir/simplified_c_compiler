@@ -8,4 +8,10 @@ namespace SyntaxModel {
         , op(op)
     {
     }
+
+    std::ostream& UnaryOp::toString(std::ostream& os) const
+    {
+        os << "op" << static_cast<std::underlying_type<UnaryOp::Op>::type>(op) << *expression << std::endl;
+        return os;
+    }
 }

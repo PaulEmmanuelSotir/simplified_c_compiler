@@ -19,4 +19,30 @@ namespace SyntaxModel {
         , returnType(returnType)
     {
     }
+
+    std::ostream& Function::toString(std::ostream& os) const
+    {
+        if (returnType == nullptr)
+            os << "void ";
+        else
+            os << *(returnType) << " ";
+        os << id << "(" << *(arguments) << ")" << std::endl;
+        for (auto dec : definitions)
+            os << *dec;
+        for (auto instr : instructions)
+            os << *instr;
+        return os;
+    }
+
+    std::ostream& Args::toString(std::ostream& os) const
+    {
+        int i = 0;
+        for (auto type : types) {
+            os << *type << names[i];
+            if (types.size() > 1)
+                os << ", ";
+            i++;
+        }
+        return os;
+    }
 }

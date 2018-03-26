@@ -10,4 +10,13 @@ namespace SyntaxModel {
         , func_name(func_name)
     {
     }
+
+    std::ostream& FunctionCall::toString(std::ostream& os) const
+    {
+        os << func_name << "(";
+        for (auto arg : args)
+            os << *arg;
+        os << ")" << std::endl;
+        return os;
+    }
 }

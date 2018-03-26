@@ -37,6 +37,7 @@ const SyntaxModel::Program* parse(std::ifstream& fs)
 
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
+        std::cout << *prog << std::endl;
         return prog;
     }
     return nullptr;
@@ -71,23 +72,44 @@ void compile(std::ifstream& fs, const std::string& target)
 int main(int argc, char* argv[])
 {
     std::string target = "output";
+    std::string inputFile = "input";
+
     if (argc < 2) {
-        std::cout << "No input file to compile";
+        std::cout << "No input file to compile" << std::endl;
+        ;
         return EXIT_FAILURE;
-    } else if (argc >= 3) {
-        // Target executable filename
-        target = argv[3];
+    }
+
+    int i;
+
+    for (i = 1; i < argc; ++i) {
+        //C'est une option
+        if (argv[i][0] == '-') {
+            if (argv[i][1] == 'a') {
+                std::cout << "##### -a not implemented #### " << std::endl;
+            } else if (argv[i][1] == 'c') {
+                std::cout << "##### -c not implemented #### " << std::endl;
+            } else if (argv[i][1] == 'o') {
+                std::cout << "##### -o not implemented #### " << std::endl;
+            } else {
+                std::cout << "Unknown option " << argv[i] << std::endl;
+            }
+
+        } else {
+            inputFile = argv[i];
+        }
     }
 
     // Open source file and compile it
     std::ifstream fs;
-    fs.open(argv[1], std::fstream::in);
+    fs.open(inputFile, std::fstream::in);
     if (fs.is_open()) {
-        std::cout << "### Compiling '" << argv[1] << "' ###" << std::endl;
+        std::cout << "### Compiling '" << inputFile << "' ###" << std::endl;
         compile(fs, target);
         fs.close();
     } else {
-        std::cout << "Couldn't read input file '" << argv[1] << "'";
+        std::cout << "Couldn't read input file '" << inputFile << "'" << std::endl;
+        ;
         return EXIT_FAILURE;
     }
 

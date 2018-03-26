@@ -8,6 +8,8 @@
 #include "SyntaxModel/SyntaxNode.h"
 #include "SyntaxModel/Type.h"
 
+using namespace std;
+
 namespace SyntaxModel {
 
     //TODO: store array size for array declarations/defintions
@@ -19,6 +21,7 @@ namespace SyntaxModel {
         Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const size_constant*>& sizes, const std::list<const Expression*>& init_arrays = empty_expr_list());
         virtual ~Definition() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Definition>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const Type* type;
         const std::vector<Identifier> names;

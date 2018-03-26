@@ -18,6 +18,12 @@ namespace SyntaxModel {
         }
         virtual ~Break() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Break, Instruction>::typenames(); }
+
+        virtual std::ostream& toString(std::ostream& os) const override
+        {
+            os << "break" << std::endl;
+            return os;
+        }
     };
 
     struct Continue final : public Instruction {
@@ -27,5 +33,11 @@ namespace SyntaxModel {
         }
         virtual ~Continue() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Continue, Instruction>::typenames(); }
+
+        virtual std::ostream& toString(std::ostream& os) const override
+        {
+            os << "continue" << std::endl;
+            return os;
+        }
     };
 }

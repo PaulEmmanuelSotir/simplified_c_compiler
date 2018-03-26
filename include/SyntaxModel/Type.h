@@ -14,6 +14,7 @@ namespace SyntaxModel {
         Type(const antlr4::misc::Interval& source_interval, const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Type>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
     private:
         template <Type::PrimitiveType T, class Enable = void>

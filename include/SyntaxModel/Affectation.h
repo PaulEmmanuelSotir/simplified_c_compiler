@@ -1,6 +1,9 @@
 #pragma once
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/SyntaxNode.h"
+#include <iostream>
+
+using namespace std;
 
 namespace SyntaxModel {
     struct Affectation final : public Expression {
@@ -20,6 +23,7 @@ namespace SyntaxModel {
         friend bool inline operator<(const Affectation& lhs, const Affectation& rhs) { return lhs.var < rhs.var; }
         friend inline bool operator==(const Affectation& lhs, const Affectation& rhs) { return lhs.var == rhs.var; }
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, Affectation>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const Op op;
         const Identifier var;

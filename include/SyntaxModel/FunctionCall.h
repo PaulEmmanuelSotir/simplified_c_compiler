@@ -9,6 +9,7 @@ namespace SyntaxModel {
         FunctionCall(const antlr4::misc::Interval& source_interval, const std::list<const Expression*>& args, const Identifier& func_name);
         virtual ~FunctionCall() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, FunctionCall>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const std::list<const Expression*> args;
         const Identifier func_name;

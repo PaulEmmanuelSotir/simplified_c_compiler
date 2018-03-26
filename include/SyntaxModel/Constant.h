@@ -6,6 +6,7 @@
 #include "SyntaxModel/SyntaxNode.h"
 #include "SyntaxModel/Type.h"
 #include "antlr4-runtime.h"
+#include "utils.h"
 
 namespace SyntaxModel {
 
@@ -19,6 +20,11 @@ namespace SyntaxModel {
 
         virtual ~Constant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override
+        {
+            os << "Constant<" << utils::type_name<Type::UnderlyingType<T>>() << "> (" << value << ")";
+            return os;
+        }
 
         const Type::PrimitiveType type = T;
         const Type::UnderlyingType<T> value;

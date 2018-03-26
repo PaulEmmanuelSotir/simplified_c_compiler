@@ -7,4 +7,15 @@ namespace SyntaxModel {
         , else_clause(else_clause)
     {
     }
+
+    std::ostream& If::toString(std::ostream& os) const
+    {
+        os << "if(" << *condition << ") {" << std::endl;
+        for (auto instr : instructions)
+            os << *instr;
+        os << "}" << std::endl;
+        if (else_clause != nullptr)
+            os << *else_clause;
+        return os;
+    }
 }

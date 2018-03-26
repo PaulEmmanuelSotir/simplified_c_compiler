@@ -7,4 +7,10 @@ namespace SyntaxModel {
         , expression(expression)
     {
     }
+
+    std::ostream& Return::toString(std::ostream& os) const
+    {
+        os << "return" << std::endl;
+        return os;
+    }
 }

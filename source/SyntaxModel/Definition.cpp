@@ -18,4 +18,19 @@ namespace SyntaxModel {
         , sizes(sizes)
     {
     }
+
+    std::ostream& Definition::toString(std::ostream& os) const
+    {
+        os << *(type) << " ";
+        int i = 0;
+        for (auto name : names) {
+            os << name;
+            auto it = utils::get_at(init_values, i);
+            if (init_values.size() && it != init_values.cend())
+                os << "=" << *it;
+            i++;
+        }
+        os << std::endl;
+        return os;
+    }
 }

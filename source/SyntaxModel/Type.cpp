@@ -8,4 +8,12 @@ namespace SyntaxModel {
         , isArray(isArray)
     {
     }
+
+    std::ostream& Type::toString(std::ostream& os) const
+    {
+        os << "type" << static_cast<int>(type);
+        if (isArray)
+            os << "[]";
+        return os;
+    }
 }

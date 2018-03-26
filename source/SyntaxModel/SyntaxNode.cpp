@@ -25,6 +25,8 @@ namespace SyntaxModel {
     bool SyntaxNodeBase::operator==(const SyntaxNodeBase& obj) const { return _unique_id == obj._unique_id; }
     bool SyntaxNodeBase::operator<(const SyntaxNodeBase& obj) const { return _unique_id < obj._unique_id; }
 
+    std::ostream& operator<<(std::ostream& os, const SyntaxNodeBase& node) { return node.toString(os); }
+
     std::list<const SyntaxNodeBase*> SyntaxNodeBase::getAllChildren() const
     {
         std::list<const SyntaxNodeBase*> all_childrens;

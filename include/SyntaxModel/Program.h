@@ -12,6 +12,7 @@ namespace SyntaxModel {
         Program(const antlr4::misc::Interval& source_interval, const std::vector<Include>& includes, const std::list<const Function*>& functions, const std::list<const Definition*>& definitions);
         virtual ~Program() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Program>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const std::vector<Include> includes;
         const std::list<const Function*> functions;
