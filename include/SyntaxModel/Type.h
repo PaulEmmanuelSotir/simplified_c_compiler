@@ -1,20 +1,20 @@
 #pragma once
-#include <iostream>
 #include <cstdint>
 #include <type_traits>
 
-using namespace std;
+#include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
 
-    struct Type final {
+    struct Type final : public SyntaxNodeBase {
         enum class PrimitiveType { INT32_T,
             INT64_T,
             CHAR };
 
-        Type(const PrimitiveType type, const bool isArray);
+        Type(const antlr4::misc::Interval& source_interval, const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
-        friend ostream& operator<<(ostream& os, const Type& t);
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Type>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
     private:
         template <Type::PrimitiveType T, class Enable = void>

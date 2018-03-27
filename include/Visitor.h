@@ -8,7 +8,7 @@
 class Visitor : public GramCompBaseVisitor {
 public:
     virtual antlrcpp::Any visitProgram(GramCompParser::ProgramContext* ctx) override;
-    virtual antlrcpp::Any visitFucntioncall(GramCompParser::FucntioncallContext* ctx) override;
+    virtual antlrcpp::Any visitFunctioncall(GramCompParser::FunctioncallContext* ctx) override;
     virtual antlrcpp::Any visitFunction(GramCompParser::FunctionContext* ctx) override;
     virtual antlrcpp::Any visitArgs(GramCompParser::ArgsContext* ctx) override;
     virtual antlrcpp::Any visitDeclare(GramCompParser::DeclareContext* context) override;
@@ -29,6 +29,7 @@ public:
     virtual antlrcpp::Any visitAtomic_type(GramCompParser::Atomic_typeContext* ctx) override;
     virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
     virtual antlrcpp::Any visitExpression_instr(GramCompParser::Expression_instrContext* ctx) override;
+    virtual antlrcpp::Any visitParenthesis(GramCompParser::ParenthesisContext* ctx) override;
 
     // Binary ops
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
@@ -61,26 +62,33 @@ public:
     virtual antlrcpp::Any visitModulo_equal(GramCompParser::Modulo_equalContext* ctx) override;
 
 private:
-    inline antlrcpp::Any visitBinaryOp(const std::vector<GramCompParser::ExpressionContext*>& exprs, SyntaxModel::BinaryOp::Op op);
+    template <typename CTX>
+    antlrcpp::Any visitBinaryOp(CTX* ctx, SyntaxModel::BinaryOp::Op op)
+    {
+        const auto& exprs = ctx->expression();
+        auto left_expr = visit_single<SyntaxModel::Expression>(exprs[0]);
+        auto right_expr = visit_single<SyntaxModel::Expression>(exprs[1]);
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::BinaryOp(ctx->getSourceInterval(), left_expr, right_expr, op));
+    }
 
     template <class CTX>
-    inline antlrcpp::Any visitUnaryAffectation(SyntaxModel::UnaryAffectation::Op op, CTX* ctx)
+    inline antlrcpp::Any visitUnaryAffectation(SyntaxModel::Affectation::Op op, CTX* ctx)
     {
         // array_indexing is nullptr if we don't affect to an array element
         auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
         auto array_index = visit_single<SyntaxModel::Expression>(ctx->expression());
-        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::UnaryAffectation(op, var_name, array_index));
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::Affectation(ctx->getSourceInterval(), op, var_name, array_index));
     }
 
     template <class CTX>
-    inline antlrcpp::Any visitBinaryAffectation(SyntaxModel::BinaryAffectation::Op op, CTX* ctx)
+    inline antlrcpp::Any visitBinaryAffectation(SyntaxModel::Affectation::Op op, CTX* ctx)
     {
         // array_indexing is nullptr if we don't affect to an array element
         auto var_name = SyntaxModel::Identifier(ctx->IDENTIFIER());
         auto expressions = ctx->expression();
         auto array_index = (expressions.size() > 1) ? visit_single<SyntaxModel::Expression>(ctx->expression(0)) : nullptr;
         auto value = visit_single<SyntaxModel::Expression>(expressions.back());
-        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::BinaryAffectation(op, var_name, value, array_index));
+        return static_cast<SyntaxModel::Expression*>(new SyntaxModel::Affectation(ctx->getSourceInterval(), op, var_name, array_index, value));
     }
 
     template <class T, class CTX>
@@ -92,10 +100,9 @@ private:
     }
 
     template <class T, class CTX>
-    inline std::vector<const T*> visit_all(const std::vector<CTX*>& contexts)
+    inline std::list<const T*> visit_all(const std::vector<CTX*>& contexts)
     {
-        std::vector<const T*> syntax_nodes;
-        syntax_nodes.reserve(contexts.size());
+        std::list<const T*> syntax_nodes;
         for (auto* ctx : contexts) {
             if (ctx != nullptr) {
                 auto visited = visit(ctx);
@@ -106,6 +113,6 @@ private:
         return syntax_nodes;
     }
 
-    static inline const std::vector<const SyntaxModel::Definition::size_constant*> parseArraySizes(const std::vector<antlr4::tree::TerminalNode*>& integers);
+    static inline const std::list<const SyntaxModel::Definition::size_constant*> parseArraySizes(const std::vector<antlr4::tree::TerminalNode*>& integers);
     static inline std::vector<utils::TerminalInfo> make_all_terminals(const std::vector<antlr4::tree::TerminalNode*>& contexts);
 };

@@ -1,31 +1,32 @@
 #pragma once
-#include <vector>
+#include <list>
 
 #include "SyntaxModel/Definition.h"
 #include "SyntaxModel/Instruction.h"
-#include "SyntaxModel/Terminals.h"
+#include "SyntaxModel/SyntaxNode.h"
 #include "SyntaxModel/Type.h"
-
-using namespace std;
 
 namespace SyntaxModel {
 
-    struct Args final {
-        Args(const vector<const Type*>& types, const vector<Identifier>& names);
-        virtual ~Args();
+    struct Args final : public SyntaxNodeBase {
+        Args(const antlr4::misc::Interval& source_interval, const std::list<const Type*>& types, const std::vector<Identifier>& names);
+        virtual ~Args() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Args>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
-        const vector<const Type*> types;
-        const vector<Identifier> names;
-        friend ostream& operator<<(ostream& os, const Args& args);
+        const std::list<const Type*> types;
+        const std::vector<Identifier> names;
     };
 
-    struct Function final {
-        Function(const vector<const Definition*>& definitions, const vector<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType);
-        virtual ~Function();
-        friend ostream& operator<<(ostream& os, const Function& dt);
+    struct Function final : public SyntaxNodeBase {
+        Function(const antlr4::misc::Interval& source_interval, const std::list<const Definition*>& definitions, const std::list<const Instruction*>& instructions, const Args* arguments, const Identifier& id, const Type* returnType);
+        virtual ~Function() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Function>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
+        friend inline bool operator<(const Function& lhs, const Function& rhs) { return lhs.id < rhs.id; }
 
-        const vector<const Definition*> definitions;
-        const vector<const Instruction*> instructions;
+        const std::list<const Definition*> definitions;
+        const std::list<const Instruction*> instructions;
         const Args* arguments;
         const Identifier id;
         const Type* returnType;

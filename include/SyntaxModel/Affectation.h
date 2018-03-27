@@ -1,42 +1,33 @@
 #pragma once
-#include <iostream>
 #include "SyntaxModel/Expression.h"
-#include "SyntaxModel/Terminals.h"
+#include "SyntaxModel/SyntaxNode.h"
+#include <iostream>
 
 using namespace std;
 
 namespace SyntaxModel {
-
-    struct UnaryAffectation final : public Expression {
+    struct Affectation final : public Expression {
         enum class Op { POST_INC,
             POST_DEC,
             PRE_INC,
-            PRE_DEC };
-
-        UnaryAffectation(const Op op, const Identifier& var, const Expression* array_indice);
-        virtual ~UnaryAffectation();
-        virtual ostream& toString(ostream& os) const override;
-
-        const Op op;
-        const Identifier& var;
-        const Expression* array_indice;
-    };
-
-    struct BinaryAffectation final : public Expression {
-        enum class Op { EQ,
+            PRE_DEC,
+            EQ,
             PLUS_EQ,
             MIN_EQ,
             DIV_EQ,
             MULT_EQ,
             MODULO_EQ };
 
-        BinaryAffectation(const Op op, const Identifier& var, const Expression* affected_value, const Expression* array_indice);
-        virtual ~BinaryAffectation();
-        virtual ostream& toString(ostream& os) const override;
+        Affectation(const antlr4::misc::Interval& source_interval, const Op op, const Identifier& var, const Expression* array_indice, const Expression* affected_value = nullptr);
+        virtual ~Affectation() = default;
+        friend bool inline operator<(const Affectation& lhs, const Affectation& rhs) { return lhs.var < rhs.var; }
+        friend inline bool operator==(const Affectation& lhs, const Affectation& rhs) { return lhs.var == rhs.var; }
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, Affectation>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const Op op;
         const Identifier var;
-        const Expression* affected_value;
         const Expression* array_indice;
+        const Expression* affected_value;
     };
 }

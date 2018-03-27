@@ -1,25 +1,21 @@
 #include "SyntaxModel/Else.h"
+#include "SyntaxModel/SyntaxNode.h"
 #include "utils.h"
 
 namespace SyntaxModel {
 
-    Else::Else(const std::vector<const Instruction*>& instructions)
-        : instructions(instructions)
+    Else::Else(const antlr4::misc::Interval& source_interval, const std::list<const Instruction*>& instructions)
+        : SyntaxNodeBase(source_interval, utils::container_cast(instructions))
+        , instructions(instructions)
     {
     }
 
-    Else::~Else()
+    std::ostream& Else::toString(std::ostream& os) const
     {
-        utils::delete_all(instructions);
-    }
-
-    ostream& operator<<(ostream& os, const Else& e)
-    {
-        os << "else {" << endl;
-        for(auto instr : e.instructions) {
+        os << "else {" << std::endl;
+        for (auto instr : instructions)
             os << *(instr);
-        }
-        os << "}" <<endl;
+        os << "}" << std::endl;
         return os;
     }
 }

@@ -9,7 +9,7 @@ namespace utils {
         text = token->getText();
     }
 
-    ostream& operator<<(ostream& os, const TerminalInfo& ti)
+    std::ostream& operator<<(std::ostream& os, const TerminalInfo& ti)
     {
         os << ti.text;
         return os;

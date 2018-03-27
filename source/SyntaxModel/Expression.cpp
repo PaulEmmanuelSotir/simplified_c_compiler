@@ -1,19 +1,26 @@
 #include "SyntaxModel/Expression.h"
-#include "SyntaxModel/Terminals.h"
+#include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
-    VariableUsage::VariableUsage(const Identifier& name)
-        : name(name)
+
+    Expression::Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children)
+        : Instruction(source_interval, children)
     {
     }
 
-    ostream& Expression::toString(ostream& os) const
+    VariableUsage::VariableUsage(const antlr4::misc::Interval& source_interval, const Identifier& name)
+        : Expression(source_interval)
+        , name(name)
     {
-        os << "expression" <<endl;
+    }
+
+    std::ostream& Expression::toString(std::ostream& os) const
+    {
+        os << "expression" << std::endl;
         return os;
     }
 
-    ostream& VariableUsage::toString(ostream& os) const
+    std::ostream& VariableUsage::toString(std::ostream& os) const
     {
         os << name;
         return os;

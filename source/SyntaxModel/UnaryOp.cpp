@@ -2,19 +2,16 @@
 
 namespace SyntaxModel {
 
-    UnaryOp::UnaryOp(const Expression* expression, const Op op)
-        : expression(expression)
+    UnaryOp::UnaryOp(const antlr4::misc::Interval& source_interval, const Expression* expression, const Op op)
+        : Expression(source_interval, { expression })
+        , expression(expression)
         , op(op)
     {
     }
 
-    UnaryOp::~UnaryOp()
+    std::ostream& UnaryOp::toString(std::ostream& os) const
     {
-        delete expression;
-    }
-
-    ostream& UnaryOp::toString(ostream& os) const {
-        os << "op" << static_cast<std::underlying_type<UnaryOp::Op>::type>(op) << *expression << endl;
+        os << "op" << static_cast<std::underlying_type<UnaryOp::Op>::type>(op) << *expression << std::endl;
         return os;
     }
 }

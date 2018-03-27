@@ -2,26 +2,20 @@
 
 namespace SyntaxModel {
 
-    If::If(const Expression* condition, const std::vector<const Instruction*>& instructions, const Else* else_clause)
-        : Structure(condition, instructions)
+    If::If(const antlr4::misc::Interval& source_interval, const Expression* condition, const std::list<const Instruction*>& instructions, const Else* else_clause)
+        : Structure(source_interval, condition, instructions, { else_clause })
         , else_clause(else_clause)
     {
     }
 
-    If::~If()
+    std::ostream& If::toString(std::ostream& os) const
     {
-        delete else_clause;
-    }
-
-    ostream& If::toString(ostream& os) const {
-        os << "if(" << *condition << ") {" << endl;
-        for(auto instr : instructions) {
+        os << "if(" << *condition << ") {" << std::endl;
+        for (auto instr : instructions)
             os << *instr;
-        }
-        os << "}" <<endl;
-        if(else_clause != nullptr) {
+        os << "}" << std::endl;
+        if (else_clause != nullptr)
             os << *else_clause;
-        }
         return os;
     }
 }

@@ -1,17 +1,20 @@
+#include <list>
+
 #include "SyntaxModel/Structure.h"
 #include "utils.h"
 
 namespace SyntaxModel {
 
-    Structure::Structure(const Expression* condition, const std::vector<const Instruction*>& instructions)
-        : condition(condition)
+    Structure::Structure(const antlr4::misc::Interval& source_interval, const Expression* condition, const std::list<const Instruction*>& instructions, const std::list<const SyntaxNodeBase*>& additionnal_children)
+        : Instruction(source_interval, utils::children_list(condition, instructions, additionnal_children))
+        , condition(condition)
         , instructions(instructions)
     {
     }
 
-    Structure::~Structure()
+    std::ostream& Structure::toString(std::ostream& os) const
     {
-        delete condition;
-        utils::delete_all(instructions);
-    } 
+        os << "structure" << std::endl;
+        return os;
+    }
 }

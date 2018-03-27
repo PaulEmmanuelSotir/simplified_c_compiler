@@ -1,21 +1,21 @@
 #pragma once
-#include <iostream>
 #include "SyntaxModel/Instruction.h"
-#include "SyntaxModel/Terminals.h"
-
-using namespace std;
+#include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
-
     struct Expression : public Instruction {
+        Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>());
         virtual ~Expression() = default;
-        virtual ostream& toString(ostream& os) const override;
+        virtual std::ostream& toString(std::ostream& os) const override;
     };
 
     struct VariableUsage final : public Expression {
-        VariableUsage(const Identifier& name);
+        VariableUsage(const antlr4::misc::Interval& source_interval, const Identifier& name);
         virtual ~VariableUsage() = default;
-        virtual ostream& toString(ostream& os) const override;
+        friend bool inline operator<(const VariableUsage& lhs, const VariableUsage& rhs) { return lhs.name < rhs.name; }
+        friend inline bool operator==(const VariableUsage& lhs, const VariableUsage& rhs) { return lhs.name == rhs.name; }
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, VariableUsage>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
         const Identifier name;
     };

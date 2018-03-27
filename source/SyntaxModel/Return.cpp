@@ -2,13 +2,15 @@
 
 namespace SyntaxModel {
 
-    Return::Return(const Expression* expression)
-        : expression(expression)
+    Return::Return(const antlr4::misc::Interval& source_interval, const Expression* expression)
+        : Instruction(source_interval, { expression })
+        , expression(expression)
     {
     }
 
-    Return::~Return()
+    std::ostream& Return::toString(std::ostream& os) const
     {
-        delete expression;
+        os << "return" << std::endl;
+        return os;
     }
 }

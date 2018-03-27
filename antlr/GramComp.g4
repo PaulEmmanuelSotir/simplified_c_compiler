@@ -1,22 +1,22 @@
 grammar GramComp;
 
-program: (INCLUDE | declaration | definition | function)*;
+program: (INCLUDE | decl_or_def | function)*;
 
 WS: [ \t\n\r]+ -> skip;
 
 instruction:
 	'break' ';' 												# break
 	| 'continue' ';'											# continue
-	| structure  												# structure_instr
+	| structure			
 	| 'return' expression ';'									# return
 	| expression ';'											# expression_instr
 ;
 
-function: (type | 'void') IDENTIFIER '(' args? ')' '{' (function_init)* (instruction)* '}';
+function: (type | 'void') IDENTIFIER '(' args? ')' '{' (decl_or_def)* (instruction)* '}';
 
 args: ('void' | type IDENTIFIER (',' type IDENTIFIER)*);
 
-function_init:
+decl_or_def:
 	declaration		# functioninit_decl
 	| definition	# functioninit_def;
 
@@ -39,7 +39,7 @@ expression:
 	| INTEGER						# integer
 	| QUOTED_CHAR_LITERAL			# char_literal
 	| STRING_LITERAL				# string_literal
-	| IDENTIFIER '(' (expression (',' expression)*)? ')'	# fucntioncall
+	| IDENTIFIER '(' (expression (',' expression)*)? ')'	# functioncall
 	| IDENTIFIER					# variable_usage
 ;
 

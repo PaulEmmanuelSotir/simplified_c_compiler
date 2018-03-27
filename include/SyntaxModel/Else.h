@@ -1,17 +1,16 @@
 #pragma once
-#include <vector>
-#include <iostream>
+#include <list>
 
 #include "SyntaxModel/Instruction.h"
 
-using namespace std;
 namespace SyntaxModel {
 
-    struct Else final {
-        Else(const vector<const Instruction*>& instructions);
-        ~Else();
-        friend ostream& operator<<(ostream& os, const Else& e);
+    struct Else final : public SyntaxNodeBase {
+        Else(const antlr4::misc::Interval& source_interval, const std::list<const Instruction*>& instructions);
+        virtual ~Else() = default;
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Else>::typenames(); }
+        virtual std::ostream& toString(std::ostream& os) const override;
 
-        const vector<const Instruction*> instructions;
+        const std::list<const Instruction*> instructions;
     };
 }

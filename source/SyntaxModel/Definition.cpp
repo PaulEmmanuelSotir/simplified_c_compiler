@@ -2,40 +2,35 @@
 #include "utils.h"
 
 namespace SyntaxModel {
-    Definition::Definition(const Type* type, const std::vector<Identifier>& names, const std::vector<const Expression*>& init_values)
-        : type(type)
+    Definition::Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const Expression*>& init_values)
+        : Instruction(source_interval, utils::children_list(type, init_values))
+        , type(type)
         , names(names)
         , init_values(init_values)
     {
     }
 
-    Definition::Definition(const Type* type, const std::vector<Identifier>& names, const std::vector<const size_constant*>& sizes, const std::vector<const Expression*>& init_arrays)
-        : type(type)
+    Definition::Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const size_constant*>& sizes, const std::list<const Expression*>& init_arrays)
+        : Instruction(source_interval, utils::children_list(type, init_values, sizes))
+        , type(type)
         , names(names)
         , init_values(init_arrays)
         , sizes(sizes)
     {
     }
 
-    Definition::~Definition()
+    std::ostream& Definition::toString(std::ostream& os) const
     {
-        delete type;
-        utils::delete_all(sizes);
-        utils::delete_all(init_values);
-    }
-
-    ostream& Definition::toString(ostream& os) const {
         os << *(type) << " ";
-        int i=0;
-        for(auto name : names) {
+        int i = 0;
+        for (auto name : names) {
             os << name;
-            if(init_values.size() && init_values[i] != nullptr)
-            {
-                os << "=" << init_values[i];
-            }
+            auto it = utils::get_at(init_values, i);
+            if (init_values.size() && it != init_values.cend())
+                os << "=" << *it;
             i++;
         }
-        os << endl;
+        os << std::endl;
         return os;
     }
 }
