@@ -1,7 +1,5 @@
 #pragma once
 #include "SyntaxModel/Expression.h"
-#include <iostream>
-using namespace std;
 
 namespace SyntaxModel {
     struct BinaryOp final : public Expression {
@@ -24,6 +22,7 @@ namespace SyntaxModel {
         virtual ~BinaryOp() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, BinaryOp>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override;
 
         const Expression* leftExpression;
         const Expression* rightExpression;

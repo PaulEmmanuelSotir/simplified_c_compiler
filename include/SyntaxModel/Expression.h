@@ -1,12 +1,18 @@
 #pragma once
 #include "SyntaxModel/Instruction.h"
 #include "SyntaxModel/SyntaxNode.h"
+#include "SyntaxModel/Type.h"
+
+namespace StaticAnalysis {
+    class StaticAnalyser;
+}
 
 namespace SyntaxModel {
     struct Expression : public Instruction {
         Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>());
         virtual ~Expression() = default;
         virtual std::ostream& toString(std::ostream& os) const override;
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const = 0;
     };
 
     struct VariableUsage final : public Expression {
@@ -16,6 +22,7 @@ namespace SyntaxModel {
         friend inline bool operator==(const VariableUsage& lhs, const VariableUsage& rhs) { return lhs.name == rhs.name; }
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, VariableUsage>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
+        virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override;
 
         const Identifier name;
     };

@@ -1,5 +1,7 @@
 #include "SyntaxModel/Affectation.h"
 
+#include "StaticAnalysis.h"
+
 namespace SyntaxModel {
     Affectation::Affectation(const antlr4::misc::Interval& source_interval, const Op op, const Identifier& var, const Expression* array_indice, const Expression* affected_value)
         : Expression(source_interval, { affected_value, array_indice })
@@ -17,5 +19,12 @@ namespace SyntaxModel {
             os << " " << *affected_value;
         os << std::endl;
         return os;
+    }
+
+    Type Affectation::getExprType(const StaticAnalysis::StaticAnalyser* analyser) const
+    {
+        // Return affected variable type
+        auto var = analyser->getVariableOfAffectation(this);
+        return *(var.type);
     }
 }

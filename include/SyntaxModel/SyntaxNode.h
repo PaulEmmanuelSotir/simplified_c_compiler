@@ -64,13 +64,13 @@ namespace SyntaxModel {
 
         const antlr4::misc::Interval source_interval;
         const std::list<const SyntaxNodeBase*> _children;
+        const size_t unique_id;
 
     protected:
         virtual std::unordered_set<std::string> getTypenames() const = 0;
         virtual std::ostream& toString(std::ostream& os) const = 0;
 
     private:
-        const size_t _unique_id;
         friend size_t std::hash<SyntaxNodeBase>::operator()(const SyntaxNodeBase&) const;
     };
 

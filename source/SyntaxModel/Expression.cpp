@@ -1,6 +1,8 @@
 #include "SyntaxModel/Expression.h"
 #include "SyntaxModel/SyntaxNode.h"
 
+#include "StaticAnalysis.h"
+
 namespace SyntaxModel {
 
     Expression::Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children)
@@ -24,5 +26,11 @@ namespace SyntaxModel {
     {
         os << name;
         return os;
+    }
+
+    Type VariableUsage::getExprType(const StaticAnalysis::StaticAnalyser* analyser) const
+    {
+        auto var = analyser->getVariableOfUsage(this);
+        return *(var.type);
     }
 }
