@@ -59,17 +59,18 @@ namespace StaticAnalysis {
         {
             Variable dummy_var(var_id, nullptr);
             auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
-            if (global_it != _global_variables.cend()) {
-                var_resolution_map.emplace(var_usage->unique_id, *global_it);
-                unused_globals.erase(*global_it);
-            } else if (func_locals != nullptr && unused_locals != nullptr) {
+            if (func_locals != nullptr && unused_locals != nullptr) {
                 auto local_it = std::find(func_locals->cbegin(), func_locals->cend(), dummy_var);
                 if (local_it != func_locals->cend()) {
                     var_resolution_map.emplace(var_usage->unique_id, *local_it);
                     unused_locals->erase(*local_it);
-                }
+                } else
+                    error<true>("Local variable '", var_id.text, "' not declared.");
+            } else if (global_it != _global_variables.cend()) {
+                var_resolution_map.emplace(var_usage->unique_id, *global_it);
+                unused_globals.erase(*global_it);
             } else
-                error<false>("Variable '", var_id.text, "' not declared.");
+                error<true>("Global variable '", var_id.text, "' not declared.");
         }
 
         bool _raisedWarnings = false;
