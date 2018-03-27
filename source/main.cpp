@@ -34,7 +34,6 @@ const SyntaxModel::Program* parse(std::ifstream& fs)
     std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
     Visitor v;
     antlrcpp::Any ast = v.visit(tree);
-
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
         std::cout << *prog << std::endl;
@@ -51,34 +50,11 @@ const StaticAnalysis::StaticAnalyser* staticAnalysis(const SyntaxModel::Program*
     return analyser;
 }
 
-void compile(std::ifstream& fs, const std::string& target)
-{
-    // Parse AST from input file
-    auto program = parse(fs);
-
-    // Static analysis
-    auto analyser = staticAnalysis(program);
-
-    if (!analyser->raisedErrors()) {
-        // Test expression type resolution (TODO: remove it!!)
-        auto exprs = program->getAllChildrenOfType<SyntaxModel::Expression>();
-        auto expr_type = (*utils::get_at(exprs, 0))->getExprType(analyser);
-        std::cout << expr_type << std::endl;
-        // Optimization
-        // TODO: ...
-
-        // Compilation to x86 target
-        // TODO: ...
-    }
-
-    delete program;
-    delete analyser;
-}
-
 int main(int argc, char* argv[])
 {
     std::string target = "output";
     std::string inputFile = "input";
+    bool staticA = false;
 
     if (argc < 2) {
         std::cout << "No input file to compile" << std::endl;
@@ -90,14 +66,16 @@ int main(int argc, char* argv[])
         //C'est une option
         if (argv[i][0] == '-') {
             if (argv[i][1] == 'a')
-                std::cout << "##### -a not implemented #### " << std::endl;
+            {
+                //std::cout << "##### -a not implemented #### " << std::endl;
+                staticA = true;
+            }
             else if (argv[i][1] == 'c')
                 std::cout << "##### -c not implemented #### " << std::endl;
             else if (argv[i][1] == 'o')
                 std::cout << "##### -o not implemented #### " << std::endl;
             else
                 std::cout << "Unknown option " << argv[i] << std::endl;
-
         } else
             inputFile = argv[i];
     }
@@ -105,13 +83,23 @@ int main(int argc, char* argv[])
     // Open source file and compile it
     std::ifstream fs;
     fs.open(inputFile, std::fstream::in);
+    const SyntaxModel::Program* program;
     if (fs.is_open()) {
         std::cout << "### Compiling '" << inputFile << "' ###" << std::endl;
-        compile(fs, target);
+        program = parse(fs);
         fs.close();
     } else {
         std::cout << "Couldn't read input file '" << inputFile << "'" << std::endl;
         return EXIT_FAILURE;
     }
+
+    if(staticA)
+    {
+        auto analyser = staticAnalysis(program);
+        delete analyser;
+    }
+
+    delete program;
+
     return EXIT_SUCCESS;
 }

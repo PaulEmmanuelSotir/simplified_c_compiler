@@ -33,11 +33,16 @@ namespace SyntaxModel {
             os << "void ";
         else
             os << *(returnType) << " ";
-        os << id << "(" << *(arguments) << ")" << std::endl;
+        os << id;
+        os << "(";
+        if(arguments != nullptr)
+            os << *(arguments);
+        os << ") {" << endl;
         for (auto dec : definitions)
             os << *dec;
         for (auto instr : instructions)
             os << *instr;
+        os << "}" << endl;
         return os;
     }
 
