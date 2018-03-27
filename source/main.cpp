@@ -64,7 +64,6 @@ void compile(std::ifstream& fs, const std::string& target)
         auto exprs = program->getAllChildrenOfType<SyntaxModel::Expression>();
         auto expr_type = (*utils::get_at(exprs, 0))->getExprType(analyser);
         std::cout << expr_type << std::endl;
-
         // Optimization
         // TODO: ...
 
