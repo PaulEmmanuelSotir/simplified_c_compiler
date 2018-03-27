@@ -3,6 +3,7 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "IR/IR.h"
 #include "StaticAnalysis.h"
 #include "SyntaxModel/SyntaxModel.h"
 #include "Visitor.h"
@@ -65,12 +66,10 @@ int main(int argc, char* argv[])
     for (i = 1; i < argc; ++i) {
         //C'est une option
         if (argv[i][0] == '-') {
-            if (argv[i][1] == 'a')
-            {
+            if (argv[i][1] == 'a') {
                 //std::cout << "##### -a not implemented #### " << std::endl;
                 staticA = true;
-            }
-            else if (argv[i][1] == 'c')
+            } else if (argv[i][1] == 'c')
                 std::cout << "##### -c not implemented #### " << std::endl;
             else if (argv[i][1] == 'o')
                 std::cout << "##### -o not implemented #### " << std::endl;
@@ -93,9 +92,9 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    if(staticA)
-    {
+    if (staticA) {
         auto analyser = staticAnalysis(program);
+        auto cfg = IR::ControlFlowGraph(program, analyser);
         delete analyser;
     }
 

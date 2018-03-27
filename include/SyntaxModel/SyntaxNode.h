@@ -12,6 +12,10 @@ namespace SyntaxModel {
     class SyntaxNodeBase;
 }
 
+namespace IR {
+    class ControlFlowGraph;
+}
+
 namespace std {
     template <>
     struct hash<SyntaxModel::SyntaxNodeBase> {
@@ -28,6 +32,7 @@ namespace SyntaxModel {
         static size_t _instance_count;
         SyntaxNodeBase(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>());
         virtual ~SyntaxNodeBase();
+        virtual void toIR(const IR::ControlFlowGraph& cfg) const = 0;
 
         bool operator==(const SyntaxNodeBase& obj) const;
         bool operator<(const SyntaxNodeBase& obj) const;
