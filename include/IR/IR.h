@@ -10,8 +10,8 @@ namespace StaticAnalysis {
 }
 
 namespace SyntaxModel {
-    class Program;
-    class Definition;
+    struct Program;
+    struct Definition;
 }
 
 namespace IR {
