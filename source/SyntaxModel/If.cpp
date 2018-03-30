@@ -19,9 +19,9 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    /*IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
     {
-        /*auto if_label = cfg.CreateLabel("if");
+        auto if_label = cfg.CreateLabel("if");
         IRVariable cond_reg = cfg->CreateTempIRVar();
         auto* eb = condition->generateIR(cfg, eb, { cond_reg });
         eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CMP, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
@@ -35,6 +35,6 @@ namespace SyntaxModel {
         if (else_clause != nullptr)
             return else_clause->generateIR(cfg, eb);
         else
-            return if_block;*/
-    }
+            return if_block;
+    }*/
 }

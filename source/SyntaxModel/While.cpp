@@ -16,9 +16,9 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    /*IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
     {
-        /*auto loop_label = cfg.CreateLabel("loop");
+        auto loop_label = cfg.CreateLabel("loop");
         auto loop_condition_label = cfg.CreateLabel("loop_condition");
         eb->AppendInstruction(Jump(condition_block));
 
@@ -32,6 +32,6 @@ namespace SyntaxModel {
         condition_block = condition->generateIR(cfg, condition_block, cond_reg);
         condition_block->AppendInstruction(Jump(cond_reg, loop_label));
 
-        return condition_block;*/
-    }
+        return condition_block;
+    }*/
 }

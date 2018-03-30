@@ -36,7 +36,7 @@ namespace SyntaxModel {
 
     IR::ExecutionBlock* Definition::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
     {
-        const auto* analyser = cfg->getAnalyser();
+        /*const auto* analyser = cfg.getAnalyser();
 
         // TODO: handle arrays
         if (init_values.size() > 0) {
@@ -51,6 +51,6 @@ namespace SyntaxModel {
 
             for (const auto* name : names) {
                         }
-        }
+        }*/
     }
 }

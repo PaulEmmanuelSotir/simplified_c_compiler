@@ -1,5 +1,6 @@
 #include "IR/IR.h"
 #include "StaticAnalysis.h"
+#include "SyntaxModel/Definition.h"
 
 namespace IR {
     Instruction::Instruction(Op op, symbol_t dest, symbol_t x, symbol_t y)
@@ -12,11 +13,10 @@ namespace IR {
 
     ExecutionBlock::ExecutionBlock(const std::string& label)
         : _label(label)
-        , _instructions(instructions)
     {
     }
 
-    IRVariable::IRVariable(const symbol_t& symbol, const SyntaxModel::PrimitiveType type, const bool isTemp = false, const size_t size = 8, const size_t offset = 0)
+    IRVariable::IRVariable(const symbol_t& symbol, const SyntaxModel::PrimitiveType type, const bool isTemp, const size_t size, const size_t offset)
         : symbol(symbol)
         , type(type)
         , isTemporary(isTemp)
@@ -50,10 +50,10 @@ namespace IR {
     ControlFlowGraph::~ControlFlowGraph()
     {
         for (auto p : _blocks)
-            delete p->second;
+            delete p.second;
     }
 
-    symbol_t ControlFlowGraph::CreateIRVar(const SyntaxModel::Definition* varDef)
+    symbol_t ControlFlowGraph::CreateIRVar(const SyntaxModel::Definition* varDef) const
     {
         if (varDef == nullptr) {
             // TODO: throw error
@@ -71,9 +71,9 @@ namespace IR {
         return prefix + "_" + std::to_string(++count);
     }
 
-    ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
+    ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)
     {
-        auto eb = _makeExecutionBlock(block_label);
+        auto eb = _makeExecutionBlock(label);
         if (eb_to_queue_on != nullptr) {
             if (eb_to_queue_on->_next_eb != nullptr) {
                 // TODO: throw error (this execution block already have a pointer to its next block)

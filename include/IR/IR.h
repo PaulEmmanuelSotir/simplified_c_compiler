@@ -11,6 +11,7 @@ namespace StaticAnalysis {
 
 namespace SyntaxModel {
     class Program;
+    class Definition;
 }
 
 namespace IR {
@@ -69,8 +70,8 @@ namespace IR {
         template <typename T>
         static inline symbol_t CreateConstant(const T& value) { return "$" + std::to_string(value); }
 
-        symbol_t CreateIRVar() const;
-        IR Variable CreateTempIRVar() const;
+        symbol_t CreateIRVar(const SyntaxModel::Definition* varDef) const;
+        IRVariable CreateTempIRVar() const;
         std::string CreateLabel(const std::string& prefix);
         ExecutionBlock* CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
 
