@@ -99,6 +99,7 @@ namespace SyntaxModel {
         virtual std::ostream& toString(std::ostream& os) const = 0;
 
     private:
+        static const std::list<const SyntaxNodeBase*> _filter_nullptr_out(const std::list<const SyntaxNodeBase*>& children);
         friend size_t std::hash<SyntaxNodeBase>::operator()(const SyntaxNodeBase&) const;
         static std::unordered_map<size_t, const SyntaxNodeBase*> _parenthoods;
     };
@@ -117,14 +118,8 @@ namespace SyntaxModel {
         }
     };
 
-    template <typename LastT>
-    struct TN<LastT> {
-        static inline std::unordered_set<std::string> typenames()
-        {
-            //static_assert(std::is_base_of<SyntaxNodeBase, LastT>::value, "TN::typenames is meant to be used on classes derived from 'SyntaxNodeBase'.");
-            static const std::string type_name = utils::type_name<LastT>();
-            static const std::string base_type_name = utils::type_name<SyntaxNodeBase>();
-            return { type_name, base_type_name };
-        }
+    template <>
+    struct TN<> {
+        static inline std::unordered_set<std::string> typenames() { return { utils::type_name<SyntaxNodeBase>() }; }
     };
 }

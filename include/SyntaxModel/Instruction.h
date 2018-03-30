@@ -4,7 +4,7 @@
 namespace SyntaxModel {
 
     struct Instruction : public SyntaxNodeBase {
-        Instruction(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>())
+        Instruction(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = {})
             : SyntaxNodeBase(source_interval, children)
         {
         }

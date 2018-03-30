@@ -1,4 +1,5 @@
 #include "SyntaxModel/Program.h"
+#include "StaticAnalysis.h"
 #include "utils.h"
 
 namespace SyntaxModel {
@@ -29,8 +30,9 @@ namespace SyntaxModel {
             decl->generateIR(cfg, eb, {}); // TODO: handle global initializations
 
         // Generate IR for main function (entry point)
-        for (const auto& func : functions) {
-            eb = func->generateIR(cfg, eb);
+        for (const auto* func : functions) {
+            if (cfg.static_analyser->isFuncCalled(func) || func->id.text == "main")
+                eb = func->generateIR(cfg, eb);
         }
     }
 }

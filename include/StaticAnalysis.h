@@ -31,6 +31,7 @@ namespace StaticAnalysis {
         const Variable getVariableOfUsage(const SyntaxModel::VariableUsage* const usage) const { return _find(_var_usage_resolution, usage->unique_id); }
         const Variable getVariableOfAffectation(const SyntaxModel::Affectation* const affectation) const { return _find(_affectation_resolution, affectation->unique_id); }
         const SyntaxModel::Function* getFunctionDef(const SyntaxModel::FunctionCall* const call) const { return _find(_function_call_resolution, call->unique_id); }
+        bool isFuncCalled(const SyntaxModel::Function* func) const { return _called_functions.find(func->unique_id) != _called_functions.end(); }
 
         bool raisedWarnings() const { return _raisedWarnings; };
         bool raisedErrors() const { return _raisedErrors; };
@@ -96,5 +97,7 @@ namespace StaticAnalysis {
         std::map<size_t, Variable> _affectation_resolution;
         // Maps function calls to their respective function definition
         std::map<size_t, const SyntaxModel::Function*> _function_call_resolution;
+        // Keep track of all called function (usefull to avoid generating asm for unused functions)
+        std::unordered_set<size_t> _called_functions;
     };
 }

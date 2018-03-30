@@ -9,7 +9,7 @@ namespace StaticAnalysis {
 
 namespace SyntaxModel {
     struct Expression : public Instruction {
-        Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = std::list<const SyntaxNodeBase*>());
+        Expression(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children = {});
         virtual ~Expression() = default;
         virtual std::ostream& toString(std::ostream& os) const override;
         virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const = 0;

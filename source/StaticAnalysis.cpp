@@ -110,8 +110,10 @@ namespace StaticAnalysis {
             auto it = func_lookup_table.find(usage->func_name.text);
             if (it == func_lookup_table.end())
                 error<true>("Function '", usage->func_name.text, "' not declared.");
-            else
+            else {
+                _called_functions.insert(it->second->unique_id);
                 _function_call_resolution.emplace(usage->unique_id, it->second);
+            }
         }
     }
 }
