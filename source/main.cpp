@@ -56,6 +56,7 @@ int main(int argc, char* argv[])
     std::string target = "output";
     std::string inputFile = "input";
     bool staticA = false;
+    bool staticC = false;
 
     if (argc < 2) {
         std::cout << "No input file to compile" << std::endl;
@@ -70,7 +71,8 @@ int main(int argc, char* argv[])
                 //std::cout << "##### -a not implemented #### " << std::endl;
                 staticA = true;
             } else if (argv[i][1] == 'c')
-                std::cout << "##### -c not implemented #### " << std::endl;
+                //std::cout << "##### -c not implemented #### " << std::endl;
+                staticC = true;
             else if (argv[i][1] == 'o')
                 std::cout << "##### -o not implemented #### " << std::endl;
             else
@@ -93,6 +95,11 @@ int main(int argc, char* argv[])
     }
 
     if (staticA) {
+        auto analyser = staticAnalysis(program);
+        delete analyser;
+    }
+
+    if(staticC) {
         auto analyser = staticAnalysis(program);
         auto cfg = IR::ControlFlowGraph(program, analyser);
         delete analyser;
