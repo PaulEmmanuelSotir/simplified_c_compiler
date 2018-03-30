@@ -26,7 +26,9 @@ namespace IR {
             MOV,
             NOP,
             JUMP_NE,
-            CMP
+            CMP,
+            ADD,
+            SUB
         };
 
         Instruction(Op op = Op::NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");

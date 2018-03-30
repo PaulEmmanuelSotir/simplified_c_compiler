@@ -47,27 +47,34 @@ namespace SyntaxModel {
         return os;
     }
 
-    void Function::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    IR::ExecutionBlock* Function::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
     {
-        auto func_eb = cfg.CreateExecutionBlock(id.text, eb);
-        const std::string rbp = "%rbp";
-        const std::string rsp = "%rsp";
-        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::PUSH, rbp));
-        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, rsp, rbp));
+        const std::string rbp = "%rbp", rsp = "%rsp";
+        eb = cfg.CreateExecutionBlock(id.text, eb);
 
-        //func_eb = args->generateIR(cfg, func_eb);
+        // Generate prologue: Reserve function stack size and update rsp and rbp registers
+        size_t reserved_size = definitions.size() * 8 + 8;
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::PUSH, rbp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, rsp, rbp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::SUB, cfg.CreateConstant(reserved_size), rbp));
+
+        //eb = args->generateIR(cfg, eb);
         //for (auto* decl : declarations)
-        //    func_eb = decl->generateIR(cfg, func_eb);
+        //    eb = decl->generateIR(cfg, eb);
         //for (auto* instr : instructions)
-        //    func_eb = instr->generateIR(cfg, func_eb);
+        //    eb = instr->generateIR(cfg, eb);
         // TODO: handle return statement type (make a variable for return value?)
 
-        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::POP, rbp));
-        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::RET));
+        // Generate epilogue
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::ADD, cfg.CreateConstant(reserved_size), rbp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::POP, rbp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::RET));
+        return eb;
     }
 
-    void Args::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    IR::ExecutionBlock* Args::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
     {
+        return nullptr;
     }
 
     std::ostream& Args::toString(std::ostream& os) const

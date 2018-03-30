@@ -18,6 +18,12 @@ namespace IR {
         case Op::RET:
             stream << "retq";
             break;
+        case Op::ADD:
+            stream << "addq " << x << ", " << y;
+            break;
+        case Op::SUB:
+            stream << "subq " << x << ", " << y;
+            break;
         case Op::PUSH:
             stream << "pushq " << x;
             break;
