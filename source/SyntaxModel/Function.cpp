@@ -53,7 +53,9 @@ namespace SyntaxModel {
         eb = cfg.CreateExecutionBlock(id.text, eb);
 
         // Generate prologue: Reserve function stack size and update rsp and rbp registers
-        size_t reserved_size = definitions.size() * 8 + 8;
+        size_t reserved_size = arguments->names.size() * 8;
+        for (auto* def : definitions)
+            reserved_size += def->names.size() * 8;
         eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::PUSH, rbp));
         eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, rsp, rbp));
         eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::SUB, cfg.CreateConstant(reserved_size), rbp));
