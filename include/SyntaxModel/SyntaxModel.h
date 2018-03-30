@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 // Includes all namespace classes
 #include "SyntaxModel/Affectation.h"

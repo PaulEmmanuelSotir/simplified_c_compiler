@@ -1,7 +1,9 @@
+#include <array>
+
+#include "CompilerException.h"
+#include "StaticAnalysis.h"
 #include "SyntaxModel/FunctionCall.h"
 #include "utils.h"
-
-#include "StaticAnalysis.h"
 
 namespace SyntaxModel {
     FunctionCall::FunctionCall(const antlr4::misc::Interval& source_interval, const list<const Expression*>& args, const Identifier& func_name)
@@ -16,7 +18,7 @@ namespace SyntaxModel {
         os << func_name << "(";
         for (auto arg : args)
             os << *arg;
-        os << ")" << std::endl;
+        os << ")";
         return os;
     }
 
@@ -25,5 +27,23 @@ namespace SyntaxModel {
         // Returns called function return type
         auto function = analyser->getFunctionDef(this);
         return *(function->returnType);
+    }
+
+    IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    {
+        //  Generate IR instructions for arguments expressions
+        if (IR::ControlFlowGraph::args_registers.size() < args.size())
+            throw new CompilerException("function can't have more than " + std::to_string(IR::ControlFlowGraph::args_registers.size()) + " arguments due to assembly function call convention");
+        for (size_t idx = 0; idx < args.size(); ++idx)
+            eb = (*utils::get_at(args, idx))->generateIR(cfg, eb, IR::ControlFlowGraph::args_registers[idx]);
+
+        // Call function
+        const auto* function = cfg.static_analyser->getFunctionDef(this);
+        const auto* func_args = function->arguments;
+        if (func_args != nullptr && func_args->names.size() != args.size())
+            throw new CompilerException("function '" + func_name.text + "' called with the wrong number of arguments");
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CALL, func_name.text));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, "%rax", result_register));
+        return eb;
     }
 }

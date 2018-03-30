@@ -15,15 +15,15 @@ using namespace std;
 namespace SyntaxModel {
 
     //TODO: store array size for array declarations/defintions
-    struct Definition final : public Instruction {
+    struct Definition final : public SyntaxNodeBase {
         using size_constant = Constant<PrimitiveType::INT32_T>;
 
         Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const Expression*>& init_values = {});
         Definition(const antlr4::misc::Interval& source_interval, const Type* type, const std::vector<Identifier>& names, const std::list<const size_constant*>& sizes, const std::list<const Expression*>& init_arrays = {});
         virtual ~Definition() = default;
-        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Definition>::typenames(); }
+        virtual std::unordered_set<std::string> getTypenames() const override { return TN<Definition>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
-        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const;
+        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const std::vector<IR::StackVariable>& stack_variables) const;
 
         const Type* type;
         const std::vector<Identifier> names;

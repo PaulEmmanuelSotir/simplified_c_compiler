@@ -29,6 +29,15 @@ namespace SyntaxModel {
             return os;
         }
 
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const override
+        {
+            if (result_register != "") {
+                int64_t int_value = static_cast<int64_t>(value);
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, "$" + std::to_string(int_value), result_register));
+            }
+            return eb;
+        }
+
         const PrimitiveType type = T;
         const Type::UnderlyingType<T> value;
     };
@@ -62,6 +71,10 @@ namespace SyntaxModel {
         virtual ~ArrayConstant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
         virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override { return Type(source_interval, type, true); }
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const override
+        {
+            return eb;
+        }
 
         const PrimitiveType type = T;
         const std::list<const Constant<T>*> values;

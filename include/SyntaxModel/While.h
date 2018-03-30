@@ -9,6 +9,6 @@ namespace SyntaxModel {
         virtual ~While() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Structure, Instruction, While>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
-        //void generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const;
+        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const;
     };
 }

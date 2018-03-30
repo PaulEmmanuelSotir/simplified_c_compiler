@@ -1,10 +1,11 @@
 #pragma once
-#include <exception>
+#include <cstdint>
 #include <map>
 #include <set>
 #include <string>
 #include <vector>
 
+#include "CompilerException.h"
 #include "SyntaxModel/SyntaxModel.h"
 
 namespace StaticAnalysis {
@@ -26,12 +27,11 @@ namespace StaticAnalysis {
 
         StaticAnalyser(const SyntaxModel::Program* ast);
         void Analyse();
+        const std::vector<Variable> getLocalVariables(const SyntaxModel::Function* const func) const { return _find(_function_variables, func->unique_id); }
+        const Variable getVariableOfUsage(const SyntaxModel::VariableUsage* const usage) const { return _find(_var_usage_resolution, usage->unique_id); }
+        const Variable getVariableOfAffectation(const SyntaxModel::Affectation* const affectation) const { return _find(_affectation_resolution, affectation->unique_id); }
+        const SyntaxModel::Function* getFunctionDef(const SyntaxModel::FunctionCall* const call) const { return _find(_function_call_resolution, call->unique_id); }
 
-        std::vector<Variable> getGlobalVariables() const { return _global_variables; }
-        std::vector<Variable> getLocalVariables(const SyntaxModel::Function* const func) const { return _function_variables.find(func->unique_id)->second; }
-        Variable getVariableOfUsage(const SyntaxModel::VariableUsage* const usage) const { return _var_usage_resolution.find(usage->unique_id)->second; }
-        Variable getVariableOfAffectation(const SyntaxModel::Affectation* const affectation) const { return _affectation_resolution.find(affectation->unique_id)->second; }
-        const SyntaxModel::Function* getFunctionDef(const SyntaxModel::FunctionCall* const func_call) const { return _function_call_resolution.find(func_call->unique_id)->second; }
         bool raisedWarnings() const { return _raisedWarnings; };
         bool raisedErrors() const { return _raisedErrors; };
 
@@ -71,6 +71,15 @@ namespace StaticAnalysis {
                 unused_globals.erase(*global_it);
             } else
                 error<true>("Global variable '", var_id.text, "' not declared.");
+        }
+
+        template <typename V>
+        static const V _find(const std::map<size_t, V> map, const size_t key)
+        {
+            auto rslt = map.find(key);
+            if (rslt != map.end())
+                return rslt->second;
+            throw new CompilerException("Can't find value for given key in std::map.");
         }
 
         bool _raisedWarnings = false;

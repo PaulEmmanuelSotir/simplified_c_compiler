@@ -56,14 +56,11 @@ namespace IR {
         friend class ControlFlowGraph;
     };
 
-    struct IRVariable {
-        IRVariable(const symbol_t& symbol, const SyntaxModel::PrimitiveType type, const bool isTemp = false, const size_t size = 8, const size_t offset = 0);
-
-        const symbol_t symbol;
-        const SyntaxModel::PrimitiveType type;
-        const bool isTemporary;
-        const size_t size;
+    struct StackVariable {
+        StackVariable(size_t offset, size_t size);
+        symbol_t getSymbol() const;
         const size_t offset;
+        const size_t size;
     };
 
     class ControlFlowGraph final {
@@ -75,10 +72,14 @@ namespace IR {
         template <typename T>
         static inline symbol_t CreateConstant(const T& value) { return "$" + std::to_string(value); }
 
-        symbol_t CreateIRVar(const SyntaxModel::Definition* varDef) const;
-        IRVariable CreateTempIRVar() const;
+        //symbol_t CreateIRVar(const SyntaxModel::Definition* varDef) const;
+        //IRVariable CreateTempIRVar() const;
+        symbol_t CreateRegister(const std::string& prefix);
         std::string CreateLabel(const std::string& prefix);
         ExecutionBlock* CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
+
+        const StaticAnalysis::StaticAnalyser* const static_analyser;
+        static const std::array<const IR::symbol_t, 6> args_registers;
 
     private:
         ExecutionBlock* _makeExecutionBlock(const std::string& label);

@@ -194,13 +194,12 @@ antlrcpp::Any Visitor::visitAtomic_type(GramCompParser::Atomic_typeContext* ctx)
 
 antlrcpp::Any Visitor::visitType(GramCompParser::TypeContext* ctx)
 {
-    auto is_array = [ctx](auto t) -> bool { return ctx->stop->getTokenIndex() != t; };
     if (ctx->CHAR() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::CHAR, is_array(GramCompParser::CHAR));
+        return new SM::Type(ctx->getSourceInterval(), PT::CHAR, ctx->ARRAY_BRACKETS() != nullptr);
     } else if (ctx->INT32_T() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::INT32_T, is_array(GramCompParser::INT32_T));
+        return new SM::Type(ctx->getSourceInterval(), PT::INT32_T, ctx->ARRAY_BRACKETS() != nullptr);
     } else if (ctx->INT64_T() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::INT64_T, is_array(GramCompParser::INT64_T));
+        return new SM::Type(ctx->getSourceInterval(), PT::INT64_T, ctx->ARRAY_BRACKETS() != nullptr);
     }
     return nullptr;
 }

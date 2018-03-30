@@ -35,4 +35,9 @@ namespace SyntaxModel {
             return Type(source_interval, PrimitiveType::INT32_T, false);
         }
     }
+
+    IR::ExecutionBlock* BinaryOp::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    {
+        return eb;
+    }
 }

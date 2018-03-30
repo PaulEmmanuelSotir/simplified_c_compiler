@@ -9,18 +9,26 @@ namespace std {
 
 namespace SyntaxModel {
     size_t SyntaxNodeBase::_instance_count = 0;
+    std::unordered_map<size_t, const SyntaxNodeBase*> SyntaxNodeBase::_parenthoods;
 
     SyntaxNodeBase::SyntaxNodeBase(const antlr4::misc::Interval& source_interval, const std::list<const SyntaxNodeBase*>& children)
         : source_interval(source_interval)
         , _children(children)
         , unique_id(_instance_count++)
     {
+        for (const auto* child : _children)
+            if (child != nullptr)
+                _parenthoods.emplace(child->unique_id, this);
     }
 
     SyntaxNodeBase::~SyntaxNodeBase()
     {
-        for (const auto* child : _children)
-            delete child;
+        for (const auto* child : _children) {
+            if (child != nullptr) {
+                _parenthoods.erase(child->unique_id);
+                delete child;
+            }
+        }
     }
 
     bool SyntaxNodeBase::operator==(const SyntaxNodeBase& obj) const { return unique_id == obj.unique_id; }

@@ -85,8 +85,9 @@ array_expr: '{' ((INTEGER | QUOTED_CHAR_LITERAL) (',' (INTEGER | QUOTED_CHAR_LIT
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
-type: (CHAR | INT32_T | INT64_T) ('[' ']')?;
+type: (CHAR | INT32_T | INT64_T) (ARRAY_BRACKETS)?;
 
+ARRAY_BRACKETS: '[' ']';
 CHAR: 'char';
 INTEGER: [0-9]+;
 INT32_T: 'int' | 'int32_t';

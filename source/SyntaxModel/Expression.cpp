@@ -33,4 +33,9 @@ namespace SyntaxModel {
         auto var = analyser->getVariableOfUsage(this);
         return *(var.type);
     }
+
+    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    {
+        return eb;
+    }
 }

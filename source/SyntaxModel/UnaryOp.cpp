@@ -32,4 +32,9 @@ namespace SyntaxModel {
         } else // if (op == Op::NOT)
             return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
     }
+
+    IR::ExecutionBlock* UnaryOp::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    {
+        return eb;
+    }
 }

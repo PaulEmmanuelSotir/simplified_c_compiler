@@ -1,8 +1,11 @@
 #include "IR/IR.h"
+#include "CompilerException.h"
 #include "StaticAnalysis.h"
 #include "SyntaxModel/Definition.h"
 
 namespace IR {
+    const std::array<const IR::symbol_t, 6> ControlFlowGraph::args_registers = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+
     Instruction::Instruction(Op op, symbol_t x, symbol_t y, symbol_t dest)
         : op(op)
         , x(x)
@@ -31,6 +34,7 @@ namespace IR {
             stream << "popq " << x;
             break;
         case Op::CALL:
+            stream << "call " << x;
             break;
         case Op::MOV:
             stream << "movq " << x << ", " << y;
@@ -63,20 +67,16 @@ namespace IR {
         _instructions.push_back(instr);
     }
 
-    IRVariable::IRVariable(const symbol_t& symbol, const SyntaxModel::PrimitiveType type, const bool isTemp, const size_t size, const size_t offset)
-        : symbol(symbol)
-        , type(type)
-        , isTemporary(isTemp)
-        , size(size)
-        , offset(offset)
-    {
-    }
-
     ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
-        : _target(target)
+        : static_analyser(anaylser)
+        , _target(target)
     {
-        ast->generateIR(*this, nullptr);
-        GenerateAssembly();
+        try {
+            ast->generateIR(*this, nullptr);
+            GenerateAssembly();
+        } catch (const CompilerException* e) {
+            std::cout << "ERROR: " << e->what() << std::endl;
+        }
     }
 
     ControlFlowGraph::~ControlFlowGraph()
@@ -102,16 +102,21 @@ namespace IR {
         std::cout << stream.str() << std::endl;
     }
 
-    symbol_t ControlFlowGraph::CreateIRVar(const SyntaxModel::Definition* varDef) const
+    symbol_t ControlFlowGraph::CreateRegister(const std::string& prefix)
     {
-        if (varDef == nullptr) {
-            // TODO: throw error
-        }
-
-        //IRVariable(varDef->name.text, varDef->type->type, )
-
         static size_t count = 0;
-        return std::to_string(++count);
+        return prefix + "_" + std::to_string(++count);
+    }
+
+    StackVariable::StackVariable(size_t offset, size_t size)
+        : offset(offset)
+        , size(size)
+    {
+    }
+
+    symbol_t StackVariable::getSymbol() const
+    {
+        return "-" + std::to_string(offset) + "(%rsp)";
     }
 
     std::string ControlFlowGraph::CreateLabel(const std::string& prefix)
@@ -126,9 +131,8 @@ namespace IR {
         if (_first_block == nullptr)
             _first_block = eb;
         if (eb_to_queue_on != nullptr) {
-            if (eb_to_queue_on->_next_eb != nullptr) {
-                // TODO: throw error (this execution block already have a pointer to its next block)
-            }
+            if (eb_to_queue_on->_next_eb != nullptr)
+                throw new CompilerException("'eb_to_queue_on' execution block already have a pointer to its next block");
             eb_to_queue_on->_next_eb = eb;
         }
         return eb;

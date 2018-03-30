@@ -9,6 +9,7 @@ namespace SyntaxModel {
         {
         }
         virtual ~Instruction() = default;
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const = 0;
     };
 
     struct Break final : public Instruction {
@@ -18,6 +19,10 @@ namespace SyntaxModel {
         }
         virtual ~Break() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Break, Instruction>::typenames(); }
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const override
+        {
+            return eb;
+        }
 
         virtual std::ostream& toString(std::ostream& os) const override
         {
@@ -33,6 +38,10 @@ namespace SyntaxModel {
         }
         virtual ~Continue() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Continue, Instruction>::typenames(); }
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const override
+        {
+            return eb;
+        }
 
         virtual std::ostream& toString(std::ostream& os) const override
         {

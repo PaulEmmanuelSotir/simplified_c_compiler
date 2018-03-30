@@ -27,4 +27,9 @@ namespace SyntaxModel {
         auto var = analyser->getVariableOfAffectation(this);
         return *(var.type);
     }
+
+    IR::ExecutionBlock* Affectation::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    {
+        return eb;
+    }
 }

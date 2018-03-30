@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "CompilerException.h"
 #include "IR/IR.h"
 #include "antlr4-runtime.h"
 #include "utils.h"
@@ -47,6 +48,27 @@ namespace SyntaxModel {
             return types.find(type_name) != types.end();
         }
 
+        template <typename T>
+        static const T* getFirstParentOfType(const SyntaxNodeBase* child)
+        {
+            auto parent_it = _parenthoods.find(child->unique_id);
+            while (parent_it != _parenthoods.end()) {
+                const auto* parent = (*parent_it).second;
+                if (parent->is<T>())
+                    return dynamic_cast<const T*>(parent);
+                parent_it = _parenthoods.find(child->unique_id);
+            }
+            return nullptr;
+        }
+
+        static const SyntaxNodeBase* getParent(const SyntaxNodeBase* child)
+        {
+            auto parent_it = _parenthoods.find(child->unique_id);
+            if (parent_it != _parenthoods.end())
+                return (*parent_it).second;
+            return nullptr;
+        }
+
         // Returns all children syntaxic elements recursively
         std::list<const SyntaxNodeBase*>
         getAllChildren() const;
@@ -78,6 +100,7 @@ namespace SyntaxModel {
 
     private:
         friend size_t std::hash<SyntaxNodeBase>::operator()(const SyntaxNodeBase&) const;
+        static std::unordered_map<size_t, const SyntaxNodeBase*> _parenthoods;
     };
 
     template <typename... Types>
