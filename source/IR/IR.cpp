@@ -3,17 +3,58 @@
 #include "SyntaxModel/Definition.h"
 
 namespace IR {
-    Instruction::Instruction(Op op, symbol_t dest, symbol_t x, symbol_t y)
+    Instruction::Instruction(Op op, symbol_t x, symbol_t y, symbol_t dest)
         : op(op)
-        , dest(dest)
         , x(x)
         , y(y)
+        , dest(dest)
     {
+    }
+
+    void Instruction::GenerateAssembly(std::ostringstream& stream) const
+    {
+        stream << "\t";
+        switch (op) {
+        case Op::RET:
+            stream << "retq";
+            break;
+        case Op::PUSH:
+            stream << "pushq " << x;
+            break;
+        case Op::POP:
+            stream << "popq " << x;
+            break;
+        case Op::CALL:
+            break;
+        case Op::MOV:
+            stream << "movq " << x << ", " << y;
+            break;
+        case Op::NOP:
+            break;
+        case Op::JUMP_NE:
+            break;
+        case Op::CMP:
+            break;
+        }
+        stream << std::endl;
     }
 
     ExecutionBlock::ExecutionBlock(const std::string& label)
         : _label(label)
     {
+    }
+
+    void ExecutionBlock::GenerateAssembly(std::ostringstream& stream) const
+    {
+        stream << _label << ":" << std::endl;
+
+        for (auto instr : _instructions)
+            instr.GenerateAssembly(stream);
+    }
+
+    void ExecutionBlock::AppendInstruction(const Instruction& instr)
+    {
+        _instructions.push_back(instr);
     }
 
     IRVariable::IRVariable(const symbol_t& symbol, const SyntaxModel::PrimitiveType type, const bool isTemp, const size_t size, const size_t offset)
@@ -25,32 +66,34 @@ namespace IR {
     {
     }
 
-    ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser)
+    ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
+        : _target(target)
     {
         ast->generateIR(*this, nullptr);
-        /*
-        for (const auto& func : ast->functions) {
-            if (func->id.text == "main") {
-                std::list<Instruction> instrs;
-                auto rbp = CreatenewReg();
-                auto rsp = CreatenewReg();
-                instrs.emplace_back(Instruction::Op::PUSH, rbp);
-                instrs.emplace_back(Instruction::Op::MOV, rsp, rbp);
-
-                if (func->instructions.size() == 0)
-                    instrs.emplace_back(Instruction::Op::NOP);
-
-                instrs.emplace_back(Instruction::Op::POP, rbp);
-                instrs.emplace_back(Instruction::Op::RET);
-                _last_block = ExecutionBlock(func->id.text, instrs);
-            }
-        }*/
+        GenerateAssembly();
     }
 
     ControlFlowGraph::~ControlFlowGraph()
     {
         for (auto p : _blocks)
             delete p.second;
+    }
+
+    void ControlFlowGraph::GenerateAssembly() const
+    {
+        // Generate Prolog
+        std::ostringstream stream;
+        stream << ".glob main" << std::endl;
+        stream << ".type main, @function" << std::endl;
+
+        // Generate core assembly
+        auto* eb = _first_block;
+        while (eb != nullptr) {
+            eb->GenerateAssembly(stream);
+            eb = eb->_next_eb;
+        }
+
+        std::cout << stream.str() << std::endl;
     }
 
     symbol_t ControlFlowGraph::CreateIRVar(const SyntaxModel::Definition* varDef) const
@@ -74,6 +117,8 @@ namespace IR {
     ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)
     {
         auto eb = _makeExecutionBlock(label);
+        if (_first_block == nullptr)
+            _first_block = eb;
         if (eb_to_queue_on != nullptr) {
             if (eb_to_queue_on->_next_eb != nullptr) {
                 // TODO: throw error (this execution block already have a pointer to its next block)

@@ -49,16 +49,21 @@ namespace SyntaxModel {
 
     void Function::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
     {
-        /*auto func_eb = cfg.CreateExecutionBlock(id.text, eb);
-        func_eb->AppendInstruction(IR::Instruction::Op::PUSH, rbp);
-        func_eb->AppendInstruction(IR::Instruction::Op::MOV, rsp, rbp);
+        auto func_eb = cfg.CreateExecutionBlock(id.text, eb);
+        const std::string rbp = "%rbp";
+        const std::string rsp = "%rsp";
+        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::PUSH, rbp));
+        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, rsp, rbp));
 
-        func_eb = args->generateIR(cfg, func_eb);
-        for (auto* decl : declarations)
-            func_eb = decl->generateIR(cfg, func_eb);
-        for (auto* instr : instructions)
-            func_eb = instr->generateIR(cfg, func_eb);*/
+        //func_eb = args->generateIR(cfg, func_eb);
+        //for (auto* decl : declarations)
+        //    func_eb = decl->generateIR(cfg, func_eb);
+        //for (auto* instr : instructions)
+        //    func_eb = instr->generateIR(cfg, func_eb);
         // TODO: handle return statement type (make a variable for return value?)
+
+        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::POP, rbp));
+        func_eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::RET));
     }
 
     void Args::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const

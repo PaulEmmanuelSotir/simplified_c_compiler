@@ -29,21 +29,23 @@ namespace IR {
             CMP
         };
 
-        Instruction(Op op = Op::NOP, symbol_t dest = "", symbol_t x = "", symbol_t y = "");
+        Instruction(Op op = Op::NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
+        void GenerateAssembly(std::ostringstream& stream) const;
 
         const Op op;
-        const symbol_t dest;
         const symbol_t x;
         const symbol_t y;
+        const symbol_t dest;
     };
 
     class ControlFlowGraph;
 
     class ExecutionBlock {
     public:
-        inline void AppendInstruction(const Instruction& instr);
+        void AppendInstruction(const Instruction& instr);
 
     private:
+        void GenerateAssembly(std::ostringstream& stream) const;
         ExecutionBlock(const std::string& label);
         ExecutionBlock* _next_eb = nullptr;
         const std::string _label;
@@ -64,8 +66,9 @@ namespace IR {
 
     class ControlFlowGraph final {
     public:
-        ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser);
+        ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target);
         ~ControlFlowGraph();
+        void GenerateAssembly() const;
 
         template <typename T>
         static inline symbol_t CreateConstant(const T& value) { return "$" + std::to_string(value); }
@@ -77,7 +80,8 @@ namespace IR {
 
     private:
         ExecutionBlock* _makeExecutionBlock(const std::string& label);
-
+        ExecutionBlock* _first_block = nullptr;
         std::unordered_map<std::string, ExecutionBlock*> _blocks;
+        const std::string& _target;
     };
 }

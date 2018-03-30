@@ -53,8 +53,8 @@ const StaticAnalysis::StaticAnalyser* staticAnalysis(const SyntaxModel::Program*
 
 int main(int argc, char* argv[])
 {
-    std::string target = "output";
-    std::string inputFile = "input";
+    std::string target = "output.s";
+    std::string inputFile = "input.c";
     bool staticA = false;
     bool staticC = false;
 
@@ -99,9 +99,11 @@ int main(int argc, char* argv[])
         delete analyser;
     }
 
-    if(staticC) {
+    if (staticC) {
         auto analyser = staticAnalysis(program);
-        auto cfg = IR::ControlFlowGraph(program, analyser);
+
+        std::cout << "### Generating assembly ###" << std::endl;
+        auto cfg = IR::ControlFlowGraph(program, analyser, target);
         delete analyser;
     }
 
