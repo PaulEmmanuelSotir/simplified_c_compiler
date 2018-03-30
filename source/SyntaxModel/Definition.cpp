@@ -33,4 +33,24 @@ namespace SyntaxModel {
         os << std::endl;
         return os;
     }
+
+    IR::ExecutionBlock* Definition::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    {
+        const auto* analyser = cfg->getAnalyser();
+
+        // TODO: handle arrays
+        if (init_values.size() > 0) {
+            std::vector<IR::IRVariable> init_tmp_vars;
+            init_tmp_vars.reserve(init_values.size());
+            for (const auto* expr : init_values) {
+                Type type = expr->getExprType(analyser);
+                auto init_val_dst = cfg->CreateTempIRVar(type);
+                init_tmp_vars.push_back();
+                eb = expr->generateIR(cfg, eb, init_val_dst);
+            }
+
+            for (const auto* name : names) {
+                        }
+        }
+    }
 }

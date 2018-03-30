@@ -2,14 +2,12 @@
 #include <cstdint>
 #include <type_traits>
 
+#include "SyntaxModel/PrimitiveType.h"
 #include "SyntaxModel/SyntaxNode.h"
 
 namespace SyntaxModel {
 
     struct Type final : public SyntaxNodeBase {
-        enum class PrimitiveType { INT32_T,
-            INT64_T,
-            CHAR };
 
         Type(const antlr4::misc::Interval& source_interval, const PrimitiveType type, const bool isArray);
         virtual ~Type() = default;
@@ -17,21 +15,21 @@ namespace SyntaxModel {
         virtual std::ostream& toString(std::ostream& os) const override;
 
     private:
-        template <Type::PrimitiveType T, class Enable = void>
+        template <PrimitiveType T, class Enable = void>
         struct _UnderlyingType;
 
-        template <Type::PrimitiveType T>
-        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::CHAR>> {
+        template <PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == PrimitiveType::CHAR>> {
             using type = char32_t;
         };
 
-        template <Type::PrimitiveType T>
-        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::INT32_T>> {
+        template <PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == PrimitiveType::INT32_T>> {
             using type = int32_t;
         };
 
-        template <Type::PrimitiveType T>
-        struct _UnderlyingType<T, std::enable_if_t<T == Type::PrimitiveType::INT64_T>> {
+        template <PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == PrimitiveType::INT64_T>> {
             using type = int64_t;
         };
 
@@ -39,7 +37,7 @@ namespace SyntaxModel {
         const PrimitiveType type;
         const bool isArray;
 
-        template <Type::PrimitiveType T>
+        template <PrimitiveType T>
         using UnderlyingType = typename _UnderlyingType<T>::type;
     };
 }

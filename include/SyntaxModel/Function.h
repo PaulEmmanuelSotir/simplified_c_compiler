@@ -13,6 +13,7 @@ namespace SyntaxModel {
         virtual ~Args() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Args>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
+        void generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const;
 
         const std::list<const Type*> types;
         const std::vector<Identifier> names;
@@ -23,6 +24,7 @@ namespace SyntaxModel {
         virtual ~Function() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Function>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
+        void generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const;
         friend inline bool operator<(const Function& lhs, const Function& rhs) { return lhs.id < rhs.id; }
 
         const std::list<const Definition*> definitions;

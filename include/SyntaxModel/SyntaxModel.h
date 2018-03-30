@@ -11,6 +11,7 @@
 #include "SyntaxModel/FunctionCall.h"
 #include "SyntaxModel/If.h"
 #include "SyntaxModel/Instruction.h"
+#include "SyntaxModel/PrimitiveType.h"
 #include "SyntaxModel/Program.h"
 #include "SyntaxModel/Return.h"
 #include "SyntaxModel/Structure.h"

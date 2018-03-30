@@ -18,4 +18,23 @@ namespace SyntaxModel {
             os << *else_clause;
         return os;
     }
+
+    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    {
+        /*auto if_label = cfg.CreateLabel("if");
+        IRVariable cond_reg = cfg->CreateTempIRVar();
+        auto* eb = condition->generateIR(cfg, eb, { cond_reg });
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CMP, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::JUMP_NE));
+
+        for (auto* instr : instructions)
+            eb = instr->generateIR(cfg, eb);
+
+        auto* if_block = cfg.CreateExecutionBlock(if_label, if_block);
+
+        if (else_clause != nullptr)
+            return else_clause->generateIR(cfg, eb);
+        else
+            return if_block;*/
+    }
 }

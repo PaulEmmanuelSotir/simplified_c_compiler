@@ -9,7 +9,7 @@
 // TODO: replace static_cast with dynamic_cast?
 
 namespace SM = SyntaxModel;
-using PT = SM::Type::PrimitiveType;
+using PT = SM::PrimitiveType;
 
 antlrcpp::Any Visitor::visitProgram(GramCompParser::ProgramContext* ctx)
 {

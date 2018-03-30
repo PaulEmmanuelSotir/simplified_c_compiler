@@ -1,4 +1,5 @@
 #include "SyntaxModel/UnaryOp.h"
+#include "SyntaxModel/PrimitiveType.h"
 
 namespace SyntaxModel {
 
@@ -22,13 +23,13 @@ namespace SyntaxModel {
 
         if (expr_type.isArray)
             // TODO: make an alias for pointer type depending on target architecture
-            return Type(source_interval, Type::PrimitiveType::INT64_T, false); // BinaryOps interprets arrays as pointers (INT64_T);
+            return Type(source_interval, PrimitiveType::INT64_T, false); // BinaryOps interprets arrays as pointers (INT64_T);
 
         if (op == Op::MINUS) {
-            if (expr_type.type == Type::PrimitiveType::CHAR)
-                return Type(source_interval, Type::PrimitiveType::INT32_T, false); // Implicit cast to INT32_T
+            if (expr_type.type == PrimitiveType::CHAR)
+                return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to INT32_T
             return expr_type;
         } else // if (op == Op::NOT)
-            return Type(source_interval, Type::PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
+            return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
     }
 }

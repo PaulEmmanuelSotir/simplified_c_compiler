@@ -1,4 +1,5 @@
 #include "SyntaxModel/BinaryOp.h"
+#include "SyntaxModel/PrimitiveType.h"
 
 namespace SyntaxModel {
 
@@ -24,14 +25,14 @@ namespace SyntaxModel {
 
         if (left_type.isArray || right_type.isArray)
             // TODO: make an alias for pointer type depending on target architecture
-            return Type(source_interval, Type::PrimitiveType::INT64_T, false); // BinaryOps interprets arrays as pointers (INT64_T);
+            return Type(source_interval, PrimitiveType::INT64_T, false); // BinaryOps interprets arrays as pointers (INT64_T);
 
         if (op == Op::AND || op == Op::OR || op == Op::SUP || op == Op::SUP_EQ || op == Op::INF || op == Op::INF_EQ || op == Op::DIFFERENT || op == Op::EQUAL)
-            return Type(source_interval, Type::PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
+            return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
         else {
-            if (left_type.type == Type::PrimitiveType::INT64_T || right_type.type == Type::PrimitiveType::INT64_T)
-                return Type(source_interval, Type::PrimitiveType::INT64_T, false);
-            return Type(source_interval, Type::PrimitiveType::INT32_T, false);
+            if (left_type.type == PrimitiveType::INT64_T || right_type.type == PrimitiveType::INT64_T)
+                return Type(source_interval, PrimitiveType::INT64_T, false);
+            return Type(source_interval, PrimitiveType::INT32_T, false);
         }
     }
 }
