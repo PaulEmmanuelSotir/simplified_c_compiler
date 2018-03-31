@@ -96,4 +96,4 @@ IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 fragment CHAR_LITERAL: ~('\\'|'\n'|'\r') | '\\'.;
 QUOTED_CHAR_LITERAL: '\'' CHAR_LITERAL '\'';
 STRING_LITERAL: '"' (CHAR_LITERAL)* '"';
-INCLUDE: '#include' [ \t]+ ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);
+INCLUDE: '#include' [ \t]? ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);
