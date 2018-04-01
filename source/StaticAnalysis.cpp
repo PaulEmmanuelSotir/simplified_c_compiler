@@ -5,19 +5,23 @@
 
 namespace StaticAnalysis {
 
-    Variable::Variable(SyntaxModel::Identifier name, SyntaxModel::Type* type, SyntaxModel::Definition::size_constant* array_size, SyntaxModel::Expression* init_value)
-        : name(name)
-        , type(type)
-        , array_size(array_size)
-        , init_value(init_value)
-    {
-    }
-
     Variable::Variable(const SyntaxModel::Definition& def, const size_t index)
-        : name(def.names[index])
+        : def_unique_id(def.unique_id)
+        , name(def.names[index])
         , type(def.type)
         , array_size((def.sizes.size() > index) ? *utils::get_at(def.sizes, index) : nullptr)
         , init_value((def.init_values.size() > index) ? *utils::get_at(def.init_values, index) : nullptr)
+
+    {
+    }
+
+    Variable::Variable(SyntaxModel::Identifier name)
+
+        : def_unique_id(static_cast<size_t>(-1))
+        , name(name)
+        , type(nullptr)
+        , array_size(nullptr)
+        , init_value(nullptr)
     {
     }
 

@@ -28,8 +28,9 @@ namespace SyntaxModel {
         return *(var.type);
     }
 
-    IR::ExecutionBlock* Affectation::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    IR::ExecutionBlock* Affectation::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
+        // TODO: optimize affectation to var usage
         return eb;
     }
 }

@@ -29,7 +29,7 @@ namespace SyntaxModel {
         return *(function->returnType);
     }
 
-    IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
         //  Generate IR instructions for arguments expressions
         if (IR::ControlFlowGraph::args_registers.size() < args.size())
@@ -42,8 +42,8 @@ namespace SyntaxModel {
         const auto* func_args = function->arguments;
         if (func_args != nullptr && func_args->names.size() != args.size())
             throw new CompilerException("function '" + func_name.text + "' called with the wrong number of arguments");
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CALL, func_name.text));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, "%rax", result_register));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::CALL, func_name.text));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, "%rax", dest));
         return eb;
     }
 }

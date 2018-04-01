@@ -9,16 +9,22 @@
 #include "SyntaxModel/SyntaxModel.h"
 
 namespace StaticAnalysis {
+    class StaticAnalyser;
 
     struct Variable {
-        Variable(SyntaxModel::Identifier name, SyntaxModel::Type* type, SyntaxModel::Definition::size_constant* array_size = nullptr, SyntaxModel::Expression* init_value = nullptr);
         Variable(const SyntaxModel::Definition& def, const size_t index = 0);
+        const size_t def_unique_id;
         const SyntaxModel::Identifier name;
         const SyntaxModel::Type* type;
         const SyntaxModel::Definition::size_constant* array_size;
         const SyntaxModel::Expression* init_value;
         friend inline bool operator<(const Variable& lhs, const Variable& rhs) { return lhs.name < rhs.name; }
         friend inline bool operator==(const Variable& lhs, const Variable& rhs) { return lhs.name == rhs.name; }
+
+    private:
+        // Make a dummy variable (usefull for std container algorithms)
+        Variable(SyntaxModel::Identifier name);
+        friend class StaticAnalyser;
     };
 
     class StaticAnalyser final {
@@ -58,7 +64,7 @@ namespace StaticAnalysis {
         template <typename T>
         void ResolveVarUsage(std::map<size_t, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals = nullptr, const std::vector<Variable>* func_locals = nullptr)
         {
-            Variable dummy_var(var_id, nullptr);
+            Variable dummy_var(var_id);
             auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
             if (func_locals != nullptr && unused_locals != nullptr) {
                 auto local_it = std::find(func_locals->cbegin(), func_locals->cend(), dummy_var);

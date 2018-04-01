@@ -1,4 +1,6 @@
 #include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Definition.h"
+#include "SyntaxModel/Function.h"
 #include "SyntaxModel/SyntaxNode.h"
 
 #include "StaticAnalysis.h"
@@ -34,8 +36,21 @@ namespace SyntaxModel {
         return *(var.type);
     }
 
-    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
+        StaticAnalysis::Variable var = cfg.static_analyser->getVariableOfUsage(this);
+        auto func = getFirstParentOfType<Function>();
+        if (func != nullptr) {
+            auto stack_defs_it = func->stackVariables.find(var.def_unique_id);
+            if (stack_defs_it != func->stackVariables.end()) {
+                for (const IR::StackVariable& stack_var : stack_defs_it->second) {
+                    if (stack_var.name.text == name.text)
+                        return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.toAddressOperandSyntax(), dest));
+                }
+            }
+            throw new CompilerException("Couldn't find stack variable from a local variable definition (got from its VariableUsage)");
+        }
+        // TODO: handle globals here
         return eb;
     }
 }

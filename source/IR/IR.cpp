@@ -6,7 +6,23 @@
 namespace IR {
     const std::array<const IR::symbol_t, 6> ControlFlowGraph::args_registers = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
-    Instruction::Instruction(Op op, symbol_t x, symbol_t y, symbol_t dest)
+    const symbol_t Instruction::RETQ = "retq";
+    const symbol_t Instruction::PUSHQ = "pushq";
+    const symbol_t Instruction::POPQ = "popq";
+    const symbol_t Instruction::CALL = "call";
+    const symbol_t Instruction::MOVQ = "movq";
+    const symbol_t Instruction::MOVZBQ = "movzbq";
+    const symbol_t Instruction::MOVABSQ = "movabsq";
+    const symbol_t Instruction::NOP = "nop";
+    const symbol_t Instruction::JUMP_NE = "jmpne";
+    const symbol_t Instruction::CMPQ = "cmpq";
+    const symbol_t Instruction::SETE = "sete";
+    const symbol_t Instruction::ADDQ = "addq";
+    const symbol_t Instruction::NEGQ = "negq";
+    const symbol_t Instruction::IMULL = "imull";
+    const symbol_t Instruction::SUBQ = "subq";
+
+    Instruction::Instruction(symbol_t op, symbol_t x, symbol_t y, symbol_t dest)
         : op(op)
         , x(x)
         , y(y)
@@ -14,38 +30,30 @@ namespace IR {
     {
     }
 
+    size_t Instruction::OperandCount() const
+    {
+        if (x != "" && y != "" && dest != "")
+            return 3;
+        else if (x != "" && y != "")
+            return 2;
+        else if (x != "")
+            return 1;
+        else if (x == "" && y == "" && dest == "")
+            return 0;
+
+        throw new CompilerException("Invalid IR instruction operands.");
+    }
+
     void Instruction::GenerateAssembly(std::ostringstream& stream) const
     {
-        stream << "\t";
-        switch (op) {
-        case Op::RET:
-            stream << "retq";
-            break;
-        case Op::ADD:
-            stream << "addq " << x << ", " << y;
-            break;
-        case Op::SUB:
-            stream << "subq " << x << ", " << y;
-            break;
-        case Op::PUSH:
-            stream << "pushq " << x;
-            break;
-        case Op::POP:
-            stream << "popq " << x;
-            break;
-        case Op::CALL:
-            stream << "call " << x;
-            break;
-        case Op::MOV:
-            stream << "movq " << x << ", " << y;
-            break;
-        case Op::NOP:
-            break;
-        case Op::JUMP_NE:
-            break;
-        case Op::CMP:
-            break;
-        }
+        size_t op_count = OperandCount();
+        stream << "\t" << op;
+        if (op_count >= 1)
+            stream << " " << x;
+        if (op_count >= 2)
+            stream << ", " << y;
+        if (op_count >= 3)
+            stream << ", " << dest;
         stream << std::endl;
     }
 
@@ -54,17 +62,20 @@ namespace IR {
     {
     }
 
-    void ExecutionBlock::GenerateAssembly(std::ostringstream& stream) const
+    void ExecutionBlock::GenerateAssembly(std::ostringstream& stream, std::function<void(const Instruction&)> onInstrGeneration) const
     {
         stream << _label << ":" << std::endl;
 
-        for (auto instr : _instructions)
+        for (auto instr : _instructions) {
+            onInstrGeneration(instr);
             instr.GenerateAssembly(stream);
+        }
     }
 
-    void ExecutionBlock::AppendInstruction(const Instruction& instr)
+    ExecutionBlock* ExecutionBlock::AppendInstruction(const Instruction& instr)
     {
         _instructions.push_back(instr);
+        return this;
     }
 
     ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
@@ -85,7 +96,7 @@ namespace IR {
             delete p.second;
     }
 
-    void ControlFlowGraph::GenerateAssembly() const
+    void ControlFlowGraph::GenerateAssembly()
     {
         // Generate Prolog
         std::ostringstream stream;
@@ -95,34 +106,37 @@ namespace IR {
         // Generate core assembly
         auto* eb = _first_block;
         while (eb != nullptr) {
-            eb->GenerateAssembly(stream);
+            eb->GenerateAssembly(stream, [this](auto instr) {
+                _register_counter = 0;
+            });
             eb = eb->_next_eb;
         }
 
         std::cout << stream.str() << std::endl;
     }
 
-    symbol_t ControlFlowGraph::CreateRegister(const std::string& prefix)
+    symbol_t ControlFlowGraph::GetFreeRegister(size_t size)
     {
+        // TODO: make count private and reset it when compiling a new AST instruction
         static size_t count = 0;
-        return prefix + "_" + std::to_string(++count);
+        return "!tmp" + std::to_string(++count);
     }
 
-    StackVariable::StackVariable(size_t offset, size_t size)
+    StackVariable::StackVariable(int64_t offset, size_t size, const utils::TerminalInfo& name)
         : offset(offset)
         , size(size)
+        , name(name)
     {
     }
 
-    symbol_t StackVariable::getSymbol() const
+    symbol_t StackVariable::toAddressOperandSyntax() const
     {
-        return "-" + std::to_string(offset) + "(%rsp)";
+        return AddressOperandSyntax("%rsp", offset);
     }
 
     std::string ControlFlowGraph::CreateLabel(const std::string& prefix)
     {
-        static size_t count = 0;
-        return prefix + "_" + std::to_string(++count);
+        return prefix + "_" + std::to_string(++_register_counter);
     }
 
     ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)

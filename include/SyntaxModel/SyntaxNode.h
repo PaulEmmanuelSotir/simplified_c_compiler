@@ -49,21 +49,21 @@ namespace SyntaxModel {
         }
 
         template <typename T>
-        static const T* getFirstParentOfType(const SyntaxNodeBase* child)
+        const T* getFirstParentOfType() const
         {
-            auto parent_it = _parenthoods.find(child->unique_id);
+            auto parent_it = _parenthoods.find(unique_id);
             while (parent_it != _parenthoods.end()) {
                 const auto* parent = (*parent_it).second;
                 if (parent->is<T>())
                     return dynamic_cast<const T*>(parent);
-                parent_it = _parenthoods.find(child->unique_id);
+                parent_it = _parenthoods.find(parent->unique_id);
             }
             return nullptr;
         }
 
-        static const SyntaxNodeBase* getParent(const SyntaxNodeBase* child)
+        const SyntaxNodeBase* getParent() const
         {
-            auto parent_it = _parenthoods.find(child->unique_id);
+            auto parent_it = _parenthoods.find(unique_id);
             if (parent_it != _parenthoods.end())
                 return (*parent_it).second;
             return nullptr;

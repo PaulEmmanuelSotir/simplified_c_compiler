@@ -19,19 +19,20 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t result_register) const
+    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
         return eb;
-        /*auto if_label = cfg.CreateLabel("if");
+        /*
+        auto* if_block = cfg.CreateExecutionBlock("if", if_block);
         IRVariable cond_reg = cfg->CreateTempIRVar();
-        auto* eb = condition->generateIR(cfg, eb, { cond_reg });
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CMP, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::JUMP_NE));
+        auto* eb = condition->generateIR(cfg, eb, { cond_reg }); // TODO: split condition expression on && and || binary operator in order to avoid evaluating unescessary expressions
+        // TODO: put jump instructions into Execution blocks?
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP_NE, if_block->label));
 
         for (auto* instr : instructions)
             eb = instr->generateIR(cfg, eb);
 
-        auto* if_block = cfg.CreateExecutionBlock(if_label, if_block);
 
         if (else_clause != nullptr)
             return else_clause->generateIR(cfg, eb);

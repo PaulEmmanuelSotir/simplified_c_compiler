@@ -4,6 +4,7 @@
 #include <unordered_map>
 
 #include "SyntaxModel/PrimitiveType.h"
+#include "utils.h"
 
 namespace StaticAnalysis {
     class StaticAnalyser;
@@ -18,23 +19,27 @@ namespace IR {
     using symbol_t = std::string;
 
     struct Instruction {
-        enum class Op {
-            RET,
-            PUSH,
-            POP,
-            CALL,
-            MOV,
-            NOP,
-            JUMP_NE,
-            CMP,
-            ADD,
-            SUB
-        };
+        static const symbol_t RETQ;
+        static const symbol_t PUSHQ;
+        static const symbol_t POPQ;
+        static const symbol_t CALL;
+        static const symbol_t MOVQ;
+        static const symbol_t MOVZBQ;
+        static const symbol_t MOVABSQ;
+        static const symbol_t NOP;
+        static const symbol_t JUMP_NE;
+        static const symbol_t CMPQ;
+        static const symbol_t SETE;
+        static const symbol_t ADDQ;
+        static const symbol_t NEGQ;
+        static const symbol_t IMULL;
+        static const symbol_t SUBQ;
 
-        Instruction(Op op = Op::NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
+        Instruction(symbol_t op = NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
         void GenerateAssembly(std::ostringstream& stream) const;
+        size_t OperandCount() const;
 
-        const Op op;
+        const symbol_t op;
         const symbol_t x;
         const symbol_t y;
         const symbol_t dest;
@@ -44,10 +49,10 @@ namespace IR {
 
     class ExecutionBlock {
     public:
-        void AppendInstruction(const Instruction& instr);
+        ExecutionBlock* AppendInstruction(const Instruction& instr);
 
     private:
-        void GenerateAssembly(std::ostringstream& stream) const;
+        void GenerateAssembly(std::ostringstream& stream, std::function<void(const Instruction&)> onInstrGeneration) const;
         ExecutionBlock(const std::string& label);
         ExecutionBlock* _next_eb = nullptr;
         const std::string _label;
@@ -57,24 +62,23 @@ namespace IR {
     };
 
     struct StackVariable {
-        StackVariable(size_t offset, size_t size);
-        symbol_t getSymbol() const;
-        const size_t offset;
+        StackVariable(int64_t offset, size_t size, const utils::TerminalInfo& name);
+        symbol_t toAddressOperandSyntax() const;
+        const int64_t offset;
         const size_t size;
+        const utils::TerminalInfo name;
     };
 
     class ControlFlowGraph final {
     public:
         ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target);
         ~ControlFlowGraph();
-        void GenerateAssembly() const;
+        void GenerateAssembly();
 
         template <typename T>
         static inline symbol_t CreateConstant(const T& value) { return "$" + std::to_string(value); }
 
-        //symbol_t CreateIRVar(const SyntaxModel::Definition* varDef) const;
-        //IRVariable CreateTempIRVar() const;
-        symbol_t CreateRegister(const std::string& prefix);
+        symbol_t GetFreeRegister(size_t size);
         std::string CreateLabel(const std::string& prefix);
         ExecutionBlock* CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
 
@@ -83,8 +87,28 @@ namespace IR {
 
     private:
         ExecutionBlock* _makeExecutionBlock(const std::string& label);
-        ExecutionBlock* _first_block = nullptr;
         std::unordered_map<std::string, ExecutionBlock*> _blocks;
+        ExecutionBlock* _first_block = nullptr;
+        size_t _register_counter = 0;
         const std::string& _target;
     };
+
+    template <typename OffsetT>
+    symbol_t AddressOperandSyntax(symbol_t reg, OffsetT offset = OffsetT(), symbol_t mult_offset = "")
+    {
+        std::stringstream st;
+        if (offset == OffsetT())
+            st << "(" << reg;
+        else {
+            if (std::is_same<OffsetT, int64_t>::value)
+                st << offset << "(";
+            else
+                st << "(" << offset << ", ";
+            st << reg;
+        }
+        if (mult_offset != "")
+            st << ", " << mult_offset;
+        st << ")";
+        return st.str();
+    }
 }

@@ -42,7 +42,7 @@ namespace SyntaxModel {
         if (init_values.size() > 0) {
             for (size_t i = 0; i < stack_variables.size(); ++i) {
                 //TODO: Type type = expr->getExprType(analyser); (if stack variable doesn't have the same size as init expression's type, perform an implicit cast)
-                eb = (*utils::get_at(init_values, i))->generateIR(cfg, eb, stack_variables[i].getSymbol());
+                eb = (*utils::get_at(init_values, i))->generateIR(cfg, eb, stack_variables[i].toAddressOperandSyntax());
             }
         }
         return eb;
