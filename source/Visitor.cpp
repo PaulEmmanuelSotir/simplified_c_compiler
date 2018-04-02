@@ -105,20 +105,15 @@ antlrcpp::Any Visitor::visitContinue(GramCompParser::ContinueContext* ctx) { ret
 
 antlrcpp::Any Visitor::visitInfequal(GramCompParser::InfequalContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::INF_EQ); }
 antlrcpp::Any Visitor::visitDifferent(GramCompParser::DifferentContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::DIFFERENT); }
-antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx)
-{
-    return visitBinaryOp(ctx, SM::BinaryOp::Op::PLUS);
-}
+antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::PLUS); }
 antlrcpp::Any Visitor::visitMult(GramCompParser::MultContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::MULT); }
 antlrcpp::Any Visitor::visitMinus(GramCompParser::MinusContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::MINUS); }
 antlrcpp::Any Visitor::visitInf(GramCompParser::InfContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::INF); }
 antlrcpp::Any Visitor::visitDiv(GramCompParser::DivContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::DIV); }
-antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx)
-{
-    return visitBinaryOp(ctx, SM::BinaryOp::Op::EQUAL);
-}
+antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::EQUAL); }
 antlrcpp::Any Visitor::visitSup(GramCompParser::SupContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::SUP); }
 antlrcpp::Any Visitor::visitSupequal(GramCompParser::SupequalContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::SUP_EQ); }
+antlrcpp::Any Visitor::visitModulo(GramCompParser::ModuloContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::MODULO); }
 
 antlrcpp::Any Visitor::visitNot(GramCompParser::NotContext* ctx)
 {

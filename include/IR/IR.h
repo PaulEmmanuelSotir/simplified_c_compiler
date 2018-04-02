@@ -34,7 +34,9 @@ namespace IR {
         static const symbol_t ADDQ;
         static const symbol_t NEGQ;
         static const symbol_t IMULL;
+        static const symbol_t IDIVQ;
         static const symbol_t SUBQ;
+        static const symbol_t CQO;
 
         Instruction(symbol_t op = NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
         void GenerateAssembly(std::ostringstream& stream) const;

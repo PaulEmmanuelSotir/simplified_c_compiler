@@ -28,6 +28,7 @@ expression:
 	| expression '-' expression		# minus
 	| expression '*' expression		# mult
 	| expression '/' expression		# div
+	| expression '%' expression		# modulo
 	| expression '==' expression	# equal
 	| expression '!=' expression	# different
 	| expression '<' expression		# inf

@@ -44,6 +44,7 @@ public:
     virtual antlrcpp::Any visitEqual(GramCompParser::EqualContext* ctx) override;
     virtual antlrcpp::Any visitSup(GramCompParser::SupContext* ctx) override;
     virtual antlrcpp::Any visitSupequal(GramCompParser::SupequalContext* context) override;
+    virtual antlrcpp::Any visitModulo(GramCompParser::ModuloContext* ctx) override;
 
     // Unary ops
     virtual antlrcpp::Any visitNot(GramCompParser::NotContext* ctx) override;

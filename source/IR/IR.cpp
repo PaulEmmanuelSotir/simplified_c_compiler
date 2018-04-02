@@ -20,7 +20,9 @@ namespace IR {
     const symbol_t Instruction::ADDQ = "addq";
     const symbol_t Instruction::NEGQ = "negq";
     const symbol_t Instruction::IMULL = "imull";
+    const symbol_t Instruction::IDIVQ = "idivq";
     const symbol_t Instruction::SUBQ = "subq";
+    const symbol_t Instruction::CQO = "cqo";
 
     Instruction::Instruction(symbol_t op, symbol_t x, symbol_t y, symbol_t dest)
         : op(op)

@@ -46,9 +46,11 @@ namespace SyntaxModel {
         switch (op) {
         case Op::PLUS:
             eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::ADDQ, leftExpressionReg, rightExpressionReg));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
             break;
         case Op::MINUS:
             eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, leftExpressionReg, rightExpressionReg));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
             break;
         case Op::MULT:
             /*Type t = getExprType(cfg.static_analyser);
@@ -60,13 +62,27 @@ namespace SyntaxModel {
                 else
                     throw new CompilerException("Expesssion type not supported");
             } else {*/
+            //TODO: make sure I don't need IMULQ here instead of IMULL
             eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IMULL, leftExpressionReg, rightExpressionReg, rightExpressionReg));
-            break;
-        case Op::DIV:
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
             break;
         case Op::MODULO:
+        case Op::DIV: {
+            //TODO: make sure this couldn't be simplified into using IDIV
+            const IR::symbol_t rax = "%rax", rdx = "%rdx", rbx = "%rbx"; // TODO: remove it
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, leftExpressionReg, rax));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, rdx));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, rbx));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::CQO));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IDIVQ, rdx));
+            if (op == Op::MODULO)
+                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, dest));
+            if (op == Op::DIV)
+                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rax, dest));
             break;
+        }
         case Op::EQUAL:
+
             break;
         case Op::DIFFERENT:
             break;
@@ -83,6 +99,6 @@ namespace SyntaxModel {
         case Op::OR:
             break;
         }
-        return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
+        return eb;
     }
 }
