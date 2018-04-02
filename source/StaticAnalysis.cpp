@@ -126,7 +126,6 @@ namespace StaticAnalysis {
     bool StaticAnalyser::FindForLoopVarDef(const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::map<size_t, Variable>& var_resolution_map)
     {
         auto* parent_for_loop = var_usage->getFirstParentOfType<SyntaxModel::For>();
-        bool found_for_loop_var_def = false;
         if (parent_for_loop != nullptr && parent_for_loop->init != nullptr && parent_for_loop->init->is<SyntaxModel::Definition>()) {
             auto* for_init_def = dynamic_cast<const SyntaxModel::Definition*>(parent_for_loop->init);
             for (size_t i = 0; i < for_init_def->names.size(); ++i) {
@@ -135,12 +134,12 @@ namespace StaticAnalysis {
                         error<true>("Can't declare variable in for loop init statement without initializing it.");
                     else {
                         var_resolution_map.emplace(var_usage->unique_id, Variable(*for_init_def, i));
-                        found_for_loop_var_def = true;
+                        return true;
                     }
                 }
             }
         }
-        return found_for_loop_var_def;
+        return false;
     }
 
     void StaticAnalyser::ResolveVarUsage(std::map<size_t, Variable>& var_resolution_map, const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals, const std::vector<Variable>* func_locals)
