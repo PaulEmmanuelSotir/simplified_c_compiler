@@ -18,4 +18,11 @@ namespace SyntaxModel {
         os << "}" << std::endl;
         return os;
     }
+
+    IR::ExecutionBlock* Else::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    {
+        for (auto* instr : instructions)
+            eb = instr->generateIR(cfg, eb, "");
+        return eb;
+    }
 }

@@ -31,7 +31,9 @@ namespace IR {
         static const symbol_t MOVZBQ;
         static const symbol_t MOVABSQ;
         static const symbol_t NOP;
-        static const symbol_t JUMP_NE;
+        static const symbol_t JNE;
+        static const symbol_t JE;
+        static const symbol_t JMP;
         static const symbol_t CMPQ;
         static const symbol_t SETE;
         static const symbol_t ADDQ;
@@ -86,7 +88,7 @@ namespace IR {
         static inline symbol_t CreateConstant(const T& value) { return "$" + std::to_string(value); }
 
         symbol_t GetFreeRegister(size_t size);
-        std::string CreateLabel(const std::string& prefix);
+        std::string CreateLabel(std::string prefix, const SyntaxModel::SyntaxNodeBase* node);
         ExecutionBlock* CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
         static std::experimental::optional<StackVariable> getStackVariableFromVariable(const StaticAnalysis::Variable& var, const SyntaxModel::SyntaxNodeBase* node);
 

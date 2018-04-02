@@ -43,7 +43,8 @@ namespace SyntaxModel {
         if (func_args != nullptr && func_args->names.size() != args.size())
             throw new CompilerException("function '" + func_name.text + "' called with the wrong number of arguments");
         eb->AppendInstruction(IR::Instruction(IR::Instruction::CALL, func_name.text));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, "%rax", dest));
+        if (dest != "")
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, "%rax", dest));
         return eb;
     }
 }

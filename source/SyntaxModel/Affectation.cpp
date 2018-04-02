@@ -60,7 +60,7 @@ namespace SyntaxModel {
                 break;
             case Op::PRE_DEC:
             case Op::PRE_INC: {
-                eb = eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                eb = eb->AppendInstruction(IR::Instruction(op == Op::PRE_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
                 if (dest != "")
                     eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
@@ -69,10 +69,10 @@ namespace SyntaxModel {
                 if (dest != "") {
                     auto tmp_reg = cfg.GetFreeRegister(8); // this temporary register is nescessary when this affectation is used in the value of another affectation
                     eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, tmp_reg));
-                    eb = eb->AppendInstruction(IR::Instruction(op == Op::PRE_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                    eb = eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
                     eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, tmp_reg, dest));
                 } else
-                    eb = eb->AppendInstruction(IR::Instruction(op == Op::PRE_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                    eb = eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
                 break;
             }
             case Op::PLUS_EQ:

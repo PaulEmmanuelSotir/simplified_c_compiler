@@ -15,7 +15,9 @@ namespace IR {
     const symbol_t Instruction::MOVZBQ = "movzbq";
     const symbol_t Instruction::MOVABSQ = "movabsq";
     const symbol_t Instruction::NOP = "nop";
-    const symbol_t Instruction::JUMP_NE = "jmpne";
+    const symbol_t Instruction::JNE = "jne";
+    const symbol_t Instruction::JE = "je";
+    const symbol_t Instruction::JMP = "jmp";
     const symbol_t Instruction::CMPQ = "cmpq";
     const symbol_t Instruction::SETE = "sete";
     const symbol_t Instruction::ADDQ = "addq";
@@ -135,9 +137,7 @@ namespace IR {
 
     symbol_t ControlFlowGraph::GetFreeRegister(size_t size)
     {
-        // TODO: make count private and reset it when compiling a new AST instruction
-        static size_t count = 0;
-        return "!tmp" + std::to_string(++count);
+        return "!tmp" + std::to_string(++_register_counter);
     }
 
     StackVariable::StackVariable(int64_t offset, size_t size, const utils::TerminalInfo& name)
@@ -152,9 +152,24 @@ namespace IR {
         return AddressOperandSyntax("%rsp", offset);
     }
 
-    std::string ControlFlowGraph::CreateLabel(const std::string& prefix)
+    std::string ControlFlowGraph::CreateLabel(std::string prefix, const SyntaxModel::SyntaxNodeBase* node)
     {
-        return prefix + "_" + std::to_string(++_register_counter);
+        static std::unordered_map<std::string, size_t> label_counters;
+
+        if (node != nullptr) {
+            // Append function name to label if given node is a children of a function
+            auto* func = node->getFirstParentOfType<SyntaxModel::Function>();
+            if (func != nullptr)
+                prefix = func->id.text + "." + prefix;
+        }
+
+        // If we already created a label with the same name, we increment its counter
+        if (label_counters.find(prefix) != label_counters.end()) {
+            size_t count = ++label_counters[prefix];
+            prefix += "_" + std::to_string(count);
+        } else
+            label_counters.emplace(prefix, 0);
+        return prefix;
     }
 
     ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)
