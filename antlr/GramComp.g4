@@ -46,7 +46,10 @@ expression:
 structure:
 	'if' '(' expression ')' '{' (instruction)* '}' else_structure?	# if
 	| 'while' '(' expression ')' '{' (instruction)* '}'				# while
+	| 'for' '(' def_or_expr def_or_expr ';' expression? ')' '{' (instruction)* '}' # for
 ;
+
+def_or_expr:  (definition? | (expression? ';'));
 
 else_structure: 'else' '{' (instruction)* '}' # else;
 

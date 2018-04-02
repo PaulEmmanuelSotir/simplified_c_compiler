@@ -30,6 +30,8 @@ public:
     virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
     virtual antlrcpp::Any visitExpression_instr(GramCompParser::Expression_instrContext* ctx) override;
     virtual antlrcpp::Any visitParenthesis(GramCompParser::ParenthesisContext* ctx) override;
+    virtual antlrcpp::Any visitFor(GramCompParser::ForContext* ctx) override;
+    virtual antlrcpp::Any visitDef_or_expr(GramCompParser::Def_or_exprContext* ctx) override;
 
     // Binary ops
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;

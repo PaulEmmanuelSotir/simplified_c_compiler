@@ -61,24 +61,8 @@ namespace StaticAnalysis {
             std::cout << std::endl;
         }
 
-        template <typename T>
-        void ResolveVarUsage(std::map<size_t, Variable>& var_resolution_map, const T* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals = nullptr, const std::vector<Variable>* func_locals = nullptr)
-        {
-            Variable dummy_var(var_id);
-            auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
-            if (func_locals != nullptr && unused_locals != nullptr) {
-                auto local_it = std::find(func_locals->cbegin(), func_locals->cend(), dummy_var);
-                if (local_it != func_locals->cend()) {
-                    var_resolution_map.emplace(var_usage->unique_id, *local_it);
-                    unused_locals->erase(*local_it);
-                } else
-                    error<true>("Local variable '", var_id.text, "' not declared.");
-            } else if (global_it != _global_variables.cend()) {
-                var_resolution_map.emplace(var_usage->unique_id, *global_it);
-                unused_globals.erase(*global_it);
-            } else
-                error<true>("Global variable '", var_id.text, "' not declared.");
-        }
+        bool FindForLoopVarDef(const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::map<size_t, Variable>& var_resolution_map);
+        void ResolveVarUsage(std::map<size_t, Variable>& var_resolution_map, const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals = nullptr, const std::vector<Variable>* func_locals = nullptr);
 
         template <typename V>
         static const V _find(const std::map<size_t, V> map, const size_t key)

@@ -215,6 +215,26 @@ antlrcpp::Any Visitor::visitParenthesis(GramCompParser::ParenthesisContext* ctx)
     return visit_single<SM::Expression>(ctx->expression());
 }
 
+antlrcpp::Any Visitor::visitFor(GramCompParser::ForContext* ctx)
+{
+    auto init = visit_single<SM::SyntaxNodeBase>(ctx->def_or_expr(0));
+    auto condition = visit_single<SM::SyntaxNodeBase>(ctx->def_or_expr(1));
+    if (condition->is<SM::Definition>())
+        throw new CompilerException("For loop doesn't support definitions in their condition statements for now");
+    auto condition_expr = dynamic_cast<const SM::Expression*>(condition);
+    auto iteration_expression = visit_single<SM::Expression>(ctx->expression());
+    auto instructions = visit_all<SM::Instruction>(ctx->instruction());
+    return static_cast<SM::Instruction*>(new SM::For(ctx->getSourceInterval(), init, condition_expr, iteration_expression, instructions));
+}
+
+antlrcpp::Any Visitor::visitDef_or_expr(GramCompParser::Def_or_exprContext* ctx)
+{
+    if (ctx->definition() != nullptr)
+        return static_cast<SM::SyntaxNodeBase*>(visit_single<SM::Definition>(ctx->definition()));
+    else
+        return static_cast<SM::SyntaxNodeBase*>(visit_single<SM::Expression>(ctx->expression()));
+}
+
 antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_INC, ctx); }
 antlrcpp::Any Visitor::visitPre_dec(GramCompParser::Pre_decContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_DEC, ctx); }
 antlrcpp::Any Visitor::visitPost_inc(GramCompParser::Post_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::POST_INC, ctx); }
