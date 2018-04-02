@@ -39,16 +39,9 @@ namespace SyntaxModel {
     IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
         StaticAnalysis::Variable var = cfg.static_analyser->getVariableOfUsage(this);
-        auto func = getFirstParentOfType<Function>();
-        if (func != nullptr) {
-            auto stack_defs_it = func->stackVariables.find(var.def_unique_id);
-            if (stack_defs_it != func->stackVariables.end()) {
-                for (const IR::StackVariable& stack_var : stack_defs_it->second) {
-                    if (stack_var.name.text == name.text)
-                        return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.toAddressOperandSyntax(), dest));
-                }
-            }
-            throw new CompilerException("Couldn't find stack variable from a local variable definition (got from its VariableUsage)");
+        auto stack_var = IR::ControlFlowGraph::getStackVariableFromVariable(var, this);
+        if (stack_var) {
+            return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.value().toAddressOperandSyntax(), dest));
         }
         // TODO: handle globals here
         return eb;

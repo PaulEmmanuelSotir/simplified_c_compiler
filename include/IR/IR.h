@@ -5,10 +5,12 @@
 #include <unordered_map>
 
 #include "SyntaxModel/PrimitiveType.h"
+#include "optional.h"
 #include "utils.h"
 
 namespace StaticAnalysis {
     class StaticAnalyser;
+    class Variable;
 }
 
 namespace SyntaxModel {
@@ -18,6 +20,7 @@ namespace SyntaxModel {
 
 namespace IR {
     using symbol_t = std::string;
+    class ExecutionBlock;
 
     struct Instruction {
         static const symbol_t RETQ;
@@ -41,6 +44,7 @@ namespace IR {
         Instruction(symbol_t op = NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
         void GenerateAssembly(std::ostringstream& stream) const;
         size_t OperandCount() const;
+        static ExecutionBlock* divide_64bits(ExecutionBlock* eb, bool getRemainder, symbol_t x, symbol_t y, symbol_t dest);
 
         const symbol_t op;
         const symbol_t x;
@@ -84,6 +88,7 @@ namespace IR {
         symbol_t GetFreeRegister(size_t size);
         std::string CreateLabel(const std::string& prefix);
         ExecutionBlock* CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on);
+        static std::experimental::optional<StackVariable> getStackVariableFromVariable(const StaticAnalysis::Variable& var, const SyntaxModel::SyntaxNodeBase* node);
 
         const StaticAnalysis::StaticAnalyser* const static_analyser;
         static const std::array<const IR::symbol_t, 6> args_registers;

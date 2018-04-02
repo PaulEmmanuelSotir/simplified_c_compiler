@@ -68,17 +68,7 @@ namespace SyntaxModel {
             break;
         case Op::MODULO:
         case Op::DIV: {
-            //TODO: make sure this couldn't be simplified into using IDIV
-            const IR::symbol_t rax = "%rax", rdx = "%rdx", rbx = "%rbx"; // TODO: remove it
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, leftExpressionReg, rax));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, rdx));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, rbx));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::CQO));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IDIVQ, rdx));
-            if (op == Op::MODULO)
-                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, dest));
-            if (op == Op::DIV)
-                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rax, dest));
+            eb = IR::Instruction::divide_64bits(eb, op == Op::MODULO, leftExpressionReg, rightExpressionReg, dest);
             break;
         }
         case Op::EQUAL:

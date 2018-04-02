@@ -7,11 +7,11 @@ using namespace std;
 
 namespace SyntaxModel {
     struct Affectation final : public Expression {
-        enum class Op { POST_INC,
+        enum class Op { EQ,
+            POST_INC,
             POST_DEC,
             PRE_INC,
             PRE_DEC,
-            EQ,
             PLUS_EQ,
             MIN_EQ,
             DIV_EQ,
@@ -31,5 +31,6 @@ namespace SyntaxModel {
         const Identifier var;
         const Expression* array_indice;
         const Expression* affected_value;
+        const bool isUnaryAffectation;
     };
 }

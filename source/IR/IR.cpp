@@ -2,6 +2,7 @@
 #include "CompilerException.h"
 #include "StaticAnalysis.h"
 #include "SyntaxModel/Definition.h"
+#include "SyntaxModel/Function.h"
 
 namespace IR {
     const std::array<const IR::symbol_t, 6> ControlFlowGraph::args_registers = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
@@ -57,6 +58,21 @@ namespace IR {
         if (op_count >= 3)
             stream << ", " << dest;
         stream << std::endl;
+    }
+
+    IR::ExecutionBlock* Instruction::divide_64bits(IR::ExecutionBlock* eb, bool getRemainder, IR::symbol_t x, IR::symbol_t y, IR::symbol_t dest)
+    {
+        //TODO: make sure this couldn't be simplified into using IDIV
+        const IR::symbol_t rax = "%rax", rdx = "%rdx", rbx = "%rbx"; // TODO: remove it
+        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, x, rax));
+        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, y, rbx));
+        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::CQO));
+        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IDIVQ, rbx));
+        if (getRemainder)
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, dest));
+        else
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rax, dest));
+        return eb;
     }
 
     ExecutionBlock::ExecutionBlock(const std::string& label)
@@ -152,6 +168,22 @@ namespace IR {
             eb_to_queue_on->_next_eb = eb;
         }
         return eb;
+    }
+
+    std::experimental::optional<StackVariable> ControlFlowGraph::getStackVariableFromVariable(const StaticAnalysis::Variable& var, const SyntaxModel::SyntaxNodeBase* node)
+    {
+        auto func = node->getFirstParentOfType<SyntaxModel::Function>();
+        if (func != nullptr) {
+            auto stack_defs_it = func->stackVariables.find(var.def_unique_id);
+            if (stack_defs_it != func->stackVariables.end()) {
+                for (const IR::StackVariable& stack_var : stack_defs_it->second) {
+                    if (stack_var.name.text == var.name.text)
+                        return stack_var;
+                }
+            }
+            throw new CompilerException("Couldn't find stack variable from a local variable");
+        }
+        return std::experimental::nullopt;
     }
 
     ExecutionBlock* ControlFlowGraph::_makeExecutionBlock(const std::string& label)
