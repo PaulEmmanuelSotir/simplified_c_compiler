@@ -45,12 +45,9 @@ namespace SyntaxModel {
 
         switch (op) {
         case Op::PLUS:
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::ADDQ, leftExpressionReg, rightExpressionReg));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
-            break;
         case Op::MINUS:
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, leftExpressionReg, rightExpressionReg));
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
+            eb = eb->AppendInstruction(IR::Instruction((op == Op::PLUS ? IR::Instruction::ADDQ : IR::Instruction::SUBQ), rightExpressionReg, leftExpressionReg));
+            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, leftExpressionReg, dest));
             break;
         case Op::MULT:
             /*Type t = getExprType(cfg.static_analyser);
