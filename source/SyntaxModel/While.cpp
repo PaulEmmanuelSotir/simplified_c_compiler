@@ -18,6 +18,24 @@ namespace SyntaxModel {
 
     IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
+        auto cond_reg = cfg.GetFreeRegister(8);
+
+        IR::symbol_t while_body_label = cfg.CreateLabel("while_body", this);
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
+
+        auto* while_body = cfg.CreateExecutionBlock(while_body_label, eb);
+        while_body = condition->generateIR(cfg, while_body, cond_reg);
+
+        IR::symbol_t while_end_label = cfg.CreateLabel("while_end", this);
+        auto* while_end = cfg.CreateExecutionBlock(while_end_label, while_body);
+
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JE, while_end_label));
+
+        for (auto* instr : instructions)
+            while_body = instr->generateIR(cfg, while_body, "");
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
+
         /*
         auto* loop_block = cfg.CreateExecutionBlock(eb, "loop");
         auto* condition_block = cfg.CreateExecutionBlock(loop_block, "loop_condition");
@@ -34,6 +52,6 @@ namespace SyntaxModel {
         eb->AppendInstruction(IR::Instruction(IR::Instruction::JUMP_NE, loop_block->label));
 
         return condition_block;*/
-        return eb;
+        return while_end;
     }
 }
