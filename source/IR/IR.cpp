@@ -12,7 +12,7 @@ namespace IR {
     const symbol_t Instruction::RETQ = "retq";
     const symbol_t Instruction::PUSHQ = "pushq";
     const symbol_t Instruction::POPQ = "popq";
-    const symbol_t Instruction::CALL = "call";
+    const symbol_t Instruction::CALL = "callq";
     const symbol_t Instruction::MOVQ = "movq";
     const symbol_t Instruction::MOVZBQ = "movzbq";
     const symbol_t Instruction::MOVABSQ = "movabsq";

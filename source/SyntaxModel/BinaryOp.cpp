@@ -69,7 +69,8 @@ namespace SyntaxModel {
             break;
         }
         case Op::EQUAL:
-
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, dest));
             break;
         case Op::DIFFERENT:
             break;
