@@ -18,7 +18,7 @@ namespace SyntaxModel {
 
     IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
-        /* 
+        /*
         auto* loop_block = cfg.CreateExecutionBlock(eb, "loop");
         auto* condition_block = cfg.CreateExecutionBlock(loop_block, "loop_condition");
         // TODO: put jump instructions into Execution blocks?

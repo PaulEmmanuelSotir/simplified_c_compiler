@@ -4,6 +4,8 @@
 #include "SyntaxModel/Definition.h"
 #include "SyntaxModel/Function.h"
 
+#include <fstream>
+
 namespace IR {
     const std::array<const IR::symbol_t, 6> ControlFlowGraph::args_registers = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
 
@@ -120,8 +122,8 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".glob main" << std::endl;
-        stream << ".type main, @function" << std::endl;
+        stream << ".globl main" << std::endl;
+        //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly
         auto* eb = _first_block;
@@ -133,6 +135,10 @@ namespace IR {
         }
 
         std::cout << stream.str() << std::endl;
+
+        std::ofstream out("file.s");
+        out << stream.str();
+        out.close();
     }
 
     symbol_t ControlFlowGraph::GetFreeRegister(size_t size)
