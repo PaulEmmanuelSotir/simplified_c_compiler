@@ -97,7 +97,7 @@ namespace SyntaxModel {
         size_t reserved_size = (arguments != nullptr ? arguments->names.size() * 8 : 0);
         for (const auto* def : definitions)
             reserved_size += def->names.size() * 8;
-        return reserved_size;
+        return reserved_size+8;  // Avoid segmentation fault
     }
 
     void Function::pullArgsFromRegisters(IR::ExecutionBlock* eb, std::string rbp) const
