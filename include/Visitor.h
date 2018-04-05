@@ -34,6 +34,8 @@ public:
     virtual antlrcpp::Any visitDef_or_expr(GramCompParser::Def_or_exprContext* ctx) override;
 
     // Binary ops
+    virtual antlrcpp::Any visitBinadd(GramCompParser::BinaddContext *ctx) override;
+    virtual antlrcpp::Any visitBinmul(GramCompParser::BinmulContext *ctx) override;
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
     virtual antlrcpp::Any visitDifferent(GramCompParser::DifferentContext* ctx) override;
     virtual antlrcpp::Any visitPlus(GramCompParser::PlusContext* ctx) override;
