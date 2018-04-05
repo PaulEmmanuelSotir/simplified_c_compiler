@@ -64,12 +64,12 @@ namespace IR {
     class ExecutionBlock {
     public:
         ExecutionBlock* AppendInstruction(const Instruction& instr);
+        const std::string _label;
 
     private:
         void GenerateAssembly(std::ostringstream& stream, std::function<void(const Instruction&)> onInstrGeneration) const;
         ExecutionBlock(const std::string& label);
         ExecutionBlock* _next_eb = nullptr;
-        const std::string _label;
         std::list<Instruction> _instructions;
 
         friend class ControlFlowGraph;

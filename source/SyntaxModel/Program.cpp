@@ -29,10 +29,15 @@ namespace SyntaxModel {
         for (const auto* decl : definitions)
             decl->generateIR(cfg, eb, {}); // TODO: handle global initializations
 
-        // Generate IR for main function (entry point)
-        for (const auto* func : functions) {
-            if (cfg.static_analyser->isFuncCalled(func) || func->id.text == "main")
-                eb = func->generateIR(cfg, eb);
+        // Generate IR
+        if(functions.size() == 2){
+            eb = (*functions.begin())->generateIR(cfg, eb);
+        } else
+        {
+            for (const auto* func : functions) {
+                if (cfg.static_analyser->isFuncCalled(func) || func->id.text == "main")
+                    eb = func->generateIR(cfg, eb);
+            }
         }
     }
 }
