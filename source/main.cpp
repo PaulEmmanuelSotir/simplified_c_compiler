@@ -13,10 +13,14 @@
 
 using namespace std;
 
+//#define DEBUG
+
 const SyntaxModel::Program* parse(ifstream& fs)
 {
     // Stream it to lexer
+#ifdef DEBUG
     cout << "# Executing lexer" << endl;
+#endif
     antlr4::ANTLRInputStream input(fs);
     GramCompLexer lexer(&input);
 
@@ -27,27 +31,35 @@ const SyntaxModel::Program* parse(ifstream& fs)
         cout << "Lexer errors : " << lexer.getNumberOfSyntaxErrors() << endl;
         return nullptr;
     }
+#ifdef DEBUG
     for (auto token : tokens.getTokens()) {
         cout << token->toString() << endl;
     }
 
     // Parse tokens
     cout << "# Parsing tokens to obtain AST" << endl;
+#endif
     GramCompParser parser(&tokens);
     antlr4::tree::ParseTree* tree = parser.program();
+#ifdef DEBUG
     cout << tree->toStringTree(&parser) << endl;
+#endif
     if(parser.getNumberOfSyntaxErrors() > 0) {
         cout << "Parser errors : " << parser.getNumberOfSyntaxErrors() << endl;
         return nullptr;
     }
 
     // Build syntaxic model (AST)
+#ifdef DEBUG
     cout << "# Translate Antlr context AST to SyntaxModel AST with Visitor class" << endl;
+#endif
     Visitor v;
     antlrcpp::Any ast = v.visit(tree);
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
+#ifdef DEBUG
         cout << *prog << endl;
+#endif
         return prog;
     }
     return nullptr;

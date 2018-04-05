@@ -1,24 +1,13 @@
-.globl main
-toto:
+.globl _main
+_main:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $16, %rsp
-	movq $1, -8(%rsp)
-	addq $1, -8(%rsp)
-	movq $84, %rdi
-	callq putchar
-	addq $16, %rsp
-	popq %rbp
-	retq
-main:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $16, %rsp
-	movq $10, -8(%rsp)
 	movq $79, %rdi
-	callq putchar
-	callq toto
+	callq _putchar
+	movq $75, %rdi
+	callq _putchar
+	movq $32, %rdi
+	callq _putchar
 	movq $0, %rax
-	addq $16, %rsp
 	popq %rbp
 	retq

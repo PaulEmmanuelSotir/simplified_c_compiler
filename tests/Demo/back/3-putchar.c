@@ -2,5 +2,5 @@
 void main() {
   putchar('O');
   putchar('K');
-  putchar(' ');
+  putchar('\n');
 }
