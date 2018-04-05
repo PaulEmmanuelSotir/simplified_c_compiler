@@ -28,6 +28,11 @@ namespace IR {
     const symbol_t Instruction::IDIVQ = "idivq";
     const symbol_t Instruction::SUBQ = "subq";
     const symbol_t Instruction::CQO = "cqo";
+    const symbol_t Instruction::SETNE = "setne";
+    const symbol_t Instruction::SETL = "setl";
+    const symbol_t Instruction::SETLE = "setle";
+    const symbol_t Instruction::SETG = "setg";
+    const symbol_t Instruction::SETGE = "setge";
 
     Instruction::Instruction(symbol_t op, symbol_t x, symbol_t y, symbol_t dest)
         : op(op)

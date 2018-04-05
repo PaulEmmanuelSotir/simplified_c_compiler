@@ -30,7 +30,7 @@ namespace SyntaxModel {
         auto* while_end = cfg.CreateExecutionBlock(while_end_label, while_body);
 
         while_body->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
-        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JE, while_end_label));
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JNE, while_end_label));
 
         for (auto* instr : instructions)
             while_body = instr->generateIR(cfg, while_body, "");

@@ -42,6 +42,11 @@ namespace IR {
         static const symbol_t IDIVQ;
         static const symbol_t SUBQ;
         static const symbol_t CQO;
+        static const symbol_t SETNE;
+        static const symbol_t SETL;
+        static const symbol_t SETLE;
+        static const symbol_t SETG;
+        static const symbol_t SETGE;
 
         Instruction(symbol_t op = NOP, symbol_t x = "", symbol_t y = "", symbol_t dest = "");
         void GenerateAssembly(std::ostringstream& stream) const;

@@ -69,18 +69,28 @@ namespace SyntaxModel {
             break;
         }
         case Op::EQUAL:
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
             eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, dest));
             break;
         case Op::DIFFERENT:
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETNE, dest));
             break;
         case Op::SUP:
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETG, dest));
             break;
         case Op::SUP_EQ:
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETGE, dest));
             break;
         case Op::INF:
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETL, dest));
             break;
         case Op::INF_EQ:
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETLE, dest));
             break;
         case Op::AND:
             break;
