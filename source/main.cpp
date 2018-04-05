@@ -21,15 +21,23 @@ const SyntaxModel::Program* parse(std::ifstream& fs)
     // Print tokens
     antlr4::CommonTokenStream tokens(&lexer);
     tokens.fill();
-    for (auto token : tokens.getTokens()) {
-        std::cout << token->toString() << std::endl;
+    if(lexer.getNumberOfSyntaxErrors() > 0) {
+        cout << "Lexer errors : " << lexer.getNumberOfSyntaxErrors() << endl;
+        return nullptr;
     }
+    /*for (auto token : tokens.getTokens()) {
+        std::cout << token->toString() << std::endl;
+    }*/
 
     // Parse tokens
     std::cout << "\n# Parsing tokens to obtain AST\n";
     GramCompParser parser(&tokens);
     antlr4::tree::ParseTree* tree = parser.program();
-    std::cout << tree->toStringTree(&parser) << std::endl;
+    //std::cout << tree->toStringTree(&parser) << std::endl;
+    if(parser.getNumberOfSyntaxErrors() > 0) {
+        cout << "Parser errors : " << parser.getNumberOfSyntaxErrors() << endl;
+        return nullptr;
+    }
 
     // Build syntaxic model (AST)
     std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
@@ -88,6 +96,8 @@ int main(int argc, char* argv[])
     if (fs.is_open()) {
         std::cout << "### Compiling '" << inputFile << "' ###" << std::endl;
         program = parse(fs);
+        if(program == nullptr)
+            return EXIT_FAILURE;
         fs.close();
     } else {
         std::cout << "Couldn't read input file '" << inputFile << "'" << std::endl;

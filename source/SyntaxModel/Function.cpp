@@ -52,7 +52,7 @@ namespace SyntaxModel {
     void Function::generateIREpilogue(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, size_t reservedStackSize) const
     {
         const std::string rbp = "%rbp", rsp = "%rsp";
-        if (reservedStackSize > 0)
+        if (reservedStackSize > 8)
             eb->AppendInstruction(IR::Instruction(IR::Instruction::ADDQ, cfg.CreateConstant(reservedStackSize), rsp));
         eb->AppendInstruction(IR::Instruction(IR::Instruction::POPQ, rbp));
         eb->AppendInstruction(IR::Instruction(IR::Instruction::RETQ));
@@ -68,7 +68,7 @@ namespace SyntaxModel {
             size_t reservedStackSize = getARStackSize();
             eb->AppendInstruction(IR::Instruction(IR::Instruction::PUSHQ, rbp));
             eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rsp, rbp));
-            if (reservedStackSize > 0)
+            if (reservedStackSize > 8)
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, cfg.CreateConstant(reservedStackSize), rsp));
             pullArgsFromRegisters(eb, rbp);
 
