@@ -24,8 +24,8 @@ expression:
 	'(' expression ')'				# parenthesis
 	| '-' expression				# unary_minus
 	| '!' expression				# not
-	| expression opMULT expression	# binadd
-	| expression opPLUS expression	# binmul
+	| expression opMULT expression	# binmul
+	| expression opPLUS expression	# binadd
 	| expression '==' expression	# equal
 	| expression '!=' expression	# different
 	| expression '<' expression		# inf
