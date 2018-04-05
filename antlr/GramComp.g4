@@ -24,8 +24,8 @@ expression:
 	'(' expression ')'				# parenthesis
 	| '-' expression				# unary_minus
 	| '!' expression				# not
-	| expression opMULT expression	# plusmoins
-	| expression opPLUS expression	# mult
+	| expression opMULT expression	# binadd
+	| expression opPLUS expression	# binmul
 	| expression '==' expression	# equal
 	| expression '!=' expression	# different
 	| expression '<' expression		# inf
@@ -41,8 +41,15 @@ expression:
 	| IDENTIFIER					# variable_usage
 ;
 
-opPLUS: '+'|'-';
-opMULT: '*'|'/'|'%';
+opPLUS:
+	'+'								#Plus
+	|'-'							#Minus
+;
+opMULT:
+	'*'								#Mult
+	|'/'							#Div
+	|'%'							#Modulo
+;
 
 structure:
 	'if' '(' expression ')' '{' (instruction)* '}' else_structure?	# if
