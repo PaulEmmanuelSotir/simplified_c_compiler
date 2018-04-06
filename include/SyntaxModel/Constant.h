@@ -56,7 +56,14 @@ namespace SyntaxModel {
             // Parse token string
             if (type == PrimitiveType::CHAR) {
                 // Take text from literal token and remove quotes and eventual escaping backslash
-                value = (text[1] == '\\') ? text[2] : text[1];
+                if(text == "'\\n'")
+                    value = '\n';
+                else if (text == "'\\r'")
+                    value = '\r';
+                else if (text == "'\\\\'")
+                    value = '\\';
+                else
+                    value = text[1];
             } else if (type == PrimitiveType::INT32_T) {
                 value = std::stoi(text);
             } else if (type == PrimitiveType::INT64_T) {
