@@ -162,12 +162,12 @@ namespace IR {
         return --_instructions.end();
     }
 
-    void ExecutionBlock::InsertInstruction(const Instruction& instr, const std::list<Instruction>::iterator& instr_it) {
+    void ExecutionBlock::InsertInstruction(const Instruction& instr, std::list<Instruction>::iterator instr_it) {
         if(instr.x && instr.y && instr.x.value().find("(%") != std::string::npos && instr.y.value().find("(%") != std::string::npos) {
-            _instructions.insert(instr_it, Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
-            _instructions.insert(instr_it, Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
+            _instructions.insert(++instr_it, Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
+            _instructions.insert(++instr_it, Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
         } else
-            _instructions.insert(instr_it, instr);
+            _instructions.insert(++instr_it, instr);
     }
 
     ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
@@ -224,13 +224,13 @@ namespace IR {
 
     symbol_t ControlFlowGraph::getFreeTmpRegister(SyntaxModel::PrimitiveType size, const AddTmpStackVar_fn& addTmpStackVar)
     {
-        for(const auto& p : _tmpRegisterUsage) {
+        /*for(const auto& p : _tmpRegisterUsage) {
             if(!p.second) {
                 auto& reg = p.first;
                 _tmpRegisterUsage[reg] = true;
                 return reg.getName(size);
             }
-        }
+        }*/
 
         // We don't have free tmp register anymore, so we have to use stack
         if(addTmpStackVar) {

@@ -95,7 +95,7 @@ namespace IR {
     class ExecutionBlock {
     public:
         std::list<Instruction>::iterator AppendInstruction(const Instruction& instr);
-        void InsertInstruction(const Instruction& instr, const std::list<Instruction>::iterator& instr_it);
+        void InsertInstruction(const Instruction& instr, std::list<Instruction>::iterator instr_it);
         const std::string _label;
 
     private:

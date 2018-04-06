@@ -70,34 +70,38 @@ namespace SyntaxModel {
                 break;
             case Op::EQUAL:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, IR::Register::r11.name8bits));
                 break;
             case Op::DIFFERENT:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETNE, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETNE, IR::Register::r11.name8bits));
                 break;
             case Op::SUP:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETG, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETG, IR::Register::r11.name8bits));
                 break;
             case Op::SUP_EQ:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETGE, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETGE, IR::Register::r11.name8bits));
                 break;
             case Op::INF:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETL, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETL, IR::Register::r11.name8bits));
                 break;
             case Op::INF_EQ:
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETLE, dest.value()));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETLE, IR::Register::r11.name8bits));
                 break;
             case Op::AND:
                 break;
             case Op::OR:
                 break;
             }
-            return eb;
+            if(op == Op::EQUAL || op == Op::DIFFERENT || op == Op::SUP || op == Op::SUP_EQ || op == Op::INF || op == Op::INF_EQ) {
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, IR::Register::r11.name8bits, IR::Register::r10.name64bits));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, IR::Register::r10.name64bits, dest.value()));
+            }
         }
+        return eb;
     }
 }

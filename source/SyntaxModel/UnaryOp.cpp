@@ -43,9 +43,8 @@ namespace SyntaxModel {
             eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, subExprReg, dest));
         } else if (op == Op::NOT) {
             eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), subExprReg));
-            IR::symbol_t byte_reg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable);
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, byte_reg));
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, byte_reg, dest));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, IR::Register::r11.name8bits));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, IR::Register::r11.name8bits, dest));
         }
         return eb;
     }
