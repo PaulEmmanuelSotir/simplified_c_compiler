@@ -1,5 +1,6 @@
 #pragma once
 #include <stdexcept>
+#include <string>
 
 struct CompilerException : public std::runtime_error {
     CompilerException(const char* what_arg)

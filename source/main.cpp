@@ -11,33 +11,55 @@
 #include "grammar/GramCompLexer.h"
 #include "grammar/GramCompParser.h"
 
-const SyntaxModel::Program* parse(std::ifstream& fs)
+using namespace std;
+
+//#define DEBUG
+
+const SyntaxModel::Program* parse(ifstream& fs)
 {
     // Stream it to lexer
-    std::cout << "\n# Executing lexer\n";
+#ifdef DEBUG
+    cout << "# Executing lexer" << endl;
+#endif
     antlr4::ANTLRInputStream input(fs);
     GramCompLexer lexer(&input);
 
     // Print tokens
     antlr4::CommonTokenStream tokens(&lexer);
     tokens.fill();
+    if(lexer.getNumberOfSyntaxErrors() > 0) {
+        cout << "Lexer errors : " << lexer.getNumberOfSyntaxErrors() << endl;
+        return nullptr;
+    }
+#ifdef DEBUG
     for (auto token : tokens.getTokens()) {
-        std::cout << token->toString() << std::endl;
+        cout << token->toString() << endl;
     }
 
     // Parse tokens
-    std::cout << "\n# Parsing tokens to obtain AST\n";
+    cout << "# Parsing tokens to obtain AST" << endl;
+#endif
     GramCompParser parser(&tokens);
     antlr4::tree::ParseTree* tree = parser.program();
-    std::cout << tree->toStringTree(&parser) << std::endl;
+#ifdef DEBUG
+    cout << tree->toStringTree(&parser) << endl;
+#endif
+    if(parser.getNumberOfSyntaxErrors() > 0) {
+        cout << "Parser errors : " << parser.getNumberOfSyntaxErrors() << endl;
+        return nullptr;
+    }
 
     // Build syntaxic model (AST)
-    std::cout << "\n# Translate Antlr context AST to SyntaxModel AST with Visitor class\n";
+#ifdef DEBUG
+    cout << "# Translate Antlr context AST to SyntaxModel AST with Visitor class" << endl;
+#endif
     Visitor v;
     antlrcpp::Any ast = v.visit(tree);
     if (ast.is<SyntaxModel::Program*>()) {
         auto prog = ast.as<SyntaxModel::Program*>();
-        std::cout << *prog << std::endl;
+#ifdef DEBUG
+        cout << *prog << endl;
+#endif
         return prog;
     }
     return nullptr;
@@ -45,7 +67,7 @@ const SyntaxModel::Program* parse(std::ifstream& fs)
 
 const StaticAnalysis::StaticAnalyser* staticAnalysis(const SyntaxModel::Program* ast)
 {
-    std::cout << "\n# Solve variable scopes and run static analysis\n";
+    cout << "# Solve variable scopes and run static analysis" << endl;
     auto analyser = new StaticAnalysis::StaticAnalyser(ast);
     analyser->Analyse();
     return analyser;
@@ -53,13 +75,13 @@ const StaticAnalysis::StaticAnalyser* staticAnalysis(const SyntaxModel::Program*
 
 int main(int argc, char* argv[])
 {
-    std::string target = "output.s";
-    std::string inputFile = "input.c";
+    string target = "output.s";
+    string inputFile = "input.c";
     bool staticA = false;
     bool staticC = false;
 
     if (argc < 2) {
-        std::cout << "No input file to compile" << std::endl;
+        cout << "No input file to compile" << endl;
         return EXIT_FAILURE;
     }
 
@@ -68,29 +90,31 @@ int main(int argc, char* argv[])
         //C'est une option
         if (argv[i][0] == '-') {
             if (argv[i][1] == 'a') {
-                //std::cout << "##### -a not implemented #### " << std::endl;
+                //cout << "##### -a not implemented #### " << endl;
                 staticA = true;
             } else if (argv[i][1] == 'c')
-                //std::cout << "##### -c not implemented #### " << std::endl;
+                //cout << "##### -c not implemented #### " << endl;
                 staticC = true;
             else if (argv[i][1] == 'o')
-                std::cout << "##### -o not implemented #### " << std::endl;
+                cout << "##### -o not implemented #### " << endl;
             else
-                std::cout << "Unknown option " << argv[i] << std::endl;
+                cout << "Unknown option " << argv[i] << endl;
         } else
             inputFile = argv[i];
     }
 
     // Open source file and compile it
-    std::ifstream fs;
-    fs.open(inputFile, std::fstream::in);
+    ifstream fs;
+    fs.open(inputFile, fstream::in);
     const SyntaxModel::Program* program;
     if (fs.is_open()) {
-        std::cout << "### Compiling '" << inputFile << "' ###" << std::endl;
+        cout << "### Compiling '" << inputFile << "' ###" << endl;
         program = parse(fs);
+        if(program == nullptr)
+            return EXIT_FAILURE;
         fs.close();
     } else {
-        std::cout << "Couldn't read input file '" << inputFile << "'" << std::endl;
+        cout << "Couldn't read input file '" << inputFile << "'" << endl;
         return EXIT_FAILURE;
     }
 
@@ -102,7 +126,7 @@ int main(int argc, char* argv[])
     if (staticC) {
         auto analyser = staticAnalysis(program);
 
-        std::cout << "### Generating assembly ###" << std::endl;
+        cout << "### Generating assembly ###" << endl;
         auto cfg = IR::ControlFlowGraph(program, analyser, target);
         delete analyser;
     }

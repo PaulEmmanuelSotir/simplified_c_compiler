@@ -1,10 +1,11 @@
 
 void main(void){
-  if(1<2)  {
+    int a = 2;
+    if(1<a)  {
       putchar('V');
     } 
-  else   {
+    else   {
       putchar('F');
     } 
-  putchar('\n');
+    putchar('\n');
 }

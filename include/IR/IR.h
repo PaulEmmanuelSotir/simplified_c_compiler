@@ -73,6 +73,11 @@ namespace IR {
         static const symbol_t IDIVQ;
         static const symbol_t SUBQ;
         static const symbol_t CQO;
+        static const symbol_t SETNE;
+        static const symbol_t SETL;
+        static const symbol_t SETLE;
+        static const symbol_t SETG;
+        static const symbol_t SETGE;
 
         Instruction(symbol_t op = NOP, optional<symbol_t> x = nullopt, optional<symbol_t> y = nullopt, optional<symbol_t> dest = nullopt);
         void GenerateAssembly(std::ostringstream& stream) const;
@@ -91,12 +96,12 @@ namespace IR {
     public:
         std::list<Instruction>::iterator AppendInstruction(const Instruction& instr);
         void InsertInstruction(const Instruction& instr, const std::list<Instruction>::iterator& instr_it);
+        const std::string _label;
 
     private:
         void GenerateAssembly(std::ostringstream& stream, std::function<void(const Instruction&)> onInstrGeneration) const;
         ExecutionBlock(const std::string& label);
         ExecutionBlock* _next_eb = nullptr;
-        const std::string _label;
         std::list<Instruction> _instructions;
 
         friend class ControlFlowGraph;

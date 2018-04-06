@@ -18,21 +18,22 @@ namespace SyntaxModel {
 
     IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable, const IR::GenerateIREpilogue_fn& gen_epilogue) const
     {
-        /* 
-        auto* loop_block = cfg.CreateExecutionBlock(eb, "loop");
-        auto* condition_block = cfg.CreateExecutionBlock(loop_block, "loop_condition");
-        // TODO: put jump instructions into Execution blocks?
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, condition_block->label));
+        auto cond_reg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable);
 
-        // Loop instructions
-        eb = generateInstructionBlock(cfg, eb, instructions, add_stack_variable, gen_epilogue);
+        IR::symbol_t while_body_label = cfg.CreateLabel("while_body", this);
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
 
-        IR::symbol_t cond_reg = cfg->CreatenewReg();
-        condition_block = condition->generateIR(cfg, condition_block, cond_reg);
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::JUMP_NE, loop_block->label));
+        auto* while_body = cfg.CreateExecutionBlock(while_body_label, eb);
+        while_body = condition->generateIR(cfg, while_body, cond_reg, add_stack_variable);
 
-        return condition_block;*/
-        return eb;
+        IR::symbol_t while_end_label = cfg.CreateLabel("while_end", this);
+        auto* while_end = cfg.CreateExecutionBlock(while_end_label, while_body);
+
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JNE, while_end_label));
+        while_body = generateInstructionBlock(cfg, while_body, instructions, add_stack_variable, gen_epilogue);
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
+
+        return while_end;
     }
 }

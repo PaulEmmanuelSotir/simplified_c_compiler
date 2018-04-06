@@ -24,11 +24,8 @@ expression:
 	'(' expression ')'				# parenthesis
 	| '-' expression				# unary_minus
 	| '!' expression				# not
-	| expression '+' expression		# plus
-	| expression '-' expression		# minus
-	| expression '*' expression		# mult
-	| expression '/' expression		# div
-	| expression '%' expression		# modulo
+	| expression opMULT expression	# binmul
+	| expression opPLUS expression	# binadd
 	| expression '==' expression	# equal
 	| expression '!=' expression	# different
 	| expression '<' expression		# inf
@@ -42,6 +39,16 @@ expression:
 	| STRING_LITERAL				# string_literal
 	| IDENTIFIER '(' (expression (',' expression)*)? ')'	# functioncall
 	| IDENTIFIER					# variable_usage
+;
+
+opPLUS:
+	'+'								#Plus
+	|'-'							#Minus
+;
+opMULT:
+	'*'								#Mult
+	|'/'							#Div
+	|'%'							#Modulo
 ;
 
 structure:

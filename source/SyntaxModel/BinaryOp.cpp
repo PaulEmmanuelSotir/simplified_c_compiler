@@ -62,31 +62,42 @@ namespace SyntaxModel {
             } else {*/
                 //TODO: make sure I don't need IMULQ here instead of IMULL
                 eb->AppendInstruction(IR::Instruction(IR::Instruction::IMULL, leftExpressionReg, rightExpressionReg, rightExpressionReg));
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rightExpressionReg, dest.value()));
                 break;
             case Op::MODULO:
-            case Op::DIV: {
+            case Op::DIV:
                 eb = IR::Instruction::divide_64bits(eb, op == Op::MODULO, leftExpressionReg, rightExpressionReg, dest.value());
                 break;
-            }
             case Op::EQUAL:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, dest.value()));
                 break;
             case Op::DIFFERENT:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETNE, dest.value()));
                 break;
             case Op::SUP:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETG, dest.value()));
                 break;
             case Op::SUP_EQ:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETGE, dest.value()));
                 break;
             case Op::INF:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETL, dest.value()));
                 break;
             case Op::INF_EQ:
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, rightExpressionReg, leftExpressionReg));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SETLE, dest.value()));
                 break;
             case Op::AND:
                 break;
             case Op::OR:
                 break;
             }
+            return eb;
         }
-        return eb;
     }
 }

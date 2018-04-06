@@ -4,6 +4,8 @@
 #include "SyntaxModel/Definition.h"
 #include "SyntaxModel/Function.h"
 
+#include <fstream>
+
 namespace IR {
 
     std::vector<Register> Register::_ABIArgsRegisters;
@@ -65,7 +67,7 @@ namespace IR {
     const symbol_t Instruction::RETQ = "retq";
     const symbol_t Instruction::PUSHQ = "pushq";
     const symbol_t Instruction::POPQ = "popq";
-    const symbol_t Instruction::CALL = "call";
+    const symbol_t Instruction::CALL = "callq";
     const symbol_t Instruction::MOVQ = "movq";
     const symbol_t Instruction::MOVZBQ = "movzbq";
     const symbol_t Instruction::MOVABSQ = "movabsq";
@@ -81,6 +83,11 @@ namespace IR {
     const symbol_t Instruction::IDIVQ = "idivq";
     const symbol_t Instruction::SUBQ = "subq";
     const symbol_t Instruction::CQO = "cqo";
+    const symbol_t Instruction::SETNE = "setne";
+    const symbol_t Instruction::SETL = "setl";
+    const symbol_t Instruction::SETLE = "setle";
+    const symbol_t Instruction::SETG = "setg";
+    const symbol_t Instruction::SETGE = "setge";
 
     Instruction::Instruction(symbol_t op, optional<symbol_t> x, optional<symbol_t> y, optional<symbol_t> dest)
         : op(op)
@@ -181,12 +188,14 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".glob main" << std::endl;
-        stream << ".type main, @function" << std::endl;
+        stream << ".globl ";
+
+        //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly
         auto* eb = _first_block;
         while (eb != nullptr) {
+            stream << eb->_label << endl;
             eb->GenerateAssembly(stream, [this](auto instr) {
                 this->freeTmpRegisters();
             });
@@ -194,6 +203,10 @@ namespace IR {
         }
 
         std::cout << stream.str() << std::endl;
+
+        std::ofstream out("file.s");
+        out << stream.str();
+        out.close();
     }
 
     void ControlFlowGraph::freeTmpRegisters()
