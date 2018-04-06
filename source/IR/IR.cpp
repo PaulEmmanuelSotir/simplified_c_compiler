@@ -201,6 +201,9 @@ namespace IR {
 
         // Generate core assembly
         auto* eb = _first_block;
+
+        stream << "_main" << endl;
+
         while (eb != nullptr) {
             eb->GenerateAssembly(stream, [this](auto instr) {
                 this->freeTmpRegisters();
