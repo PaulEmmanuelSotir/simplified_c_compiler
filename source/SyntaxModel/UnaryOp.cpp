@@ -32,4 +32,21 @@ namespace SyntaxModel {
         } else // if (op == Op::NOT)
             return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
     }
+
+    IR::ExecutionBlock* UnaryOp::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    {
+        auto subExprReg = cfg.GetFreeRegister(8);
+        eb = expression->generateIR(cfg, eb, subExprReg);
+
+        if (op == Op::MINUS) {
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::NEGQ, subExprReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, subExprReg, dest));
+        } else if (op == Op::NOT) {
+            IR::symbol_t byte_reg = cfg.GetFreeRegister(1);
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), subExprReg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, byte_reg));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, byte_reg, dest));
+        }
+        return eb;
+    }
 }

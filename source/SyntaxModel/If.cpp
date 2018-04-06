@@ -19,22 +19,25 @@ namespace SyntaxModel {
         return os;
     }
 
-    /*IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
-        auto if_label = cfg.CreateLabel("if");
-        IRVariable cond_reg = cfg->CreateTempIRVar();
-        auto* eb = condition->generateIR(cfg, eb, { cond_reg });
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::CMP, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::JUMP_NE));
+        auto cond_reg = cfg.GetFreeRegister(8);
+        eb = condition->generateIR(cfg, eb, cond_reg); // TODO: split condition expression on && and || binary operator in order to avoid evaluating unescessary expressions
+        IR::symbol_t end_if_then_label = cfg.CreateLabel("end_if", this);
+
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JE, end_if_then_label));
 
         for (auto* instr : instructions)
-            eb = instr->generateIR(cfg, eb);
+            eb = instr->generateIR(cfg, eb, "");
+        auto* end_if_then = cfg.CreateExecutionBlock(end_if_then_label, eb);
 
-        auto* if_block = cfg.CreateExecutionBlock(if_label, if_block);
-
-        if (else_clause != nullptr)
-            return else_clause->generateIR(cfg, eb);
-        else
-            return if_block;
-    }*/
+        if (else_clause != nullptr) {
+            IR::symbol_t end_else_label = cfg.CreateLabel("end_else", this);
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, end_else_label));
+            end_if_then = else_clause->generateIR(cfg, end_if_then);
+            return cfg.CreateExecutionBlock(end_else_label, end_if_then);
+        }
+        return end_if_then;
+    }
 }

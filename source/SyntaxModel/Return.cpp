@@ -1,4 +1,5 @@
 #include "SyntaxModel/Return.h"
+#include "SyntaxModel/Function.h"
 
 namespace SyntaxModel {
 
@@ -12,5 +13,20 @@ namespace SyntaxModel {
     {
         os << "return" << std::endl;
         return os;
+    }
+
+    IR::ExecutionBlock* Return::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    {
+        // Generate IR instructions to compute return expression
+        if (expression != nullptr)
+            eb = expression->generateIR(cfg, eb, "%rax");
+
+        // Generate function call epilogue
+        const auto* func = getFirstParentOfType<Function>();
+        if (func != nullptr)
+            func->generateIREpilogue(cfg, eb, func->getARStackSize());
+        else
+            throw new CompilerException("Return statement outside of any function definition");
+        return eb;
     }
 }

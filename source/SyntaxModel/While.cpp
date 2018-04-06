@@ -16,22 +16,42 @@ namespace SyntaxModel {
         return os;
     }
 
-    /*IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
     {
-        auto loop_label = cfg.CreateLabel("loop");
-        auto loop_condition_label = cfg.CreateLabel("loop_condition");
-        eb->AppendInstruction(Jump(condition_block));
+        auto cond_reg = cfg.GetFreeRegister(8);
+
+        IR::symbol_t while_body_label = cfg.CreateLabel("while_body", this);
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
+
+        auto* while_body = cfg.CreateExecutionBlock(while_body_label, eb);
+        while_body = condition->generateIR(cfg, while_body, cond_reg);
+
+        IR::symbol_t while_end_label = cfg.CreateLabel("while_end", this);
+        auto* while_end = cfg.CreateExecutionBlock(while_end_label, while_body);
+
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JNE, while_end_label));
+
+        for (auto* instr : instructions)
+            while_body = instr->generateIR(cfg, while_body, "");
+        while_body->AppendInstruction(IR::Instruction(IR::Instruction::JMP, while_body_label));
+
+        /*
+        auto* loop_block = cfg.CreateExecutionBlock(eb, "loop");
+        auto* condition_block = cfg.CreateExecutionBlock(loop_block, "loop_condition");
+        // TODO: put jump instructions into Execution blocks?
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, condition_block->label));
 
         // Loop instructions
-        auto* loop_block = cfg.CreateExecutionBlock(eb, loop_label);
         for (auto* instr : instructions)
             loop_block = instr->generateIR(cfg, loop_block);
 
-        auto* condition_block = cfg.CreateExecutionBlock(loop_block, loop_condition_label);
         IR::symbol_t cond_reg = cfg->CreatenewReg();
         condition_block = condition->generateIR(cfg, condition_block, cond_reg);
-        condition_block->AppendInstruction(Jump(cond_reg, loop_label));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, 0, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::JUMP_NE, loop_block->label));
 
-        return condition_block;
-    }*/
+        return condition_block;*/
+        return while_end;
+    }
 }

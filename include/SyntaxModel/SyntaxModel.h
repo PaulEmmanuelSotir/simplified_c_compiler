@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 // Includes all namespace classes
 #include "SyntaxModel/Affectation.h"
@@ -7,6 +8,7 @@
 #include "SyntaxModel/Definition.h"
 #include "SyntaxModel/Else.h"
 #include "SyntaxModel/Expression.h"
+#include "SyntaxModel/For.h"
 #include "SyntaxModel/Function.h"
 #include "SyntaxModel/FunctionCall.h"
 #include "SyntaxModel/If.h"

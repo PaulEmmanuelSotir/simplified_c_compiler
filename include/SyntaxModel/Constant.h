@@ -1,4 +1,5 @@
 #pragma once
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -29,6 +30,18 @@ namespace SyntaxModel {
             return os;
         }
 
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const override
+        {
+            if (dest != "") {
+                int64_t int_value = static_cast<int64_t>(value);
+                if (int_value > std::numeric_limits<int32_t>::max())
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVABSQ, "$" + std::to_string(int_value), dest));
+                else
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, "$" + std::to_string(int_value), dest));
+            }
+            return eb;
+        }
+
         const PrimitiveType type = T;
         const Type::UnderlyingType<T> value;
     };
@@ -38,15 +51,21 @@ namespace SyntaxModel {
     {
         auto text = value_token->getSymbol()->getText();
         Type::UnderlyingType<type> value;
-        // TODO: use 'if constexpr' here if compiling with C++ 17 standard
-        // Parse token string
-        if (type == PrimitiveType::CHAR) {
-            // Take text from literal token and remove quotes and eventual escaping backslash
-            value = (text[1] == '\\') ? text[2] : text[1];
-        } else if (type == PrimitiveType::INT32_T) {
-            value = std::stoi(text);
-        } else if (type == PrimitiveType::INT64_T) {
-            value = std::stol(text);
+        try {
+            // TODO: use 'if constexpr' here if compiling with C++ 17 standard
+            // Parse token string
+            if (type == PrimitiveType::CHAR) {
+                // Take text from literal token and remove quotes and eventual escaping backslash
+                value = (text[1] == '\\') ? text[2] : text[1];
+            } else if (type == PrimitiveType::INT32_T) {
+                value = std::stoi(text);
+            } else if (type == PrimitiveType::INT64_T) {
+                value = std::stol(text);
+            }
+        } catch (std::invalid_argument& e) {
+            throw new CompilerException(std::string("No conversion could be performed from terminal text (") + e.what() + ")");
+        } catch (std::out_of_range& e) {
+            throw new CompilerException(std::string("Constant is out of bounds (") + e.what() + ")");
         }
         return new Constant<type>(source_interval, value);
     }
@@ -62,6 +81,10 @@ namespace SyntaxModel {
         virtual ~ArrayConstant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
         virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override { return Type(source_interval, type, true); }
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const override
+        {
+            return eb;
+        }
 
         const PrimitiveType type = T;
         const std::list<const Constant<T>*> values;

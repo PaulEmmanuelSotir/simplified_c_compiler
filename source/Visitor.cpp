@@ -105,20 +105,27 @@ antlrcpp::Any Visitor::visitContinue(GramCompParser::ContinueContext* ctx) { ret
 
 antlrcpp::Any Visitor::visitInfequal(GramCompParser::InfequalContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::INF_EQ); }
 antlrcpp::Any Visitor::visitDifferent(GramCompParser::DifferentContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::DIFFERENT); }
-antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx)
-{
-    return visitBinaryOp(ctx, SM::BinaryOp::Op::PLUS);
-}
-antlrcpp::Any Visitor::visitMult(GramCompParser::MultContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::MULT); }
-antlrcpp::Any Visitor::visitMinus(GramCompParser::MinusContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::MINUS); }
+antlrcpp::Any Visitor::visitPlus(GramCompParser::PlusContext* ctx) { return SM::BinaryOp::Op::PLUS; }
+antlrcpp::Any Visitor::visitMult(GramCompParser::MultContext* ctx) { return SM::BinaryOp::Op::MULT; }
+antlrcpp::Any Visitor::visitMinus(GramCompParser::MinusContext* ctx) { return SM::BinaryOp::Op::MINUS; }
 antlrcpp::Any Visitor::visitInf(GramCompParser::InfContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::INF); }
-antlrcpp::Any Visitor::visitDiv(GramCompParser::DivContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::DIV); }
-antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx)
-{
-    return visitBinaryOp(ctx, SM::BinaryOp::Op::EQUAL);
-}
+antlrcpp::Any Visitor::visitDiv(GramCompParser::DivContext* ctx) { return SM::BinaryOp::Op::DIV; }
+antlrcpp::Any Visitor::visitEqual(GramCompParser::EqualContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::EQUAL); }
 antlrcpp::Any Visitor::visitSup(GramCompParser::SupContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::SUP); }
 antlrcpp::Any Visitor::visitSupequal(GramCompParser::SupequalContext* ctx) { return visitBinaryOp(ctx, SM::BinaryOp::Op::SUP_EQ); }
+antlrcpp::Any Visitor::visitModulo(GramCompParser::ModuloContext* ctx) { return SM::BinaryOp::Op::MODULO; }
+
+antlrcpp::Any Visitor::visitBinadd(GramCompParser::BinaddContext *ctx)
+{
+    auto op = visit(ctx->opPLUS());
+    return visitBinaryOp(ctx, op);
+}
+
+antlrcpp::Any Visitor::visitBinmul(GramCompParser::BinmulContext *ctx)
+{
+    auto op = visit(ctx->opMULT());
+    return visitBinaryOp(ctx, op);
+}
 
 antlrcpp::Any Visitor::visitNot(GramCompParser::NotContext* ctx)
 {
@@ -194,13 +201,12 @@ antlrcpp::Any Visitor::visitAtomic_type(GramCompParser::Atomic_typeContext* ctx)
 
 antlrcpp::Any Visitor::visitType(GramCompParser::TypeContext* ctx)
 {
-    auto is_array = [ctx](auto t) -> bool { return ctx->stop->getTokenIndex() != t; };
     if (ctx->CHAR() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::CHAR, is_array(GramCompParser::CHAR));
+        return new SM::Type(ctx->getSourceInterval(), PT::CHAR, ctx->ARRAY_BRACKETS() != nullptr);
     } else if (ctx->INT32_T() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::INT32_T, is_array(GramCompParser::INT32_T));
+        return new SM::Type(ctx->getSourceInterval(), PT::INT32_T, ctx->ARRAY_BRACKETS() != nullptr);
     } else if (ctx->INT64_T() != nullptr) {
-        return new SM::Type(ctx->getSourceInterval(), PT::INT64_T, is_array(GramCompParser::INT64_T));
+        return new SM::Type(ctx->getSourceInterval(), PT::INT64_T, ctx->ARRAY_BRACKETS() != nullptr);
     }
     return nullptr;
 }
@@ -214,6 +220,26 @@ antlrcpp::Any Visitor::visitExpression_instr(GramCompParser::Expression_instrCon
 antlrcpp::Any Visitor::visitParenthesis(GramCompParser::ParenthesisContext* ctx)
 {
     return visit_single<SM::Expression>(ctx->expression());
+}
+
+antlrcpp::Any Visitor::visitFor(GramCompParser::ForContext* ctx)
+{
+    auto init = visit_single<SM::SyntaxNodeBase>(ctx->def_or_expr(0));
+    auto condition = visit_single<SM::SyntaxNodeBase>(ctx->def_or_expr(1));
+    if (condition->is<SM::Definition>())
+        throw new CompilerException("For loop doesn't support definitions in their condition statements for now");
+    auto condition_expr = dynamic_cast<const SM::Expression*>(condition);
+    auto iteration_expression = visit_single<SM::Expression>(ctx->expression());
+    auto instructions = visit_all<SM::Instruction>(ctx->instruction());
+    return static_cast<SM::Instruction*>(new SM::For(ctx->getSourceInterval(), init, condition_expr, iteration_expression, instructions));
+}
+
+antlrcpp::Any Visitor::visitDef_or_expr(GramCompParser::Def_or_exprContext* ctx)
+{
+    if (ctx->definition() != nullptr)
+        return static_cast<SM::SyntaxNodeBase*>(visit_single<SM::Definition>(ctx->definition()));
+    else
+        return static_cast<SM::SyntaxNodeBase*>(visit_single<SM::Expression>(ctx->expression()));
 }
 
 antlrcpp::Any Visitor::visitPre_inc(GramCompParser::Pre_incContext* ctx) { return visitUnaryAffectation(SM::Affectation::Op::PRE_INC, ctx); }

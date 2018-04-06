@@ -5,6 +5,7 @@
 #include <type_traits>
 #include <vector>
 
+#include "CompilerException.h"
 #include "IR/IR.h"
 #include "antlr4-runtime.h"
 #include "utils.h"
@@ -47,6 +48,27 @@ namespace SyntaxModel {
             return types.find(type_name) != types.end();
         }
 
+        template <typename T>
+        const T* getFirstParentOfType() const
+        {
+            auto parent_it = _parenthoods.find(unique_id);
+            while (parent_it != _parenthoods.end()) {
+                const auto* parent = (*parent_it).second;
+                if (parent->is<T>())
+                    return dynamic_cast<const T*>(parent);
+                parent_it = _parenthoods.find(parent->unique_id);
+            }
+            return nullptr;
+        }
+
+        const SyntaxNodeBase* getParent() const
+        {
+            auto parent_it = _parenthoods.find(unique_id);
+            if (parent_it != _parenthoods.end())
+                return (*parent_it).second;
+            return nullptr;
+        }
+
         // Returns all children syntaxic elements recursively
         std::list<const SyntaxNodeBase*>
         getAllChildren() const;
@@ -77,7 +99,9 @@ namespace SyntaxModel {
         virtual std::ostream& toString(std::ostream& os) const = 0;
 
     private:
+        static const std::list<const SyntaxNodeBase*> _filter_nullptr_out(const std::list<const SyntaxNodeBase*>& children);
         friend size_t std::hash<SyntaxNodeBase>::operator()(const SyntaxNodeBase&) const;
+        static std::unordered_map<size_t, const SyntaxNodeBase*> _parenthoods;
     };
 
     template <typename... Types>
@@ -94,14 +118,8 @@ namespace SyntaxModel {
         }
     };
 
-    template <typename LastT>
-    struct TN<LastT> {
-        static inline std::unordered_set<std::string> typenames()
-        {
-            //static_assert(std::is_base_of<SyntaxNodeBase, LastT>::value, "TN::typenames is meant to be used on classes derived from 'SyntaxNodeBase'.");
-            static const std::string type_name = utils::type_name<LastT>();
-            static const std::string base_type_name = utils::type_name<SyntaxNodeBase>();
-            return { type_name, base_type_name };
-        }
+    template <>
+    struct TN<> {
+        static inline std::unordered_set<std::string> typenames() { return { utils::type_name<SyntaxNodeBase>() }; }
     };
 }

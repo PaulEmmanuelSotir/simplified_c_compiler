@@ -1,5 +1,6 @@
 #include "SyntaxModel/Function.h"
 #include "SyntaxModel/PrimitiveType.h"
+#include "SyntaxModel/Return.h"
 #include "utils.h"
 
 namespace SyntaxModel {
@@ -18,6 +19,7 @@ namespace SyntaxModel {
         , arguments(arguments)
         , id(id)
         , returnType(returnType)
+        , stackVariables(computeARStack(arguments, definitions))
     {
     }
 
@@ -47,34 +49,90 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* Function::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    void Function::generateIREpilogue(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, size_t reservedStackSize) const
     {
         const std::string rbp = "%rbp", rsp = "%rsp";
-        eb = cfg.CreateExecutionBlock(id.text, eb);
+        if (reservedStackSize > 8)
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::ADDQ, cfg.CreateConstant(reservedStackSize), rsp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::POPQ, rbp));
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::RETQ));
+    }
 
-        // Generate prologue: Reserve function stack size and update rsp and rbp registers
-        size_t reserved_size = definitions.size() * 8 + 8;
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::PUSH, rbp));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::MOV, rsp, rbp));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::SUB, cfg.CreateConstant(reserved_size), rbp));
+    IR::ExecutionBlock* Function::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    {
+        if (!this->is<Putchar>()) {
+            const std::string rbp = "%rbp", rsp = "%rsp", rax = "%rax";
+            string name;
+            if(id.text == "main" || id.text == "putchar") {
+                name = "_"+id.text;
+            } else {
+                name = id.text;
+            }
+            eb = cfg.CreateExecutionBlock(name, eb);
 
-        //eb = args->generateIR(cfg, eb);
-        //for (auto* decl : declarations)
-        //    eb = decl->generateIR(cfg, eb);
-        //for (auto* instr : instructions)
-        //    eb = instr->generateIR(cfg, eb);
-        // TODO: handle return statement type (make a variable for return value?)
+            // Generate prologue: Reserve function stack size and update rsp and rbp registers
+            size_t reservedStackSize = getARStackSize();
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::PUSHQ, rbp));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rsp, rbp));
+            if (reservedStackSize > 8)
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::SUBQ, cfg.CreateConstant(reservedStackSize), rsp));
+            pullArgsFromRegisters(eb, rbp);
 
-        // Generate epilogue
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::ADD, cfg.CreateConstant(reserved_size), rbp));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::POP, rbp));
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::Op::RET));
+            for (auto* def : definitions) {
+                auto stack_var_it = stackVariables.find(def->unique_id);
+                eb = def->generateIR(cfg, eb, stack_var_it->second);
+            }
+            for (auto* instr : instructions) {
+                eb = instr->generateIR(cfg, eb, "");
+                if (instr->is<Return>())
+                    return eb;
+            }
+
+            // If we reach the end of eb, it means we didn't executed any main return statements (thus we return 0)
+            if (id.text == "main")
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, IR::ControlFlowGraph::CreateConstant(0), rax));
+
+            // Generate epilogue
+            generateIREpilogue(cfg, eb, reservedStackSize);
+        }
         return eb;
     }
 
-    IR::ExecutionBlock* Args::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* const eb) const
+    size_t Function::getARStackSize() const
     {
-        return nullptr;
+        size_t reserved_size = (arguments != nullptr ? arguments->names.size() * 8 : 0);
+        for (const auto* def : definitions)
+            reserved_size += def->names.size() * 8;
+        return reserved_size+8;  // Avoid segmentation fault
+    }
+
+    void Function::pullArgsFromRegisters(IR::ExecutionBlock* eb, std::string rbp) const
+    {
+        if (arguments != nullptr) {
+            for (size_t r_idx = 0; r_idx < arguments->names.size(); ++r_idx)
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, IR::ControlFlowGraph::args_registers[r_idx], "-" + std::to_string(8 * r_idx) + "(" + rbp + ")"));
+        }
+    }
+
+    std::unordered_map<size_t, std::vector<IR::StackVariable>> Function::computeARStack(const Args* args, const std::list<const Definition*>& defs)
+    {
+        std::unordered_map<size_t, std::vector<IR::StackVariable>> stackVariables;
+        int64_t offset = 0;
+        for (auto* def : defs) {
+            std::vector<IR::StackVariable> vars;
+            vars.reserve(def->names.size());
+            for (auto n : def->names) {
+                offset -= 8;
+                vars.emplace_back(offset, 8, n);
+            }
+            stackVariables.emplace(def->unique_id, vars);
+        }
+        return stackVariables;
+    }
+
+    IR::ExecutionBlock* Args::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    {
+        return eb;
     }
 
     std::ostream& Args::toString(std::ostream& os) const

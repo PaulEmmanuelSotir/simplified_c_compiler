@@ -11,6 +11,7 @@ namespace SyntaxModel {
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, FunctionCall>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
         virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override;
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const override;
 
         const std::list<const Expression*> args;
         const Identifier func_name;

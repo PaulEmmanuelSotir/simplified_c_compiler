@@ -1,4 +1,6 @@
 #include "SyntaxModel/Expression.h"
+#include "SyntaxModel/Definition.h"
+#include "SyntaxModel/Function.h"
 #include "SyntaxModel/SyntaxNode.h"
 
 #include "StaticAnalysis.h"
@@ -32,5 +34,16 @@ namespace SyntaxModel {
     {
         auto var = analyser->getVariableOfUsage(this);
         return *(var.type);
+    }
+
+    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    {
+        StaticAnalysis::Variable var = cfg.static_analyser->getVariableOfUsage(this);
+        auto stack_var = IR::ControlFlowGraph::getStackVariableFromVariable(var, this);
+        if (stack_var) {
+            return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.value().toAddressOperandSyntax(), dest));
+        }
+        // TODO: handle globals here
+        return eb;
     }
 }

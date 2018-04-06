@@ -24,10 +24,8 @@ expression:
 	'(' expression ')'				# parenthesis
 	| '-' expression				# unary_minus
 	| '!' expression				# not
-	| expression '+' expression		# plus
-	| expression '-' expression		# minus
-	| expression '*' expression		# mult
-	| expression '/' expression		# div
+	| expression opMULT expression	# binmul
+	| expression opPLUS expression	# binadd
 	| expression '==' expression	# equal
 	| expression '!=' expression	# different
 	| expression '<' expression		# inf
@@ -43,10 +41,23 @@ expression:
 	| IDENTIFIER					# variable_usage
 ;
 
+opPLUS:
+	'+'								#Plus
+	|'-'							#Minus
+;
+opMULT:
+	'*'								#Mult
+	|'/'							#Div
+	|'%'							#Modulo
+;
+
 structure:
 	'if' '(' expression ')' '{' (instruction)* '}' else_structure?	# if
 	| 'while' '(' expression ')' '{' (instruction)* '}'				# while
+	| 'for' '(' def_or_expr def_or_expr ';' expression? ')' '{' (instruction)* '}' # for
 ;
+
+def_or_expr:  (definition? | (expression? ';'));
 
 else_structure: 'else' '{' (instruction)* '}' # else;
 
@@ -85,8 +96,9 @@ array_expr: '{' ((INTEGER | QUOTED_CHAR_LITERAL) (',' (INTEGER | QUOTED_CHAR_LIT
 
 atomic_type: CHAR | INT32_T | INT64_T;
 
-type: (CHAR | INT32_T | INT64_T) ('[' ']')?;
+type: (CHAR | INT32_T | INT64_T) (ARRAY_BRACKETS)?;
 
+ARRAY_BRACKETS: '[' ']';
 CHAR: 'char';
 INTEGER: [0-9]+;
 INT32_T: 'int' | 'int32_t';
@@ -95,4 +107,4 @@ IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 fragment CHAR_LITERAL: ~('\\'|'\n'|'\r') | '\\'.;
 QUOTED_CHAR_LITERAL: '\'' CHAR_LITERAL '\'';
 STRING_LITERAL: '"' (CHAR_LITERAL)* '"';
-INCLUDE: '#include' [ \t]+ ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);
+INCLUDE: '#include' [ \t]? ('<' (CHAR_LITERAL)+ '>' | STRING_LITERAL);

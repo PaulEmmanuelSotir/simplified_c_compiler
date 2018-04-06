@@ -30,8 +30,12 @@ public:
     virtual antlrcpp::Any visitType(GramCompParser::TypeContext* ctx) override;
     virtual antlrcpp::Any visitExpression_instr(GramCompParser::Expression_instrContext* ctx) override;
     virtual antlrcpp::Any visitParenthesis(GramCompParser::ParenthesisContext* ctx) override;
+    virtual antlrcpp::Any visitFor(GramCompParser::ForContext* ctx) override;
+    virtual antlrcpp::Any visitDef_or_expr(GramCompParser::Def_or_exprContext* ctx) override;
 
     // Binary ops
+    virtual antlrcpp::Any visitBinadd(GramCompParser::BinaddContext *ctx) override;
+    virtual antlrcpp::Any visitBinmul(GramCompParser::BinmulContext *ctx) override;
     virtual antlrcpp::Any visitInfequal(GramCompParser::InfequalContext* ctx) override;
     virtual antlrcpp::Any visitDifferent(GramCompParser::DifferentContext* ctx) override;
     virtual antlrcpp::Any visitPlus(GramCompParser::PlusContext* ctx) override;
@@ -42,6 +46,7 @@ public:
     virtual antlrcpp::Any visitEqual(GramCompParser::EqualContext* ctx) override;
     virtual antlrcpp::Any visitSup(GramCompParser::SupContext* ctx) override;
     virtual antlrcpp::Any visitSupequal(GramCompParser::SupequalContext* context) override;
+    virtual antlrcpp::Any visitModulo(GramCompParser::ModuloContext* ctx) override;
 
     // Unary ops
     virtual antlrcpp::Any visitNot(GramCompParser::NotContext* ctx) override;

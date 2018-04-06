@@ -5,19 +5,23 @@
 
 namespace StaticAnalysis {
 
-    Variable::Variable(SyntaxModel::Identifier name, SyntaxModel::Type* type, SyntaxModel::Definition::size_constant* array_size, SyntaxModel::Expression* init_value)
-        : name(name)
-        , type(type)
-        , array_size(array_size)
-        , init_value(init_value)
-    {
-    }
-
     Variable::Variable(const SyntaxModel::Definition& def, const size_t index)
-        : name(def.names[index])
+        : def_unique_id(def.unique_id)
+        , name(def.names[index])
         , type(def.type)
         , array_size((def.sizes.size() > index) ? *utils::get_at(def.sizes, index) : nullptr)
         , init_value((def.init_values.size() > index) ? *utils::get_at(def.init_values, index) : nullptr)
+
+    {
+    }
+
+    Variable::Variable(SyntaxModel::Identifier name)
+
+        : def_unique_id(static_cast<size_t>(-1))
+        , name(name)
+        , type(nullptr)
+        , array_size(nullptr)
+        , init_value(nullptr)
     {
     }
 
@@ -88,6 +92,8 @@ namespace StaticAnalysis {
         auto* func_locals = new std::vector<Variable>((*_function_variables.find(func->unique_id)).second);
         auto* unused_locals = new std::set<Variable>(func_locals->cbegin(), func_locals->cend());
 
+        std::list<const SyntaxModel::For*> for_loops = func->getAllChildrenOfType<SyntaxModel::For>();
+
         for (auto var_usage : func->getAllChildrenOfType<SyntaxModel::VariableUsage>())
             ResolveVarUsage(_var_usage_resolution, var_usage, var_usage->name, unused_globals, unused_locals, func_locals);
         for (auto affectation : func->getAllChildrenOfType<SyntaxModel::Affectation>())
@@ -110,8 +116,49 @@ namespace StaticAnalysis {
             auto it = func_lookup_table.find(usage->func_name.text);
             if (it == func_lookup_table.end())
                 error<true>("Function '", usage->func_name.text, "' not declared.");
-            else
+            else {
+                _called_functions.insert(it->second->unique_id);
                 _function_call_resolution.emplace(usage->unique_id, it->second);
+            }
         }
+    }
+
+    bool StaticAnalyser::FindForLoopVarDef(const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::map<size_t, Variable>& var_resolution_map)
+    {
+        auto* parent_for_loop = var_usage->getFirstParentOfType<SyntaxModel::For>();
+        if (parent_for_loop != nullptr && parent_for_loop->init != nullptr && parent_for_loop->init->is<SyntaxModel::Definition>()) {
+            auto* for_init_def = dynamic_cast<const SyntaxModel::Definition*>(parent_for_loop->init);
+            for (size_t i = 0; i < for_init_def->names.size(); ++i) {
+                if (for_init_def->names[i].text == var_id.text) {
+                    if (for_init_def->init_values.size() <= i)
+                        error<true>("Can't declare variable in for loop init statement without initializing it.");
+                    else {
+                        var_resolution_map.emplace(var_usage->unique_id, Variable(*for_init_def, i));
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    void StaticAnalyser::ResolveVarUsage(std::map<size_t, Variable>& var_resolution_map, const SyntaxModel::SyntaxNodeBase* var_usage, const SyntaxModel::Identifier& var_id, std::set<Variable>& unused_globals, std::set<Variable>* unused_locals, const std::vector<Variable>* func_locals)
+    {
+        Variable dummy_var(var_id);
+        auto global_it = std::find(_global_variables.cbegin(), _global_variables.cend(), dummy_var);
+        if (func_locals != nullptr && unused_locals != nullptr) {
+            auto local_it = std::find(func_locals->cbegin(), func_locals->cend(), dummy_var);
+            if (local_it != func_locals->cend()) {
+                var_resolution_map.emplace(var_usage->unique_id, *local_it);
+                unused_locals->erase(*local_it);
+            } else {
+                if (!FindForLoopVarDef(var_usage, var_id, var_resolution_map))
+                    error<true>("Local variable '", var_id.text, "' not declared.");
+            }
+        } else if (global_it != _global_variables.cend()) {
+            var_resolution_map.emplace(var_usage->unique_id, *global_it);
+            unused_globals.erase(*global_it);
+        } else
+            error<true>("Global variable '", var_id.text, "' not declared.");
     }
 }
