@@ -144,6 +144,8 @@ namespace IR {
 
     void ExecutionBlock::GenerateAssembly(std::ostringstream& stream, std::function<void(const Instruction&)> onInstrGeneration) const
     {
+        if(_label == "main")
+            stream << "_";
         stream << _label << ":" << std::endl;
 
         for (auto instr : _instructions) {
@@ -196,7 +198,7 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".globl main" << std::endl; 
+        stream << ".globl _main" << std::endl;
         //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly

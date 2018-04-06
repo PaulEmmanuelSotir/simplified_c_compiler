@@ -42,7 +42,10 @@ namespace SyntaxModel {
         const auto* func_args = function->arguments;
         if (func_args != nullptr && func_args->names.size() != args.size())
             throw new CompilerException("function '" + func_name.text + "' called with the wrong number of arguments");
-        eb->AppendInstruction(IR::Instruction(IR::Instruction::CALL, func_name.text));
+        string funcName = func_name.text;
+        if(func_name.text == "putchar")
+            funcName = "_"+func_name.text;
+        eb->AppendInstruction(IR::Instruction(IR::Instruction::CALL, funcName));
         if (dest)
             eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, IR::Register::rax.name64bits, dest.value()));
         return eb;

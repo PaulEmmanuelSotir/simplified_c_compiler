@@ -13,7 +13,7 @@
 
 using namespace std;
 
-//#define DEBUG
+#define DEBUG
 
 const SyntaxModel::Program* parse(ifstream& fs)
 {
