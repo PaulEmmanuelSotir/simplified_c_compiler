@@ -154,12 +154,20 @@ namespace IR {
 
     std::list<Instruction>::iterator ExecutionBlock::AppendInstruction(const Instruction& instr)
     {
-        _instructions.push_back(instr);
+        if(instr.x && instr.y && instr.x.value().find("(%") != std::string::npos && instr.y.value().find("(%") != std::string::npos) {
+            _instructions.push_back(Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
+            _instructions.push_back(Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
+        } else
+            _instructions.push_back(instr);
         return --_instructions.end();
     }
 
     void ExecutionBlock::InsertInstruction(const Instruction& instr, const std::list<Instruction>::iterator& instr_it) {
-        _instructions.insert(instr_it, instr);
+        if(instr.x && instr.y && instr.x.value().find("(%") != std::string::npos && instr.y.value().find("(%") != std::string::npos) {
+            _instructions.insert(instr_it, Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
+            _instructions.insert(instr_it, Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
+        } else
+            _instructions.insert(instr_it, instr);
     }
 
     ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
