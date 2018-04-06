@@ -1,20 +1,19 @@
 # PLD COMP - Simplified C compiler (WIP)
 *by H4413*  
 
-This is a simplified C compiler written in modern C++ with Antlr4 featuring static analysis and x86 asm target.
+Ce projet est un compilateur pour un language C simplifié, écrit en c++ avec Antlr4. La cible est une architecture x86.
+## Instalation et lancement
+Vous devez utiliser au minimum c++14. Le makefile propose ces options : 
+- make : compile le projet
+- make rebuild : lance la génération de la grammaire puis compile le projet
+- make clean : nettoie le dossier bin
+L'éxecutable se trouve ensuite dans ce dossier à partir de la racine du projet : ```./bin/debug/c_compiler```
 
-## Install and run instructions
-You need at least c++14 to build the project. Use the makefile like this : 
-- make : compile the project
-- make rebuild : launch antlr and create the grammar again, then compile the project
-- make clean : clean bin folder
-The executable file is then in ./bin/debug/c_compiler
-
-Command to launch the compilation of a file : 
+Commande pour lancer le programme une fois compilé : 
 ```
 ./bin/debug/c_compiler [filepath] [-a] [-c]
 ``` 
-Examples : "./bin/debug/c_compiler ./tests/Back/2_putchar.c -c"
+Exemples : ```./bin/debug/c_compiler ./tests/Back/2_putchar.c -c```
 
 ## Ecarts au sujet
   Nous avons choisi que notre IR soit plus proche du language assembleur que dans le sujet, ainsi notre CFG est une liste chainée qui contient des basics blocs dans l'ordre dans lequel ils apparaitront dans le fichier assembleur (.s). 
