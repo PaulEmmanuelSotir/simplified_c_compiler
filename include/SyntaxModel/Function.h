@@ -26,7 +26,6 @@ namespace SyntaxModel {
         virtual std::ostream& toString(std::ostream& os) const override;
         IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const;
         size_t getARStackSize() const;
-        void generateIREpilogue(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, size_t reservedStackSize) const;
         friend inline bool operator<(const Function& lhs, const Function& rhs) { return lhs.id < rhs.id; }
 
         const std::list<const Definition*> definitions;
@@ -37,7 +36,7 @@ namespace SyntaxModel {
         const std::unordered_map<size_t, std::vector<IR::StackVariable>> stackVariables;
 
     private:
-        void pullArgsFromRegisters(IR::ExecutionBlock* eb, std::string rbp) const;
+        void pullArgsFromRegisters(IR::ExecutionBlock* eb) const;
         static std::unordered_map<size_t, std::vector<IR::StackVariable>> computeARStack(const Args* args, const std::list<const Definition*>& defs);
     };
 

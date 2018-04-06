@@ -36,14 +36,15 @@ namespace SyntaxModel {
         return *(var.type);
     }
 
-    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* VariableUsage::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
         StaticAnalysis::Variable var = cfg.static_analyser->getVariableOfUsage(this);
         auto stack_var = IR::ControlFlowGraph::getStackVariableFromVariable(var, this);
-        if (stack_var) {
-            return eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.value().toAddressOperandSyntax(), dest));
+        if (stack_var)
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, stack_var.value().toAddressOperandSyntax(), dest));
+        else {
+            // TODO: handle globals here
         }
-        // TODO: handle globals here
         return eb;
     }
 }

@@ -33,16 +33,16 @@ namespace SyntaxModel {
         return *(var.type);
     }
 
-    IR::ExecutionBlock* Affectation::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* Affectation::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
         auto analyser = cfg.static_analyser;
         auto var = analyser->getVariableOfAffectation(this);
         auto stack_var = IR::ControlFlowGraph::getStackVariableFromVariable(var, this);
 
-        auto generateAffectedValue = [&cfg, &eb, this]() {
-            auto value_reg = cfg.GetFreeRegister(8);
+        auto generateAffectedValue = [&cfg, &eb, &add_stack_variable, this]() {
+            auto value_reg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable);
             if (!isUnaryAffectation)
-                eb = affected_value->generateIR(cfg, eb, value_reg);
+                eb = affected_value->generateIR(cfg, eb, value_reg, add_stack_variable);
             return value_reg;
         };
 
@@ -54,43 +54,43 @@ namespace SyntaxModel {
             // TODO: handle arrays
             switch (op) {
             case Op::EQ:
-                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, generateAffectedValue(), var_symbol));
-                if (dest != "")
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, generateAffectedValue(), var_symbol));
+                if (dest)
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
             case Op::PRE_DEC:
             case Op::PRE_INC: {
-                eb = eb->AppendInstruction(IR::Instruction(op == Op::PRE_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
-                if (dest != "")
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
+                eb->AppendInstruction(IR::Instruction(op == Op::PRE_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                if (dest)
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
             case Op::POST_DEC:
             case Op::POST_INC:
-                if (dest != "") {
-                    auto tmp_reg = cfg.GetFreeRegister(8); // this temporary register is nescessary when this affectation is used in the value of another affectation
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, tmp_reg));
-                    eb = eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, tmp_reg, dest));
+                if (dest) {
+                    auto tmp_reg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable); // this temporary register is nescessary when this affectation is used in the value of another affectation
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, tmp_reg));
+                    eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, tmp_reg, dest));
                 } else
-                    eb = eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
+                    eb->AppendInstruction(IR::Instruction(op == Op::POST_DEC ? IR::Instruction::SUBQ : IR::Instruction::ADDQ, cfg.CreateConstant(1), var_symbol));
                 break;
             }
             case Op::PLUS_EQ:
             case Op::MIN_EQ:
-                eb = eb->AppendInstruction(IR::Instruction(op == Op::PLUS_EQ ? IR::Instruction::ADDQ : IR::Instruction::SUBQ, generateAffectedValue(), var_symbol));
-                if (dest != "")
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
+                eb->AppendInstruction(IR::Instruction(op == Op::PLUS_EQ ? IR::Instruction::ADDQ : IR::Instruction::SUBQ, generateAffectedValue(), var_symbol));
+                if (dest)
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
             case Op::DIV_EQ:
             case Op::MODULO_EQ:
                 eb = IR::Instruction::divide_64bits(eb, op == Op::MODULO_EQ, var_symbol, generateAffectedValue(), var_symbol);
-                if (dest != "")
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
+                if (dest)
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
             case Op::MULT_EQ:
-                eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IMULL, var_symbol, generateAffectedValue(), var_symbol));
-                if (dest != "")
-                    eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::IMULL, var_symbol, generateAffectedValue(), var_symbol));
+                if (dest)
+                    eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, var_symbol, dest));
                 break;
             }
         }

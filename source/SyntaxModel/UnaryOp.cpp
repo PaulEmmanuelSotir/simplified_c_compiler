@@ -33,19 +33,18 @@ namespace SyntaxModel {
             return Type(source_interval, PrimitiveType::INT32_T, false); // Implicit cast to boolean (INT32_T)
     }
 
-    IR::ExecutionBlock* UnaryOp::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* UnaryOp::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
-        auto subExprReg = cfg.GetFreeRegister(8);
-        eb = expression->generateIR(cfg, eb, subExprReg);
+        auto subExprReg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable);
+        eb = expression->generateIR(cfg, eb, subExprReg, add_stack_variable);
 
         if (op == Op::MINUS) {
             eb->AppendInstruction(IR::Instruction(IR::Instruction::NEGQ, subExprReg));
             eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, subExprReg, dest));
         } else if (op == Op::NOT) {
-            IR::symbol_t byte_reg = cfg.GetFreeRegister(1);
             eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), subExprReg));
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, byte_reg));
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, byte_reg, dest));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::SETE, IR::Register::r11.name8bits));
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVZBQ, IR::Register::r11.name8bits, dest));
         }
         return eb;
     }
