@@ -129,9 +129,9 @@ namespace SyntaxModel {
     void Function::pullArgsFromRegisters(IR::ExecutionBlock* eb) const
     {
         if (arguments != nullptr) {
-            auto args_regs = IR::Register::getABIArgsRegisters();
+            std::array<std::string, 6> args_regs = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
             for (size_t r_idx = 0; r_idx < arguments->names.size(); ++r_idx)
-                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, args_regs[r_idx].name64bits, "-" + std::to_string(8 * r_idx) + "(" + IR::Register::rbp.name64bits + ")"));
+                eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, args_regs[r_idx], "-" + std::to_string(8 * r_idx) + "(" + IR::Register::rbp.name64bits + ")"));
         }
     }
 

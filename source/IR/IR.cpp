@@ -7,9 +7,8 @@
 #include <fstream>
 
 namespace IR {
-
-    std::vector<Register> Register::_ABIArgsRegisters;
     std::set<Register> Register::_registers;
+    //std::array<Register, 6> Register::_ABIArgsRegisters;
 
     Register::Register(symbol_t name64bits, symbol_t name32bits, symbol_t name16bits, symbol_t name8bits, bool isABICallArg, bool isOwnedByCaller, bool useAsTmp, bool isExtendedReg)
         : name64bits(name64bits)
@@ -22,8 +21,8 @@ namespace IR {
         , isExtendedReg(isExtendedReg)
     {
         _registers.insert(*this);
-        if (isABICallArg)
-            _ABIArgsRegisters.push_back(*this);
+        //if (isABICallArg)
+        //    _ABIArgsRegisters.push_back(*this);
     }
 
     symbol_t Register::getName(SyntaxModel::PrimitiveType size) const
@@ -41,7 +40,7 @@ namespace IR {
         throw new CompilerException("Huston, we have a problem!");
     }
 
-    std::vector<Register> Register::getABIArgsRegisters() { return _ABIArgsRegisters; }
+    //std::array<Register, 6> Register::getABIArgsRegisters() { return _ABIArgsRegisters; }
     std::set<Register> Register::getRegisters() { return _registers; }
     bool Register::operator==(const Register& other) const { return other.name64bits == name64bits; };
     bool Register::operator<(const Register& other) const { return other.name64bits < name64bits; };
@@ -63,6 +62,7 @@ namespace IR {
     const Register Register::r13("%r13", "%r9d", "%r9w", "%r9b", false, true, false, true);
     const Register Register::r14("%r14", "%r9d", "%r9w", "%r9b", false, true, false, true);
     const Register Register::r15("%r15", "%r9d", "%r9w", "%r9b", false, true, false, true);
+
 
     const symbol_t Instruction::RETQ = "retq";
     const symbol_t Instruction::PUSHQ = "pushq";
@@ -196,14 +196,12 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".globl ";
-
+        stream << ".globl main" << std::endl; 
         //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly
         auto* eb = _first_block;
         while (eb != nullptr) {
-            stream << eb->_label << endl;
             eb->GenerateAssembly(stream, [this](auto instr) {
                 this->freeTmpRegisters();
             });
@@ -263,7 +261,7 @@ namespace IR {
             // Append function name to label if given node is a children of a function
             auto* func = node->getFirstParentOfType<SyntaxModel::Function>();
             if (func != nullptr)
-                prefix = func->id.text + "." + prefix;
+                prefix = func->id.text + "_" + prefix;
         }
 
         // If we already created a label with the same name, we increment its counter
@@ -272,7 +270,7 @@ namespace IR {
             prefix += "_" + std::to_string(count);
         } else
             label_counters.emplace(prefix, 0);
-        return prefix;
+        return "." + prefix;
     }
 
     ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)

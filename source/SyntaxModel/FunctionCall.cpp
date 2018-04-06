@@ -31,12 +31,11 @@ namespace SyntaxModel {
 
     IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
-        //  Generate IR instructions for arguments expressions
-        auto args_regs = IR::Register::getABIArgsRegisters();
+        std::array<std::string, 6> args_regs = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
         if (args_regs.size() < args.size())
             throw new CompilerException("function can't have more than " + std::to_string(args_regs.size()) + " arguments due to assembly function call convention");
         for (size_t idx = 0; idx < args.size(); ++idx)
-            eb = (*utils::get_at(args, idx))->generateIR(cfg, eb, args_regs[idx].name64bits, add_stack_variable);
+            eb = (*utils::get_at(args, idx))->generateIR(cfg, eb, args_regs[idx], add_stack_variable);
 
         // Call function
         const auto* function = cfg.static_analyser->getFunctionDef(this);

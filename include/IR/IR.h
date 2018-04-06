@@ -32,7 +32,7 @@ namespace IR {
 
         Register(symbol_t name64bits, symbol_t name32bits, symbol_t name16bits, symbol_t name8bits, bool isABICallArg, bool isOwnedByCaller, bool useAsTmp, bool isExtendedReg = false);
         symbol_t getName(SyntaxModel::PrimitiveType size) const;
-        static std::vector<Register> getABIArgsRegisters();
+        //static std::array<Register, 6> getABIArgsRegisters();
         static std::set<Register> getRegisters();
         bool operator==(const Register& other) const;
         bool operator<(const Register& other) const;
@@ -49,7 +49,7 @@ namespace IR {
         static const Register rax, rbx, rcx, rdx, rbp, rsp, rsi, rdi, r8, r9, r10, r11, r12, r13, r14, r15;
 
     private:
-        static std::vector<Register> _ABIArgsRegisters;
+        //static std::array<Register, 6> _ABIArgsRegisters;
         static std::set<Register> _registers;
     };
 
