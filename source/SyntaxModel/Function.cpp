@@ -62,7 +62,13 @@ namespace SyntaxModel {
     {
         if (!this->is<Putchar>()) {
             const std::string rbp = "%rbp", rsp = "%rsp", rax = "%rax";
-            eb = cfg.CreateExecutionBlock(id.text, eb);
+            string name;
+            if(id.text == "main" || id.text == "putchar") {
+                name = "_"+id.text;
+            } else {
+                name = id.text;
+            }
+            eb = cfg.CreateExecutionBlock(name, eb);
 
             // Generate prologue: Reserve function stack size and update rsp and rbp registers
             size_t reservedStackSize = getARStackSize();

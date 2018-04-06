@@ -133,8 +133,10 @@ namespace IR {
 
         // Generate core assembly
         auto* eb = _first_block;
+
+        stream << "_main" << endl;
+
         while (eb != nullptr) {
-            stream << eb->_label << endl;
             eb->GenerateAssembly(stream, [this](auto instr) {
                 _register_counter = 0;
             });
