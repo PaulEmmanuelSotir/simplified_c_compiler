@@ -23,7 +23,7 @@ namespace SyntaxModel {
         virtual ~Definition() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Definition>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
-        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const std::vector<IR::StackVariable>& stack_variables) const;
+        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const std::vector<IR::StackVariable>& stack_variables, const IR::AddTmpStackVar_fn& add_stack_variable) const;
 
         const Type* type;
         const std::vector<Identifier> names;

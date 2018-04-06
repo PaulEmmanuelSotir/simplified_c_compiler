@@ -34,7 +34,7 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* Definition::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const std::vector<IR::StackVariable>& stack_variables) const
+    IR::ExecutionBlock* Definition::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const std::vector<IR::StackVariable>& stack_variables, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
         //TODO: remove it: const auto* analyser = cfg.getAnalyser();
 
@@ -42,7 +42,7 @@ namespace SyntaxModel {
         if (init_values.size() > 0) {
             for (size_t i = 0; i < stack_variables.size(); ++i) {
                 //TODO: Type type = expr->getExprType(analyser); (if stack variable doesn't have the same size as init expression's type, perform an implicit cast)
-                eb = (*utils::get_at(init_values, i))->generateIR(cfg, eb, stack_variables[i].toAddressOperandSyntax());
+                eb = (*utils::get_at(init_values, i))->generateIR(cfg, eb, stack_variables[i].toAddressOperandSyntax(), add_stack_variable);
             }
         }
         return eb;

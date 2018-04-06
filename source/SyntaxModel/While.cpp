@@ -16,7 +16,7 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* While::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable, const IR::GenerateIREpilogue_fn& gen_epilogue) const
     {
         /* 
         auto* loop_block = cfg.CreateExecutionBlock(eb, "loop");
@@ -25,8 +25,7 @@ namespace SyntaxModel {
         eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, condition_block->label));
 
         // Loop instructions
-        for (auto* instr : instructions)
-            loop_block = instr->generateIR(cfg, loop_block);
+        eb = generateInstructionBlock(cfg, eb, instructions, add_stack_variable, gen_epilogue);
 
         IR::symbol_t cond_reg = cfg->CreatenewReg();
         condition_block = condition->generateIR(cfg, condition_block, cond_reg);

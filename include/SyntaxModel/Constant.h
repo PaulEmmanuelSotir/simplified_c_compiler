@@ -30,9 +30,9 @@ namespace SyntaxModel {
             return os;
         }
 
-        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const override
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const override
         {
-            if (dest != "") {
+            if (dest) {
                 int64_t int_value = static_cast<int64_t>(value);
                 if (int_value > std::numeric_limits<int32_t>::max())
                     eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVABSQ, "$" + std::to_string(int_value), dest));
@@ -81,7 +81,7 @@ namespace SyntaxModel {
         virtual ~ArrayConstant() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<Instruction, Expression, decltype(*this)>::typenames(); }
         virtual Type getExprType(const StaticAnalysis::StaticAnalyser* analyser) const override { return Type(source_interval, type, true); }
-        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const override
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const override
         {
             return eb;
         }

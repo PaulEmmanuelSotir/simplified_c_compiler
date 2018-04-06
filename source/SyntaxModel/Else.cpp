@@ -1,4 +1,5 @@
 #include "SyntaxModel/Else.h"
+#include "SyntaxModel/Structure.h"
 #include "SyntaxModel/SyntaxNode.h"
 #include "utils.h"
 
@@ -19,10 +20,8 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* Else::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
+    IR::ExecutionBlock* Else::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, const IR::AddTmpStackVar_fn& add_stack_variable, const IR::GenerateIREpilogue_fn& gen_epilogue) const
     {
-        for (auto* instr : instructions)
-            eb = instr->generateIR(cfg, eb, "");
-        return eb;
+        return Structure::generateInstructionBlock(cfg, eb, instructions, add_stack_variable, gen_epilogue);
     }
 }

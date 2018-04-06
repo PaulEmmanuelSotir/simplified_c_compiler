@@ -24,10 +24,10 @@ namespace SyntaxModel {
     }
 
     void Program::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb) const
-    {
-        // Generate IR for global defintions
+    {        
+        // Generate IR for global definitions
         for (const auto* decl : definitions)
-            decl->generateIR(cfg, eb, {}); // TODO: handle global initializations
+            decl->generateIR(cfg, eb, {}, nullptr); // TODO: handle global initializations
 
         // Generate IR for main function (entry point)
         for (const auto* func : functions) {
