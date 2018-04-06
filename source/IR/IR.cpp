@@ -250,7 +250,7 @@ namespace IR {
 
     symbol_t StackVariable::toAddressOperandSyntax() const
     {
-        return AddressOperandSyntax("%rsp", offset);
+        return AddressOperandSyntax(Register::rbp.name64bits, offset);
     }
 
     std::string ControlFlowGraph::CreateLabel(std::string prefix, const SyntaxModel::SyntaxNodeBase* node)

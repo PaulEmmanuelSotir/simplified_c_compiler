@@ -72,7 +72,7 @@ namespace SyntaxModel {
                     used_tmp_stack_var = 0;
                 used_tmp_stack_var++;
                 if (used_tmp_stack_var > tmp_stack_variable.size()) {
-                    size_t bytesize = SyntaxModel::Type::sizeOf(size);
+                    size_t bytesize = 8;//SyntaxModel::Type::sizeOf(size);
                     reservedStackSize += bytesize;
                     IR::StackVariable stackVar(-reservedStackSize, bytesize, "!tmp" + tmp_stack_variable.size());
                     tmp_stack_variable.push_back(stackVar);
@@ -123,7 +123,7 @@ namespace SyntaxModel {
         size_t reserved_size = (arguments != nullptr ? arguments->names.size() * 8 : 0);
         for (const auto* def : definitions)
             reserved_size += def->names.size() * 8;
-        return reserved_size + 8; // Avoid segmentation fault
+        return reserved_size;
     }
 
     void Function::pullArgsFromRegisters(IR::ExecutionBlock* eb) const
