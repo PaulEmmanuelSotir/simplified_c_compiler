@@ -1,7 +1,7 @@
 echo "Lancement des tests front-end"
 
 PROG='./bin/debug/c_compiler'
-TEST='./tests/front/ValidPrograms/'
+TEST='./tests/Moodle/front/ValidPrograms/'
 
 echo $TEST*.c
 

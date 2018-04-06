@@ -196,13 +196,11 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".globl main" << std::endl; 
+        stream << ".globl main" << std::endl;
         //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly
         auto* eb = _first_block;
-
-        stream << "_main" << endl;
 
         while (eb != nullptr) {
             eb->GenerateAssembly(stream, [this](auto instr) {
