@@ -29,13 +29,13 @@ namespace SyntaxModel {
         return *(function->returnType);
     }
 
-    IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* FunctionCall::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
-        //  Generate IR instructions for arguments expressions
-        if (IR::ControlFlowGraph::args_registers.size() < args.size())
-            throw new CompilerException("function can't have more than " + std::to_string(IR::ControlFlowGraph::args_registers.size()) + " arguments due to assembly function call convention");
+        std::array<std::string, 6> args_regs = {"%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9"};
+        if (args_regs.size() < args.size())
+            throw new CompilerException("function can't have more than " + std::to_string(args_regs.size()) + " arguments due to assembly function call convention");
         for (size_t idx = 0; idx < args.size(); ++idx)
-            eb = (*utils::get_at(args, idx))->generateIR(cfg, eb, IR::ControlFlowGraph::args_registers[idx]);
+            eb = (*utils::get_at(args, idx))->generateIR(cfg, eb, args_regs[idx], add_stack_variable);
 
         // Call function
         const auto* function = cfg.static_analyser->getFunctionDef(this);
@@ -43,8 +43,8 @@ namespace SyntaxModel {
         if (func_args != nullptr && func_args->names.size() != args.size())
             throw new CompilerException("function '" + func_name.text + "' called with the wrong number of arguments");
         eb->AppendInstruction(IR::Instruction(IR::Instruction::CALL, func_name.text));
-        if (dest != "")
-            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, "%rax", dest));
+        if (dest)
+            eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, IR::Register::rax.name64bits, dest.value()));
         return eb;
     }
 }

@@ -11,7 +11,7 @@ namespace SyntaxModel {
         virtual ~If() = default;
         virtual std::unordered_set<std::string> getTypenames() const override { return TN<If, Structure, Instruction>::typenames(); }
         virtual std::ostream& toString(std::ostream& os) const override;
-        IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const;
+        virtual IR::ExecutionBlock* generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable, const IR::GenerateIREpilogue_fn& gen_epilogue) const override;
 
         const Else* else_clause;
     };

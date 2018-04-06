@@ -20,7 +20,12 @@ namespace SyntaxModel {
 
         template <PrimitiveType T>
         struct _UnderlyingType<T, std::enable_if_t<T == PrimitiveType::CHAR>> {
-            using type = char32_t;
+            using type = char;
+        };
+
+        template <PrimitiveType T>
+        struct _UnderlyingType<T, std::enable_if_t<T == PrimitiveType::INT16_T>> {
+            using type = int16_t;
         };
 
         template <PrimitiveType T>
@@ -39,5 +44,20 @@ namespace SyntaxModel {
 
         template <PrimitiveType T>
         using UnderlyingType = typename _UnderlyingType<T>::type;
+
+        static size_t sizeOf(PrimitiveType t)
+        {
+            switch (t) {
+            case PrimitiveType::INT64_T:
+                return sizeof(UnderlyingType<PrimitiveType::INT64_T>);
+            case SyntaxModel::PrimitiveType::INT32_T:
+                return sizeof(UnderlyingType<PrimitiveType::INT32_T>);
+            case SyntaxModel::PrimitiveType::INT16_T:
+                return sizeof(UnderlyingType<PrimitiveType::INT16_T>);
+            case SyntaxModel::PrimitiveType::CHAR:
+                return sizeof(UnderlyingType<PrimitiveType::CHAR>);
+            }
+            throw new CompilerException("Huston, we have a problem!");
+        }
     };
 }

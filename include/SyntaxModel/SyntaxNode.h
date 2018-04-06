@@ -9,6 +9,9 @@
 #include "IR/IR.h"
 #include "antlr4-runtime.h"
 #include "utils.h"
+#include "optional.h"
+
+using namespace std::experimental;
 
 namespace SyntaxModel {
     // forward declare SyntaxNodeBase for std::hash specialization

@@ -19,23 +19,22 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* If::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable, const IR::GenerateIREpilogue_fn& gen_epilogue) const
     {
-        auto cond_reg = cfg.GetFreeRegister(8);
-        eb = condition->generateIR(cfg, eb, cond_reg); // TODO: split condition expression on && and || binary operator in order to avoid evaluating unescessary expressions
-        IR::symbol_t end_if_then_label = cfg.CreateLabel("end_if", this);
+        auto cond_reg = cfg.getFreeTmpRegister(PrimitiveType::INT64_T, add_stack_variable);
+        eb = condition->generateIR(cfg, eb, cond_reg, add_stack_variable); // TODO: split condition expression on && and || binary operator in order to avoid evaluating unescessary expressions
+        IR::symbol_t end_if_then_label = cfg.CreateLabel(else_clause == nullptr ? "end_if" : "else", this);
 
         eb->AppendInstruction(IR::Instruction(IR::Instruction::CMPQ, IR::ControlFlowGraph::CreateConstant(0), cond_reg));
         eb->AppendInstruction(IR::Instruction(IR::Instruction::JE, end_if_then_label));
 
-        for (auto* instr : instructions)
-            eb = instr->generateIR(cfg, eb, "");
+        eb = generateInstructionBlock(cfg, eb, instructions, add_stack_variable, gen_epilogue);
         auto* end_if_then = cfg.CreateExecutionBlock(end_if_then_label, eb);
 
         if (else_clause != nullptr) {
             IR::symbol_t end_else_label = cfg.CreateLabel("end_else", this);
             eb->AppendInstruction(IR::Instruction(IR::Instruction::JMP, end_else_label));
-            end_if_then = else_clause->generateIR(cfg, end_if_then);
+            end_if_then = else_clause->generateIR(cfg, end_if_then, add_stack_variable, gen_epilogue);
             return cfg.CreateExecutionBlock(end_else_label, end_if_then);
         }
         return end_if_then;

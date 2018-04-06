@@ -15,18 +15,11 @@ namespace SyntaxModel {
         return os;
     }
 
-    IR::ExecutionBlock* Return::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, IR::symbol_t dest) const
+    IR::ExecutionBlock* Return::generateIR(IR::ControlFlowGraph& cfg, IR::ExecutionBlock* eb, optional<IR::symbol_t> dest, const IR::AddTmpStackVar_fn& add_stack_variable) const
     {
         // Generate IR instructions to compute return expression
         if (expression != nullptr)
-            eb = expression->generateIR(cfg, eb, "%rax");
-
-        // Generate function call epilogue
-        const auto* func = getFirstParentOfType<Function>();
-        if (func != nullptr)
-            func->generateIREpilogue(cfg, eb, func->getARStackSize());
-        else
-            throw new CompilerException("Return statement outside of any function definition");
+            eb = expression->generateIR(cfg, eb, IR::Register::rax.name64bits, add_stack_variable);
         return eb;
     }
 }

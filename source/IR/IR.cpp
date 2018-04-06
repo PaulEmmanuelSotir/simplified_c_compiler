@@ -7,7 +7,62 @@
 #include <fstream>
 
 namespace IR {
-    const std::array<const IR::symbol_t, 6> ControlFlowGraph::args_registers = { "%rdi", "%rsi", "%rdx", "%rcx", "%r8", "%r9" };
+    std::set<Register> Register::_registers;
+    //std::array<Register, 6> Register::_ABIArgsRegisters;
+
+    Register::Register(symbol_t name64bits, symbol_t name32bits, symbol_t name16bits, symbol_t name8bits, bool isABICallArg, bool isOwnedByCaller, bool useAsTmp, bool isExtendedReg)
+        : name64bits(name64bits)
+        , name32bits(name32bits)
+        , name16bits(name16bits)
+        , name8bits(name8bits)
+        , isABICallArg(isABICallArg)
+        , isOwnedByCaller(isOwnedByCaller)
+        , useAsTmp(useAsTmp)
+        , isExtendedReg(isExtendedReg)
+    {
+        _registers.insert(*this);
+        //if (isABICallArg)
+        //    _ABIArgsRegisters.push_back(*this);
+    }
+
+    symbol_t Register::getName(SyntaxModel::PrimitiveType size) const
+    {
+        switch (size) {
+        case SyntaxModel::PrimitiveType::INT64_T:
+            return name64bits;
+        case SyntaxModel::PrimitiveType::INT32_T:
+            return name32bits;
+        case SyntaxModel::PrimitiveType::INT16_T:
+            return name16bits;
+        case SyntaxModel::PrimitiveType::CHAR:
+            return name8bits;
+        }
+        throw new CompilerException("Huston, we have a problem!");
+    }
+
+    //std::array<Register, 6> Register::getABIArgsRegisters() { return _ABIArgsRegisters; }
+    std::set<Register> Register::getRegisters() { return _registers; }
+    bool Register::operator==(const Register& other) const { return other.name64bits == name64bits; };
+    bool Register::operator<(const Register& other) const { return other.name64bits < name64bits; };
+
+    const Register Register::rax("%rax", "%eax", "%ax", "%al", false, false, false);
+    const Register Register::rbx("%rbx", "%ebx", "%bx", "%bl", false, true, false);
+    const Register Register::rcx("%rcx", "%ecx", "%cx", "%cl", true, false, false);
+    const Register Register::rdx("%rdx", "%edx", "%dx", "%dl", true, false, false);
+    const Register Register::rbp("%rbp", "%ebp", "%bp", "%bpl", false, true, false);
+    const Register Register::rsp("%rsp", "%esp", "%sp", "%spl", false, false, false);
+    const Register Register::rsi("%rsi", "%esi", "%si", "%sil", true, false, false);
+    const Register Register::rdi("%rdi", "%edi", "%di", "%dil", true, false, false);
+
+    const Register Register::r8("%r8", "%r8d", "%r8w", "%r8b", true, false, false, true);
+    const Register Register::r9("%r9", "%r9d", "%r9w", "%r9b", true, false, false, true);
+    const Register Register::r10("%r10", "%r9d", "%r9w", "%r9b", false, false, true, true);
+    const Register Register::r11("%r11", "%r9d", "%r9w", "%r9b", false, false, true, true);
+    const Register Register::r12("%r12", "%r9d", "%r9w", "%r9b", false, true, false, true);
+    const Register Register::r13("%r13", "%r9d", "%r9w", "%r9b", false, true, false, true);
+    const Register Register::r14("%r14", "%r9d", "%r9w", "%r9b", false, true, false, true);
+    const Register Register::r15("%r15", "%r9d", "%r9w", "%r9b", false, true, false, true);
+
 
     const symbol_t Instruction::RETQ = "retq";
     const symbol_t Instruction::PUSHQ = "pushq";
@@ -34,7 +89,7 @@ namespace IR {
     const symbol_t Instruction::SETG = "setg";
     const symbol_t Instruction::SETGE = "setge";
 
-    Instruction::Instruction(symbol_t op, symbol_t x, symbol_t y, symbol_t dest)
+    Instruction::Instruction(symbol_t op, optional<symbol_t> x, optional<symbol_t> y, optional<symbol_t> dest)
         : op(op)
         , x(x)
         , y(y)
@@ -44,13 +99,13 @@ namespace IR {
 
     size_t Instruction::OperandCount() const
     {
-        if (x != "" && y != "" && dest != "")
+        if (x && y && dest)
             return 3;
-        else if (x != "" && y != "")
+        else if (x && y)
             return 2;
-        else if (x != "")
+        else if (x)
             return 1;
-        else if (x == "" && y == "" && dest == "")
+        else if (!x && !y && !dest)
             return 0;
 
         throw new CompilerException("Invalid IR instruction operands.");
@@ -58,29 +113,27 @@ namespace IR {
 
     void Instruction::GenerateAssembly(std::ostringstream& stream) const
     {
-        size_t op_count = OperandCount();
         stream << "\t" << op;
-        if (op_count >= 1)
-            stream << " " << x;
-        if (op_count >= 2)
-            stream << ", " << y;
-        if (op_count >= 3)
-            stream << ", " << dest;
+        if (x)
+            stream << " " << x.value();
+        if (y)
+            stream << ", " << y.value();
+        if (dest)
+            stream << ", " << dest.value();
         stream << std::endl;
     }
 
-    IR::ExecutionBlock* Instruction::divide_64bits(IR::ExecutionBlock* eb, bool getRemainder, IR::symbol_t x, IR::symbol_t y, IR::symbol_t dest)
+    ExecutionBlock* Instruction::divide_64bits(ExecutionBlock* eb, bool getRemainder, symbol_t x, symbol_t y, symbol_t dest)
     {
         //TODO: make sure this couldn't be simplified into using IDIV
-        const IR::symbol_t rax = "%rax", rdx = "%rdx", rbx = "%rbx"; // TODO: remove it
-        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, x, rax));
-        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, y, rbx));
-        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::CQO));
-        eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::IDIVQ, rbx));
+        eb->AppendInstruction(Instruction(Instruction::MOVQ, x, Register::rax.name64bits));
+        eb->AppendInstruction(Instruction(Instruction::MOVQ, y, Register::rbx.name64bits));
+        eb->AppendInstruction(Instruction(Instruction::CQO));
+        eb->AppendInstruction(Instruction(Instruction::IDIVQ, Register::rbx.name64bits));
         if (getRemainder)
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rdx, dest));
+            eb->AppendInstruction(Instruction(Instruction::MOVQ, Register::rdx.name64bits, dest));
         else
-            eb = eb->AppendInstruction(IR::Instruction(IR::Instruction::MOVQ, rax, dest));
+            eb->AppendInstruction(Instruction(Instruction::MOVQ, Register::rax.name64bits, dest));
         return eb;
     }
 
@@ -99,16 +152,32 @@ namespace IR {
         }
     }
 
-    ExecutionBlock* ExecutionBlock::AppendInstruction(const Instruction& instr)
+    std::list<Instruction>::iterator ExecutionBlock::AppendInstruction(const Instruction& instr)
     {
-        _instructions.push_back(instr);
-        return this;
+        if(instr.x && instr.y && instr.x.value().find("(%") != std::string::npos && instr.y.value().find("(%") != std::string::npos) {
+            _instructions.push_back(Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
+            _instructions.push_back(Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
+        } else
+            _instructions.push_back(instr);
+        return --_instructions.end();
+    }
+
+    void ExecutionBlock::InsertInstruction(const Instruction& instr, const std::list<Instruction>::iterator& instr_it) {
+        if(instr.x && instr.y && instr.x.value().find("(%") != std::string::npos && instr.y.value().find("(%") != std::string::npos) {
+            _instructions.insert(instr_it, Instruction(Instruction::MOVQ, instr.x, Register::r10.name64bits));
+            _instructions.insert(instr_it, Instruction(instr.op, Register::r10.name64bits, instr.y, instr.dest));
+        } else
+            _instructions.insert(instr_it, instr);
     }
 
     ControlFlowGraph::ControlFlowGraph(const SyntaxModel::Program* ast, const StaticAnalysis::StaticAnalyser* anaylser, const std::string& target)
         : static_analyser(anaylser)
         , _target(target)
     {
+        for(const auto& reg : Register::getRegisters())
+            if(reg.useAsTmp)
+                _tmpRegisterUsage.emplace(reg, false);
+
         try {
             ast->generateIR(*this, nullptr);
             GenerateAssembly();
@@ -127,16 +196,14 @@ namespace IR {
     {
         // Generate Prolog
         std::ostringstream stream;
-        stream << ".globl ";
-
+        stream << ".globl main" << std::endl; 
         //stream << ".type main, @function" << std::endl;
 
         // Generate core assembly
         auto* eb = _first_block;
         while (eb != nullptr) {
-            stream << eb->_label << endl;
             eb->GenerateAssembly(stream, [this](auto instr) {
-                _register_counter = 0;
+                this->freeTmpRegisters();
             });
             eb = eb->_next_eb;
         }
@@ -148,12 +215,33 @@ namespace IR {
         out.close();
     }
 
-    symbol_t ControlFlowGraph::GetFreeRegister(size_t size)
+    void ControlFlowGraph::freeTmpRegisters()
     {
-        return "!tmp" + std::to_string(++_register_counter);
+        for(const auto& p : _tmpRegisterUsage)
+            _tmpRegisterUsage[p.first] = false;
+        _freeTmpStackVars = true;
     }
 
-    StackVariable::StackVariable(int64_t offset, size_t size, const utils::TerminalInfo& name)
+    symbol_t ControlFlowGraph::getFreeTmpRegister(SyntaxModel::PrimitiveType size, const AddTmpStackVar_fn& addTmpStackVar)
+    {
+        for(const auto& p : _tmpRegisterUsage) {
+            if(!p.second) {
+                auto& reg = p.first;
+                _tmpRegisterUsage[reg] = true;
+                return reg.getName(size);
+            }
+        }
+
+        // We don't have free tmp register anymore, so we have to use stack
+        if(addTmpStackVar) {
+            symbol_t varAddressOperand = addTmpStackVar(size, _freeTmpStackVars);
+            _freeTmpStackVars = false;
+            return varAddressOperand;
+        }
+        throw new CompilerException("Can't create temporary variable (no free register and no way to create a stack variable)");
+    }
+
+    StackVariable::StackVariable(int64_t offset, size_t size, const std::string& name)
         : offset(offset)
         , size(size)
         , name(name)
@@ -173,7 +261,7 @@ namespace IR {
             // Append function name to label if given node is a children of a function
             auto* func = node->getFirstParentOfType<SyntaxModel::Function>();
             if (func != nullptr)
-                prefix = func->id.text + "." + prefix;
+                prefix = func->id.text + "_" + prefix;
         }
 
         // If we already created a label with the same name, we increment its counter
@@ -182,7 +270,7 @@ namespace IR {
             prefix += "_" + std::to_string(count);
         } else
             label_counters.emplace(prefix, 0);
-        return prefix;
+        return "." + prefix;
     }
 
     ExecutionBlock* ControlFlowGraph::CreateExecutionBlock(const std::string& label, ExecutionBlock* const eb_to_queue_on)
@@ -204,8 +292,8 @@ namespace IR {
         if (func != nullptr) {
             auto stack_defs_it = func->stackVariables.find(var.def_unique_id);
             if (stack_defs_it != func->stackVariables.end()) {
-                for (const IR::StackVariable& stack_var : stack_defs_it->second) {
-                    if (stack_var.name.text == var.name.text)
+                for (const StackVariable& stack_var : stack_defs_it->second) {
+                    if (stack_var.name == var.name.text)
                         return stack_var;
                 }
             }
